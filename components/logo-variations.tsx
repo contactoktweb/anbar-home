@@ -22,7 +22,7 @@ export function LogoVariations() {
           <Reveal>
             <div className="flex h-72 flex-col items-center justify-center rounded-sm border border-border/60 bg-background md:h-96">
               <Image
-                src="/anbar-logo.png"
+                src="/Anbar_Home_Logo_Black.png.webp"
                 alt="Anbar Home — versión oscura sobre fondo blanco"
                 width={520}
                 height={214}
@@ -37,7 +37,7 @@ export function LogoVariations() {
           <Reveal delay={120}>
             <div className="flex h-72 flex-col items-center justify-center rounded-sm bg-camel md:h-96">
               <Image
-                src="/anbar-logo.png"
+                src="/Anbar_Home_Logo_Black.png.webp"
                 alt="Anbar Home — versión clara sobre fondo camel"
                 width={520}
                 height={214}

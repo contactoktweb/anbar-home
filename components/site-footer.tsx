@@ -34,14 +34,14 @@ const bottomGroups = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border/60 bg-ivory px-6 py-16 md:px-10 md:py-24">
+    <footer className="border-t border-border/60 bg-ivory px-6 py-10 md:px-10">
       <div className="mx-auto max-w-7xl">
         
         {/* Top Row */}
         <div className="grid gap-12 border-b border-border/40 pb-16 md:grid-cols-3 md:gap-10">
           <div className="flex items-center justify-start">
             <Image
-              src="/anbar-logo.png"
+              src="/Anbar_Home_Logo_Black.png.webp"
               alt="Anbar Home"
               width={300}
               height={120}
@@ -49,30 +49,30 @@ export function SiteFooter() {
             />
           </div>
 
-          <div className="flex items-end justify-center gap-6 opacity-70 md:-translate-x-10">
+          <div className="flex items-end justify-center gap-6 opacity-40 md:-translate-x-10">
             {/* Pitcher with handle */}
-            <svg viewBox="0 0 100 150" fill="currentColor" className="h-16 w-auto text-camel-dark md:h-24" aria-hidden="true">
+            <svg viewBox="0 0 100 150" fill="currentColor" className="h-16 w-auto text-camel md:h-24" aria-hidden="true">
               <path d="M 40 10 L 60 10 C 55 20, 50 30, 55 45 C 55 50, 75 70, 75 100 C 75 125, 65 135, 55 137 C 55 140, 60 140, 60 142 L 40 142 C 40 140, 45 140, 45 137 C 35 135, 25 125, 25 100 C 25 70, 45 50, 45 45 C 50 30, 45 20, 40 10 Z" />
               <path d="M 72 65 C 90 65, 95 85, 80 105 L 75 100 C 85 85, 85 70, 70 70 Z" />
             </svg>
 
             {/* Wide bowl */}
-            <svg viewBox="0 0 120 100" fill="currentColor" className="h-12 w-auto text-camel-dark md:h-16" aria-hidden="true">
+            <svg viewBox="0 0 120 100" fill="currentColor" className="h-12 w-auto text-camel md:h-16" aria-hidden="true">
               <path d="M 40 10 L 80 10 C 75 15, 70 20, 70 25 C 70 40, 110 45, 110 65 C 110 85, 80 92, 65 95 C 65 98, 70 98, 70 100 L 50 100 C 50 98, 55 98, 55 95 C 40 92, 10 85, 10 65 C 10 45, 50 40, 50 25 C 50 20, 45 15, 40 10 Z" />
             </svg>
             
             {/* Tall amphora (original) */}
-            <svg viewBox="0 0 100 160" fill="currentColor" className="h-20 w-auto text-camel-dark md:h-28" aria-hidden="true">
+            <svg viewBox="0 0 100 160" fill="currentColor" className="h-20 w-auto text-camel md:h-28" aria-hidden="true">
               <path d="M 35 15 L 65 15 C 60 25, 55 35, 55 50 C 55 75, 85 90, 85 120 C 85 140, 70 145, 60 147 C 60 150, 65 150, 65 153 L 35 153 C 35 150, 40 150, 40 147 C 30 145, 15 140, 15 120 C 15 90, 45 75, 45 50 C 45 35, 40 25, 35 15 Z" />
             </svg>
 
             {/* Slender cylinder vase */}
-            <svg viewBox="0 0 100 150" fill="currentColor" className="h-16 w-auto text-camel-dark md:h-24" aria-hidden="true">
+            <svg viewBox="0 0 100 150" fill="currentColor" className="h-16 w-auto text-camel md:h-24" aria-hidden="true">
               <path d="M 25 10 L 75 10 C 60 20, 60 30, 60 40 L 65 135 C 65 140, 65 145, 60 150 L 40 150 C 35 145, 35 140, 35 135 L 40 40 C 40 30, 40 20, 25 10 Z" />
             </svg>
 
             {/* Small squat pot */}
-            <svg viewBox="0 0 100 100" fill="currentColor" className="h-10 w-auto text-camel-dark md:h-14" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="currentColor" className="h-10 w-auto text-camel md:h-14" aria-hidden="true">
               <path d="M 40 10 L 60 10 C 55 15, 55 20, 55 25 C 55 30, 85 40, 85 60 C 85 80, 65 95, 55 95 L 45 95 C 35 95, 15 80, 15 60 C 15 40, 45 30, 45 25 C 45 20, 45 15, 40 10 Z" />
             </svg>
           </div>
@@ -97,7 +97,7 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom Row */}
-        <div className="grid gap-12 pt-16 md:grid-cols-4 md:gap-10">
+        <div className="grid gap-12 pt-16 sm:grid-cols-2 lg:flex lg:justify-between lg:gap-8">
           {bottomGroups.map((group) => (
             <div key={group.title}>
               <h3 className="font-serif text-[17px] font-medium text-neutral-900">

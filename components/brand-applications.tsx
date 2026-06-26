@@ -53,7 +53,7 @@ export function BrandApplications() {
                 />
                 <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
                   <Image
-                    src="/anbar-logo.png"
+                    src="/Anbar_Home_Logo_Black.png.webp"
                     alt=""
                     aria-hidden="true"
                     width={400}
