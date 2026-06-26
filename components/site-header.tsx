@@ -5,10 +5,12 @@ import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 const links = [
-  { label: 'Concepto', href: '#concepto' },
-  { label: 'El Logo', href: '#logo' },
-  { label: 'Galería', href: '#galeria' },
-  { label: 'Identidad', href: '#identidad' },
+  { label: 'Línea Suprema', href: '#linea-suprema' },
+  { label: 'Esculturas', href: '#esculturas' },
+  { label: 'Summer Sale', href: '#summer-sale' },
+  { label: 'Accesorios Hogar', href: '#accesorios-hogar' },
+  { label: 'Jarrones Escultóricos', href: '#jarrones-escultoricos' },
+  { label: 'Blog', href: '#blog' },
 ]
 
 export function SiteHeader() {
@@ -25,14 +27,14 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-500',
+        'fixed inset-x-0 top-0 z-50 transition-all duration-200 ease-in-out',
         scrolled
-          ? 'bg-background/85 backdrop-blur-md border-b border-border/60'
+          ? 'bg-ivory/85 backdrop-blur-md border-b border-border/60'
           : 'bg-transparent',
       )}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
-        <a href="#inicio" className="flex items-center" aria-label="Anbar Home">
+        <a href="/" className="flex items-center" aria-label="Anbar Home">
           <Image
             src="/anbar-logo.png"
             alt="Anbar Home"
@@ -48,7 +50,7 @@ export function SiteHeader() {
             <a
               key={link.href}
               href={link.href}
-              className="text-xs uppercase tracking-[0.22em] text-foreground/70 transition-colors duration-300 hover:text-camel-dark"
+              className="text-[15px] font-medium text-neutral-900 transition-colors duration-300 hover:text-camel"
             >
               {link.label}
             </a>
@@ -64,19 +66,19 @@ export function SiteHeader() {
         >
           <span
             className={cn(
-              'h-px w-6 bg-foreground transition-transform duration-300',
+              'h-px w-6 bg-camel-dark transition-transform duration-300',
               open && 'translate-y-[6px] rotate-45',
             )}
           />
           <span
             className={cn(
-              'h-px w-6 bg-foreground transition-opacity duration-300',
+              'h-px w-6 bg-camel-dark transition-opacity duration-300',
               open && 'opacity-0',
             )}
           />
           <span
             className={cn(
-              'h-px w-6 bg-foreground transition-transform duration-300',
+              'h-px w-6 bg-camel-dark transition-transform duration-300',
               open && '-translate-y-[6px] -rotate-45',
             )}
           />
@@ -95,7 +97,7 @@ export function SiteHeader() {
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="border-b border-border/40 py-4 text-xs uppercase tracking-[0.22em] text-foreground/75 last:border-b-0"
+              className="border-b border-border/40 py-4 text-[15px] font-medium text-camel-dark last:border-b-0"
             >
               {link.label}
             </a>

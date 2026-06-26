@@ -27,7 +27,7 @@ const meanings = [
 
 export function LogoMeaning() {
   return (
-    <section id="logo" className="bg-ivory px-6 py-28 md:py-40">
+    <section id="logo" className="bg-sand px-6 py-28 md:py-40">
       <div className="mx-auto max-w-6xl">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="text-[0.7rem] uppercase tracking-[0.4em] text-camel-dark">

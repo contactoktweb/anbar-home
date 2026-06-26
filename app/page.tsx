@@ -8,10 +8,13 @@ import { BrandApplications } from '@/components/brand-applications'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 
+import { SidebarFilters } from '@/components/sidebar-filters'
+
 export default function Page() {
   return (
     <>
       <SiteHeader />
+      <SidebarFilters />
       <main>
         <Hero />
         <Concept />

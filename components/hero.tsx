@@ -4,7 +4,7 @@ export function Hero() {
   return (
     <section
       id="inicio"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-ivory to-background px-6 pt-28 pb-20 text-center"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-ivory to-white px-6 pt-28 pb-20 text-center"
     >
       {/* Subtle architectural arch outline */}
       <svg

@@ -3,16 +3,16 @@ import { Reveal } from '@/components/reveal'
 
 export function LogoVariations() {
   return (
-    <section id="identidad" className="bg-ivory px-6 py-28 md:py-40">
+    <section id="identidad" className="bg-camel px-6 py-28 md:py-40">
       <div className="mx-auto max-w-6xl">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <span className="text-[0.7rem] uppercase tracking-[0.4em] text-camel-dark">
+          <span className="text-[0.7rem] uppercase tracking-[0.4em] text-white/80">
             Variaciones del Logo
           </span>
-          <h2 className="mt-6 text-balance text-4xl font-light leading-tight tracking-tight md:text-5xl">
+          <h2 className="mt-6 text-balance text-4xl font-light leading-tight tracking-tight text-white md:text-5xl">
             Una identidad versátil
           </h2>
-          <p className="mt-8 text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mt-8 text-pretty text-base leading-relaxed text-white/90 md:text-lg">
             El logotipo conserva su elegancia sobre fondos claros y cálidos,
             adaptándose con serenidad a cada aplicación.
           </p>
@@ -29,7 +29,7 @@ export function LogoVariations() {
                 className="h-auto w-[62%] max-w-xs object-contain mix-blend-multiply"
               />
             </div>
-            <p className="mt-4 text-center text-[0.7rem] uppercase tracking-[0.28em] text-muted-foreground">
+            <p className="mt-4 text-center text-[0.7rem] uppercase tracking-[0.28em] text-white/80">
               Versión principal · Fondo blanco
             </p>
           </Reveal>
@@ -44,7 +44,7 @@ export function LogoVariations() {
                 className="h-auto w-[62%] max-w-xs object-contain invert mix-blend-screen"
               />
             </div>
-            <p className="mt-4 text-center text-[0.7rem] uppercase tracking-[0.28em] text-muted-foreground">
+            <p className="mt-4 text-center text-[0.7rem] uppercase tracking-[0.28em] text-white/80">
               Versión clara · Fondo camel
             </p>
           </Reveal>
