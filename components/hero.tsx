@@ -1,6 +1,10 @@
 import Image from 'next/image'
 
-export function Hero() {
+export function Hero({ data }: { data?: any }) {
+  const subtitle = data?.heroSubtitle || 'Decoración lujosa'
+  const tagline = data?.heroTagline || 'El arte de habitar con calma.'
+  const cta = data?.heroCta || 'Descubrir'
+
   return (
     <section
       id="inicio"
@@ -34,7 +38,7 @@ export function Hero() {
 
       <div className="relative z-10 flex flex-col items-center mix-blend-multiply">
         <span className="animate-fade-in mb-16 -translate-y-6 text-[0.75rem] font-medium uppercase tracking-[0.4em] text-camel-dark [animation-delay:200ms]">
-          Decoración lujosa
+          {subtitle}
         </span>
 
         <Image
@@ -47,7 +51,7 @@ export function Hero() {
         />
 
         <p className="animate-fade-up mt-10 max-w-xl text-balance font-serif text-2xl font-light leading-relaxed text-foreground/75 md:text-3xl [animation-delay:800ms]">
-          El arte de habitar con calma.
+          {tagline}
         </p>
 
         <div className="animate-fade-up mt-12 flex flex-col items-center gap-6 [animation-delay:1100ms]">
@@ -55,7 +59,7 @@ export function Hero() {
             href="#concepto"
             className="group text-xs uppercase tracking-[0.3em] text-foreground/70"
           >
-            Descubrir
+            {cta}
             <span className="mx-auto mt-3 block h-10 w-px origin-top scale-y-100 bg-camel transition-transform duration-500 group-hover:scale-y-75" />
           </a>
         </div>

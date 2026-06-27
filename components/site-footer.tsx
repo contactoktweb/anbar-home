@@ -1,38 +1,57 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 const topGroup = {
   title: 'Enlaces Rápidos',
   links: [
-    'Aviso de privacidad',
-    'Políticas de tratamiento de datos',
-    'Política integral de retractos, cambios, devoluciones y garantía',
+    { label: 'Aviso de privacidad', href: '/aviso-de-privacidad' },
+    { label: 'Políticas de tratamiento de datos', href: '/politicas-de-tratamiento-de-datos' },
+    { label: 'Política integral de retractos, cambios, devoluciones y garantía', href: '/politicas-de-retractos-y-garantias' },
   ],
 }
 
-const bottomGroups = [
-  {
-    title: 'Nuestra Empresa',
-    links: ['Preguntas frecuentes', 'Lista de deseos'],
-  },
-  {
-    title: 'Tiendas',
-    links: [
-      'Bogotá: Calle 109 #18B-52, Local 101',
-      'Bucaramanga: Calle 62 #30-99',
-      'Cabecera del Llano: Cra 36 #48-141 Local 5',
-    ],
-  },
-  {
-    title: 'Colecciones',
-    links: ['Esculturas', 'Jarrones', 'Espejos'],
-  },
-  {
-    title: 'Blog Diseño Interior',
-    links: ['El Regreso de los Espacios Sensoriales'],
-  },
-]
+import { client } from '@/sanity/lib/client'
+import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const settings = await client.fetch(GLOBAL_SETTINGS_QUERY).catch(() => null)
+  
+  const storesLinks = settings?.physicalStores?.map((s: any) => ({
+    label: `${s.city}: ${s.address}`,
+    href: '#'
+  })) || [
+    { label: 'Bogotá: Calle 109 #18B-52, Local 101', href: '#' },
+    { label: 'Bucaramanga: Calle 62 #30-99', href: '#' },
+    { label: 'Cabecera del Llano: Cra 36 #48-141 Local 5', href: '#' },
+  ]
+
+  const bottomGroups = [
+    {
+      title: 'Nuestra Empresa',
+      links: [
+        { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' }
+      ],
+    },
+    {
+      title: 'Tiendas',
+      links: storesLinks,
+    },
+    {
+      title: 'Colecciones',
+      links: [
+        { label: 'Esculturas', href: '#' },
+        { label: 'Jarrones', href: '#' },
+        { label: 'Espejos', href: '#' }
+      ],
+    },
+    {
+      title: 'Blog Diseño Interior',
+      links: [
+        { label: 'El Regreso de los Espacios Sensoriales', href: '#' }
+      ],
+    },
+  ]
+
   return (
     <footer className="border-t border-border/60 bg-ivory px-6 py-10 md:px-10">
       <div className="mx-auto max-w-7xl">
@@ -83,13 +102,13 @@ export function SiteFooter() {
             </h3>
             <ul className="mt-6 space-y-4">
               {topGroup.links.map((link) => (
-                <li key={link}>
-                  <a
-                    href="#"
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
                     className="text-sm font-light text-neutral-600 transition-colors duration-300 hover:text-camel-dark"
                   >
-                    {link}
-                  </a>
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -105,13 +124,13 @@ export function SiteFooter() {
               </h3>
               <ul className="mt-6 space-y-4">
                 {group.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
                       className="text-[13px] font-light leading-relaxed text-neutral-600 transition-colors duration-300 hover:text-camel-dark"
                     >
-                      {link}
-                    </a>
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>

@@ -5,6 +5,9 @@ import { CategorySidebar } from '@/components/category-sidebar'
 import { CategoryProductGrid } from '@/components/category-product-grid'
 import { mockProducts } from '@/lib/mock-products'
 
+import { client } from '@/sanity/lib/client'
+import { PRODUCTS_QUERY } from '@/sanity/lib/queries'
+
 // Map slugs to category names used in the data
 const slugCategoryMap: Record<string, string> = {
   'linea-suprema': 'Línea Suprema',
@@ -18,9 +21,24 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const { slug } = await params
   const categoryName = slugCategoryMap[slug] ?? 'Categoría'
 
+  const sanityProducts = await client.fetch(PRODUCTS_QUERY).catch(() => [])
+  
+  // Format Sanity products to match the mock product structure
+  const formattedSanityProducts = sanityProducts.map((p: any) => ({
+    id: p._id,
+    name: p.name,
+    price: p.price,
+    originalPrice: p.originalPrice,
+    category: p.category,
+    image: p.imageUrl,
+    rating: p.rating || 0
+  }))
+
+  const allProducts = formattedSanityProducts.length > 0 ? formattedSanityProducts : mockProducts
+
   // Filter: only show products that belong to this category
-  const filteredProducts = mockProducts.filter(
-    (p) => p.category === categoryName
+  const filteredProducts = allProducts.filter(
+    (p: any) => p.category === categoryName
   )
 
   return (
