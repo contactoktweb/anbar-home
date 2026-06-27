@@ -7,7 +7,7 @@ import { Product } from '@/lib/mock-products'
 import { cn } from '@/lib/utils'
 
 export function CategoryProductGrid({ products }: { products: Product[] }) {
-  const [viewMode, setViewMode] = useState<GridViewMode>('4')
+  const [viewMode, setViewMode] = useState<GridViewMode>('3')
   const [isSortOpen, setIsSortOpen] = useState(false)
   const [sortOption, setSortOption] = useState('Orden por defecto')
 

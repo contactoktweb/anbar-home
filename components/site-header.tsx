@@ -2,8 +2,10 @@
 
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { Search, Heart, ShoppingBag, X } from 'lucide-react'
+import { Search, Heart, ShoppingBag, X, Trash2, Plus, Minus } from 'lucide-react'
+import { useStore } from '@/components/store-provider'
 
 const links = [
   { label: 'Línea Suprema', href: '/category/linea-suprema' },
@@ -20,6 +22,20 @@ export function SiteHeader() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(false)
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const router = useRouter()
+  
+  const { cart, favorites, removeFromCart, toggleFavorite, updateQuantity } = useStore()
+  
+  // Format prices in COP
+  const formatCOP = (amount: number) =>
+    new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+    }).format(amount)
+
+  const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -28,15 +44,25 @@ export function SiteHeader() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      setIsSearchOpen(false)
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+      setSearchQuery('')
+    }
+  }
+
   return (
-    <header
-      className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-200 ease-in-out',
-        scrolled
-          ? 'bg-ivory/85 backdrop-blur-md border-b border-border/60'
-          : 'bg-transparent',
-      )}
-    >
+    <>
+      <header
+        className={cn(
+          'fixed inset-x-0 top-0 z-50 transition-all duration-200 ease-in-out',
+          scrolled
+            ? 'bg-ivory/85 backdrop-blur-md border-b border-border/60'
+            : 'bg-transparent',
+        )}
+      >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
         <a href="/" className="flex items-center" aria-label="Anbar Home">
           <Image
@@ -72,7 +98,7 @@ export function SiteHeader() {
 
           <button onClick={() => setIsCartOpen(true)} className="flex items-center gap-1 transition-colors hover:text-camel" aria-label="Carrito">
             <ShoppingBag className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
-            <span className="text-sm font-medium text-camel-dark">0</span>
+            <span className="text-sm font-medium text-camel-dark">{cart.length}</span>
           </button>
 
           <button
@@ -124,9 +150,11 @@ export function SiteHeader() {
         </nav>
       </div>
 
+      </header>
+
       {/* Search Overlay */}
       {isSearchOpen && (
-        <div className="fixed inset-0 z-[60] flex flex-col bg-ivory/95 backdrop-blur-md animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] flex flex-col bg-ivory/95 backdrop-blur-md animate-in fade-in duration-300">
           <div className="mx-auto w-full max-w-7xl px-6 py-8 md:px-10">
             <div className="flex justify-end">
               <button onClick={() => setIsSearchOpen(false)} className="p-2 text-neutral-500 transition-transform hover:rotate-90 hover:text-camel">
@@ -135,17 +163,19 @@ export function SiteHeader() {
             </div>
             <div className="mx-auto mt-16 max-w-3xl px-4 md:mt-24">
               <h2 className="mb-8 font-serif text-3xl text-neutral-800 md:text-4xl">¿Qué estás buscando?</h2>
-              <div className="relative border-b border-neutral-300 pb-3 transition-colors focus-within:border-camel">
+              <form onSubmit={handleSearch} className="relative border-b border-neutral-300 pb-3 transition-colors focus-within:border-camel">
                 <input 
                   type="text" 
                   placeholder="Buscar producto..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-transparent pr-12 text-xl outline-none placeholder:text-neutral-400 md:text-2xl"
                   autoFocus
                 />
-                <button className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 transition-colors hover:text-camel">
+                <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 transition-colors hover:text-camel">
                   <Search className="h-6 w-6 md:h-7 md:w-7" strokeWidth={1.5} />
                 </button>
-              </div>
+              </form>
             </div>
           </div>
         </div>
@@ -154,15 +184,36 @@ export function SiteHeader() {
       {/* Favorites Sidebar Placeholder */}
       {isFavoritesOpen && (
         <>
-          <div className="fixed inset-0 z-[60] bg-black/30 backdrop-blur-sm transition-opacity" onClick={() => setIsFavoritesOpen(false)} />
-          <div className="fixed inset-y-0 right-0 z-[70] w-full max-w-md border-l border-border/50 bg-ivory p-6 shadow-2xl animate-in slide-in-from-right-full duration-300 md:p-8">
+          <div className="fixed inset-0 z-[100] bg-black/30 backdrop-blur-sm transition-opacity" onClick={() => setIsFavoritesOpen(false)} />
+          <div className="fixed inset-y-0 right-0 z-[110] w-full max-w-md border-l border-border/50 bg-ivory p-6 shadow-2xl animate-in slide-in-from-right-full duration-300 md:p-8">
             <div className="mb-8 flex items-center justify-between border-b border-border/50 pb-4">
               <h2 className="font-serif text-2xl text-neutral-900">Mis Favoritos</h2>
               <button onClick={() => setIsFavoritesOpen(false)} className="text-neutral-500 hover:text-camel"><X className="h-6 w-6" strokeWidth={1.5} /></button>
             </div>
-            <div className="flex h-[60vh] flex-col items-center justify-center text-center">
-              <Heart className="mb-4 h-12 w-12 text-neutral-200" strokeWidth={1} />
-              <p className="text-neutral-500">Tu lista de deseos está vacía.</p>
+            <div className="flex-1 overflow-y-auto">
+              {favorites.length === 0 ? (
+                <div className="flex h-full flex-col items-center justify-center text-center">
+                  <Heart className="mb-4 h-12 w-12 text-neutral-200" strokeWidth={1} />
+                  <p className="text-neutral-500">Tu lista de deseos está vacía.</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  {favorites.map((product) => (
+                    <div key={product.id} className="flex gap-4 border-b border-border/50 pb-4 last:border-0">
+                      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden bg-white">
+                        <Image src={product.image} alt={product.name} fill className="object-cover object-center mix-blend-multiply" />
+                      </div>
+                      <div className="flex flex-1 flex-col justify-center">
+                        <h3 className="text-sm font-medium text-neutral-900">{product.name}</h3>
+                        <p className="text-sm font-serif text-camel-dark">{formatCOP(product.price)}</p>
+                      </div>
+                      <button onClick={() => toggleFavorite(product)} className="text-neutral-400 hover:text-red-500">
+                        <Trash2 className="h-4 w-4" strokeWidth={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </>
@@ -171,19 +222,77 @@ export function SiteHeader() {
       {/* Cart Sidebar Placeholder */}
       {isCartOpen && (
         <>
-          <div className="fixed inset-0 z-[60] bg-black/30 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)} />
-          <div className="fixed inset-y-0 right-0 z-[70] w-full max-w-md border-l border-border/50 bg-ivory p-6 shadow-2xl animate-in slide-in-from-right-full duration-300 md:p-8">
+          <div className="fixed inset-0 z-[100] bg-black/30 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)} />
+          <div className="fixed inset-y-0 right-0 z-[110] w-full max-w-md border-l border-border/50 bg-ivory p-6 shadow-2xl animate-in slide-in-from-right-full duration-300 md:p-8">
             <div className="mb-8 flex items-center justify-between border-b border-border/50 pb-4">
               <h2 className="font-serif text-2xl text-neutral-900">Carrito de Compras</h2>
               <button onClick={() => setIsCartOpen(false)} className="text-neutral-500 hover:text-camel"><X className="h-6 w-6" strokeWidth={1.5} /></button>
             </div>
-            <div className="flex h-[60vh] flex-col items-center justify-center text-center">
-              <ShoppingBag className="mb-4 h-12 w-12 text-neutral-200" strokeWidth={1} />
-              <p className="text-neutral-500">Tu carrito está vacío por ahora.</p>
+            <div className="flex flex-col h-[calc(100vh-140px)]">
+              <div className="flex-1 overflow-y-auto">
+                {cart.length === 0 ? (
+                  <div className="flex h-full flex-col items-center justify-center text-center">
+                    <ShoppingBag className="mb-4 h-12 w-12 text-neutral-200" strokeWidth={1} />
+                    <p className="text-neutral-500">Tu carrito está vacío por ahora.</p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-4">
+                    {cart.map((item) => (
+                      <div key={item.id} className="flex gap-4 border-b border-border/50 pb-4 last:border-0">
+                        <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden bg-white">
+                          <Image src={item.image} alt={item.name} fill className="object-cover object-center mix-blend-multiply" />
+                        </div>
+                        <div className="flex flex-1 flex-col justify-center">
+                          <h3 className="text-sm font-medium text-neutral-900">{item.name}</h3>
+                          <div className="flex justify-between items-center mt-2">
+                            <p className="text-sm font-serif text-camel-dark">{formatCOP(item.price)}</p>
+                            <div className="flex items-center gap-2 rounded border border-neutral-200 px-2 py-1 bg-neutral-50/50">
+                              <button 
+                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                className="text-neutral-400 transition-colors hover:text-camel p-0.5"
+                                aria-label="Disminuir cantidad"
+                              >
+                                <Minus className="h-3 w-3" strokeWidth={2} />
+                              </button>
+                              <span className="text-xs font-medium w-3 text-center text-neutral-700">{item.quantity}</span>
+                              <button 
+                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                className="text-neutral-400 transition-colors hover:text-camel p-0.5"
+                                aria-label="Aumentar cantidad"
+                              >
+                                <Plus className="h-3 w-3" strokeWidth={2} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <button onClick={() => removeFromCart(item.id)} className="text-neutral-400 hover:text-red-500 self-start mt-1">
+                          <Trash2 className="h-4 w-4" strokeWidth={1.5} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              {cart.length > 0 && (
+                <div className="mt-auto pt-6 border-t border-border/50 bg-ivory">
+                  <div className="mb-4 flex justify-between text-lg font-medium text-neutral-900">
+                    <span>Subtotal</span>
+                    <span className="font-serif text-camel-dark">{formatCOP(cartTotal)}</span>
+                  </div>
+                  <a 
+                    href="/checkout" 
+                    onClick={() => setIsCartOpen(false)}
+                    className="flex w-full items-center justify-center bg-camel-dark px-6 py-4 text-sm font-medium text-white transition-colors hover:bg-neutral-900"
+                  >
+                    Ir al pago
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </>
       )}
-    </header>
+    </>
   )
 }
