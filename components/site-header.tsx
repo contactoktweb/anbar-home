@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Search, Heart, ShoppingBag, X, Trash2, Plus, Minus } from 'lucide-react'
 import { useStore } from '@/components/store-provider'
@@ -24,8 +25,9 @@ export function SiteHeader() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
+  const pathname = usePathname()
   
-  const { cart, favorites, removeFromCart, toggleFavorite, updateQuantity } = useStore()
+  const { cart, favorites, removeFromCart, toggleFavorite, updateQuantity, clearCart, clearFavorites } = useStore()
   
   // Format prices in COP
   const formatCOP = (amount: number) =>
@@ -43,6 +45,14 @@ export function SiteHeader() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Cerrar menús automáticamente al cambiar de ruta
+  useEffect(() => {
+    setIsCartOpen(false)
+    setIsFavoritesOpen(false)
+    setOpen(false)
+    setIsSearchOpen(false)
+  }, [pathname])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -64,7 +74,7 @@ export function SiteHeader() {
         )}
       >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
-        <a href="/" className="flex items-center" aria-label="Anbar Home">
+        <Link href="/" className="flex items-center" aria-label="Anbar Home">
           <Image
             src="/Anbar_Home_Logo_Black.png.webp"
             alt="Anbar Home"
@@ -73,17 +83,17 @@ export function SiteHeader() {
             priority
             className="h-8 w-auto object-contain md:h-9"
           />
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-10 md:flex">
           {links.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-[15px] font-medium text-neutral-900 transition-colors duration-300 hover:text-camel"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -92,8 +102,9 @@ export function SiteHeader() {
             <Search className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
           </button>
           
-          <button onClick={() => setIsFavoritesOpen(true)} className="transition-colors hover:text-camel" aria-label="Favoritos">
+          <button onClick={() => setIsFavoritesOpen(true)} className="flex items-center gap-1 transition-colors hover:text-camel" aria-label="Favoritos">
             <Heart className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
+            <span className="text-sm font-medium text-camel-dark">{favorites.length}</span>
           </button>
 
           <button onClick={() => setIsCartOpen(true)} className="flex items-center gap-1 transition-colors hover:text-camel" aria-label="Carrito">
@@ -138,14 +149,14 @@ export function SiteHeader() {
       >
         <nav className="flex flex-col px-6 py-2">
           {links.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
               className="border-b border-border/40 py-4 text-[15px] font-medium text-camel-dark last:border-b-0"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
@@ -186,7 +197,7 @@ export function SiteHeader() {
         <>
           <div className="fixed inset-0 z-[100] bg-black/30 backdrop-blur-sm transition-opacity" onClick={() => setIsFavoritesOpen(false)} />
           <div className="fixed inset-y-0 right-0 z-[110] w-full max-w-md border-l border-border/50 bg-ivory p-6 shadow-2xl animate-in slide-in-from-right-full duration-300 md:p-8">
-            <div className="mb-8 flex items-center justify-between border-b border-border/50 pb-4">
+            <div className="mb-6 flex items-center justify-between border-b border-border/50 pb-4">
               <h2 className="font-serif text-2xl text-neutral-900">Mis Favoritos</h2>
               <button onClick={() => setIsFavoritesOpen(false)} className="text-neutral-500 hover:text-camel"><X className="h-6 w-6" strokeWidth={1.5} /></button>
             </div>
@@ -197,7 +208,16 @@ export function SiteHeader() {
                   <p className="text-neutral-500">Tu lista de deseos está vacía.</p>
                 </div>
               ) : (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 pb-4">
+                  <div className="flex justify-end pb-2">
+                    <button 
+                      onClick={clearFavorites} 
+                      className="flex items-center gap-1.5 text-[13px] text-neutral-500 transition-colors hover:text-red-500"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>Eliminar todos</span>
+                    </button>
+                  </div>
                   {favorites.map((product) => (
                     <div key={product.id} className="flex gap-4 border-b border-border/50 pb-4 last:border-0">
                       <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden bg-white">
@@ -224,7 +244,7 @@ export function SiteHeader() {
         <>
           <div className="fixed inset-0 z-[100] bg-black/30 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)} />
           <div className="fixed inset-y-0 right-0 z-[110] w-full max-w-md border-l border-border/50 bg-ivory p-6 shadow-2xl animate-in slide-in-from-right-full duration-300 md:p-8">
-            <div className="mb-8 flex items-center justify-between border-b border-border/50 pb-4">
+            <div className="mb-6 flex items-center justify-between border-b border-border/50 pb-4">
               <h2 className="font-serif text-2xl text-neutral-900">Carrito de Compras</h2>
               <button onClick={() => setIsCartOpen(false)} className="text-neutral-500 hover:text-camel"><X className="h-6 w-6" strokeWidth={1.5} /></button>
             </div>
@@ -236,7 +256,16 @@ export function SiteHeader() {
                     <p className="text-neutral-500">Tu carrito está vacío por ahora.</p>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-4 pb-4">
+                    <div className="flex justify-end pb-2">
+                      <button 
+                        onClick={clearCart} 
+                        className="flex items-center gap-1.5 text-[13px] text-neutral-500 transition-colors hover:text-red-500"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        <span>Eliminar todos</span>
+                      </button>
+                    </div>
                     {cart.map((item) => (
                       <div key={item.id} className="flex gap-4 border-b border-border/50 pb-4 last:border-0">
                         <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden bg-white">
@@ -280,13 +309,12 @@ export function SiteHeader() {
                     <span>Subtotal</span>
                     <span className="font-serif text-camel-dark">{formatCOP(cartTotal)}</span>
                   </div>
-                  <a 
-                    href="/checkout" 
-                    onClick={() => setIsCartOpen(false)}
+                  <Link 
+                    href="/checkout"
                     className="flex w-full items-center justify-center bg-camel-dark px-6 py-4 text-sm font-medium text-white transition-colors hover:bg-neutral-900"
                   >
                     Ir al pago
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>

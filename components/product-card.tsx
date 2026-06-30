@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Product } from '@/lib/mock-products'
 import { cn } from '@/lib/utils'
 import { ShoppingBag, Heart, Check } from 'lucide-react'
@@ -15,8 +16,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const [rating, setRating] = useState(product.rating || 0)
   const [hoverRating, setHoverRating] = useState(0)
   const [isAdded, setIsAdded] = useState(false)
-  const { addToCart, toggleFavorite, isFavorite } = useStore()
+  const { cart, addToCart, toggleFavorite, isFavorite } = useStore()
   const favorite = isFavorite(product.id)
+  const isInCart = cart.some(item => item.id === product.id)
 
   // Format prices in COP
   const formatCOP = (amount: number) =>
@@ -30,7 +32,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const formattedOriginalPrice = product.originalPrice ? formatCOP(product.originalPrice) : null
 
   return (
-    <div className="group flex h-full flex-col cursor-pointer">
+    <Link href={`/product/${product.id}`} className="group flex h-full flex-col cursor-pointer">
       <div className="relative mb-4 aspect-square overflow-hidden bg-white flex items-center justify-center p-4 shrink-0">
         {/* Sale badge */}
         {product.originalPrice && (
@@ -121,11 +123,18 @@ export function ProductCard({ product }: ProductCardProps) {
               }}
               aria-label="Añadir al carrito"
             >
-              {isAdded ? <Check className="h-4 w-4" strokeWidth={2} /> : <ShoppingBag className="h-4 w-4" strokeWidth={1.5} />}
+              {isAdded ? (
+                <Check className="h-4 w-4" strokeWidth={2} />
+              ) : (
+                <ShoppingBag 
+                  className="h-4 w-4" 
+                  strokeWidth={1.5} 
+                />
+              )}
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

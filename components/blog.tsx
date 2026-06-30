@@ -4,10 +4,10 @@ export function Blog() {
   return (
     <section id="blog" className="py-24 bg-white">
       <div className="mx-auto max-w-5xl px-6 md:px-10">
-        
+
         {/* Title */}
         <h2 className="mb-6 font-serif text-4xl font-normal text-neutral-900 md:text-5xl lg:text-6xl leading-tight">
-          El regreso de los <em className="italic">espacios sensoriales</em>: así se vera<br className="hidden md:block"/> el diseño interior del futuro
+          El regreso de los <em className="italic">espacios sensoriales</em>: así se vera<br className="hidden md:block" /> el diseño interior del futuro
         </h2>
 
         {/* Meta data */}
@@ -25,7 +25,7 @@ export function Blog() {
 
         {/* Content & Image Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center">
-          
+
           {/* Text Content */}
           <div className="flex flex-col space-y-6">
             <p className="text-[17px] leading-relaxed text-neutral-800">
@@ -51,7 +51,7 @@ export function Blog() {
               className="object-cover"
             />
           </div>
-          
+
         </div>
 
         {/* Continuation Content */}
@@ -90,11 +90,11 @@ export function Blog() {
                 La idea es sencilla: diseñar interiores que no solo se observen,
                 sino que también se experimenten emocionalmente.
               </p>
-              
+
               <p>
                 Entre las tendencias más importantes destacan:
               </p>
-              
+
               <ul className="list-disc space-y-3 pl-6 text-left">
                 <li>Materiales naturales como madera y lino.</li>
                 <li>Iluminación cálida e indirecta.</li>
@@ -125,7 +125,7 @@ export function Blog() {
             <h3 className="font-serif text-3xl md:text-4xl lg:text-[42px] font-normal text-neutral-900 text-center">
               Materiales <em className="italic">naturales</em>: La clave del nuevo lujo
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start text-[17px] leading-relaxed text-neutral-800 text-justify">
               {/* Left Column */}
               <div className="space-y-6">
@@ -151,7 +151,7 @@ export function Blog() {
                 <p>
                   Actualmente, los espacios más sofisticados priorizan:
                 </p>
-                
+
                 <ul className="list-disc space-y-3 pl-6 marker:text-neutral-900 text-left">
                   <li className="pl-1">Texturas suaves.</li>
                   <li className="pl-1">Tonos tierra y neutros.</li>
@@ -184,7 +184,7 @@ export function Blog() {
           {/* Quote */}
           <div className="border-l-4 border-camel-dark py-4 pl-8 my-12 bg-neutral-50/50">
             <p className="font-serif text-2xl italic leading-relaxed text-neutral-900 md:text-3xl">
-              “El futuro del diseño interior será más humano.”
+              “El futuro del diseño interior será más humano”
             </p>
             <p className="mt-6 text-[15px] font-medium text-neutral-500 uppercase tracking-wider">
               Andrés Barrientos. CEO Anbar Home
@@ -215,7 +215,7 @@ export function Blog() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 items-start">
             <div className="flex flex-col">
               <h3 className="font-serif text-[28px] md:text-[34px] font-normal text-neutral-900 leading-tight">
-                La casa emocional: habitar<br className="hidden md:block"/> el hogar con el corazón
+                La casa emocional: habitar<br className="hidden md:block" /> el hogar con el corazón
               </h3>
               <div className="mt-8 flex items-center">
                 <span className="h-1.5 w-1.5 rounded-full bg-neutral-900"></span>
@@ -225,8 +225,8 @@ export function Blog() {
             </div>
             <div className="text-[15px] leading-relaxed text-neutral-500 font-light pt-2">
               <p>
-                Durante años, las casas perfectas dominaron las redes sociales: 
-                espacios minimalistas, colores neutros y ambientes diseñados para 
+                Durante años, las casas perfectas dominaron las redes sociales:
+                espacios minimalistas, colores neutros y ambientes diseñados para
                 verse impecables en fotografías. Pero hoy las personas buscan algo diferente.
               </p>
             </div>
@@ -236,7 +236,7 @@ export function Blog() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 items-start">
             <div className="flex flex-col">
               <h3 className="font-serif text-[28px] md:text-[34px] font-normal text-neutral-900 leading-tight">
-                Esculturas: las protagonistas<br className="hidden md:block"/> de los espacios modernos
+                Esculturas: las protagonistas<br className="hidden md:block" /> de los espacios modernos
               </h3>
               <div className="mt-8 flex items-center">
                 <span className="h-1.5 w-1.5 rounded-full bg-neutral-900"></span>
@@ -246,9 +246,9 @@ export function Blog() {
             </div>
             <div className="text-[15px] leading-relaxed text-neutral-500 font-light pt-2">
               <p>
-                Las esculturas dejaron de ser piezas reservadas únicamente para galerías 
-                o palacios. Arquitectos, interioristas y amantes de la decoración están 
-                incorporando esculturas en sus espacios para crear ambientes mucho más 
+                Las esculturas dejaron de ser piezas reservadas únicamente para galerías
+                o palacios. Arquitectos, interioristas y amantes de la decoración están
+                incorporando esculturas en sus espacios para crear ambientes mucho más
                 sofisticados, emocionales y visualmente equilibrados.
               </p>
             </div>

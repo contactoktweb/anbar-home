@@ -19,15 +19,14 @@ export const homePage = defineType({
       title: 'Subtítulo',
       type: 'string',
       group: 'hero',
-      initialValue: 'Decoración lujosa',
-      validation: (rule) => rule.required(),
+      initialValue: '',
     }),
     defineField({
       name: 'heroTagline',
       title: 'Lema / Tagline',
       type: 'string',
       group: 'hero',
-      initialValue: 'El arte de habitar con calma.',
+      initialValue: 'El arte de habitar con calma',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -39,13 +38,12 @@ export const homePage = defineType({
       validation: (rule) => rule.required(),
     }),
 
-    // --- CONCEPT ---
     defineField({
       name: 'conceptTitle',
       title: 'Título Principal',
       type: 'string',
       group: 'concept',
-      initialValue: 'Refleja quién eres en tus espacios.',
+      initialValue: 'Refleja quién eres en tus espacios',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -99,7 +97,7 @@ export const homePage = defineType({
       title: 'Frase Destacada (Cita)',
       type: 'string',
       group: 'concept',
-      initialValue: '“El futuro del diseño interior será más humano.”',
+      initialValue: '“El futuro del diseño interior será más humano”',
       validation: (rule) => rule.required(),
     }),
     defineField({

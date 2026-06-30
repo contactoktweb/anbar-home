@@ -1,8 +1,8 @@
 import Image from 'next/image'
 
 export function Hero({ data }: { data?: any }) {
-  const subtitle = data?.heroSubtitle || 'Decoración lujosa'
-  const tagline = data?.heroTagline || 'El arte de habitar con calma.'
+  const subtitle = data?.heroSubtitle || ''
+  const tagline = data?.heroTagline || 'El arte de habitar con calma'
   const cta = data?.heroCta || 'Descubrir'
 
   return (
@@ -37,9 +37,11 @@ export function Hero({ data }: { data?: any }) {
       </svg>
 
       <div className="relative z-10 flex flex-col items-center mix-blend-multiply">
-        <span className="animate-fade-in mb-16 -translate-y-6 text-[0.75rem] font-medium uppercase tracking-[0.4em] text-camel-dark [animation-delay:200ms]">
-          {subtitle}
-        </span>
+        {subtitle && (
+          <span className="animate-fade-in mb-16 -translate-y-6 text-[0.75rem] font-medium uppercase tracking-[0.4em] text-camel-dark [animation-delay:200ms]">
+            {subtitle}
+          </span>
+        )}
 
         <Image
           src="/Anbar_Home_Logo_Black.png.webp"

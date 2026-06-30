@@ -12,8 +12,8 @@ interface StoreContextType {
   favorites: Product[]
   addToCart: (product: Product) => void
   removeFromCart: (productId: string) => void
-  updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
+  clearFavorites: () => void
   toggleFavorite: (product: Product) => void
   isFavorite: (productId: string) => boolean
 }
@@ -74,6 +74,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setCart([])
   }
 
+  const clearFavorites = () => {
+    setFavorites([])
+  }
+
   const toggleFavorite = (product: Product) => {
     setFavorites((prev) => {
       const exists = prev.find((item) => item.id === product.id)
@@ -97,6 +101,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         removeFromCart,
         updateQuantity,
         clearCart,
+        clearFavorites,
         toggleFavorite,
         isFavorite,
       }}

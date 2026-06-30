@@ -1,9 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
-import { WhatsAppButton } from '@/components/whatsapp-button'
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { useStore } from '@/components/store-provider'
 
 declare global {
@@ -12,20 +10,57 @@ declare global {
   }
 }
 
+const COLOMBIA_LOCATIONS: Record<string, string[]> = {
+  'Bogotá D.C.': ['Bogotá'],
+  'Antioquia': ['Medellín', 'Envigado', 'Bello', 'Itagüí', 'Sabaneta', 'Rionegro'],
+  'Valle del Cauca': ['Cali', 'Palmira', 'Buenaventura', 'Tuluá', 'Yumbo', 'Buga'],
+  'Cundinamarca': ['Soacha', 'Chía', 'Zipaquirá', 'Mosquera', 'Madrid', 'Facatativá'],
+  'Atlántico': ['Barranquilla', 'Soledad', 'Malambo', 'Puerto Colombia'],
+  'Bolívar': ['Cartagena', 'Magangué', 'Turbaco', 'Arjona'],
+  'Santander': ['Bucaramanga', 'Floridablanca', 'Girón', 'Piedecuesta', 'Barrancabermeja'],
+  'Norte de Santander': ['Cúcuta', 'Ocaña', 'Villa del Rosario', 'Los Patios'],
+  'Boyacá': ['Tunja', 'Duitama', 'Sogamoso', 'Chiquinquirá'],
+  'Caldas': ['Manizales', 'La Dorada', 'Villamaría', 'Chinchiná'],
+  'Risaralda': ['Pereira', 'Dosquebradas', 'Santa Rosa de Cabal'],
+  'Quindío': ['Armenia', 'Calarcá', 'Montenegro', 'Tebaida'],
+  'Magdalena': ['Santa Marta', 'Ciénaga', 'Fundación'],
+  'Cesar': ['Valledupar', 'Aguachica', 'Agustín Codazzi'],
+  'Tolima': ['Ibagué', 'Espinal', 'Melgar', 'Honda'],
+  'Huila': ['Neiva', 'Pitalito', 'Garzón'],
+  'Meta': ['Villavicencio', 'Acacías', 'Granada'],
+  'Nariño': ['Pasto', 'Tumaco', 'Ipiales'],
+  'Cauca': ['Popayán', 'Santander de Quilichao'],
+  'Sucre': ['Sincelejo', 'Corozal', 'San Marcos'],
+  'Córdoba': ['Montería', 'Lorica', 'Cereté', 'Sahagún']
+}
+
 export default function CheckoutPage() {
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
-    phone: '',
+    country: 'Colombia',
+    firstName: '',
+    lastName: '',
+    company: '',
     address: '',
-    city: '',
+    apartment: '',
+    department: 'Bogotá D.C.',
+    city: 'Bogotá',
+    postalCode: '',
+    phone: '',
+    sameAsBilling: true
   })
+  
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   
   const { cart, clearCart } = useStore()
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
   
-  // Format prices in COP
   const formatCOP = (amount: number) =>
     new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -33,16 +68,25 @@ export default function CheckoutPage() {
       minimumFractionDigits: 0,
     }).format(amount)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target
+    const val = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    
+    setFormData(prev => {
+      const newData = { ...prev, [name]: val }
+      // If department changes, automatically select the first city of that department
+      if (name === 'department') {
+        const availableCities = COLOMBIA_LOCATIONS[value as keyof typeof COLOMBIA_LOCATIONS] || []
+        newData.city = availableCities.length > 0 ? availableCities[0] : ''
+      }
+      return newData
+    })
   }
 
   const handlePayment = (e: React.FormEvent) => {
     e.preventDefault()
     setIsProcessing(true)
 
-    // TODO: Aquí podrías guardar el esquema inicial en Sanity con estado "PENDING"
-    // y obtener el ID de la orden real.
     const mockOrderId = `order-${Date.now()}`
     const realAmountInCents = cartTotal * 100
     const wompiPublicKey = process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY
@@ -64,20 +108,14 @@ export default function CheckoutPage() {
       amountInCents: realAmountInCents,
       reference: mockOrderId,
       publicKey: wompiPublicKey,
-      // Opcional: url a donde Wompi redirige tras pago (si no usas el modo modal puro)
-      // redirectUrl: 'https://tudominio.com/success', 
     })
 
     checkout.open((result: any) => {
       var transaction = result.transaction
-      console.log('Transaction:', transaction)
-      
       if (transaction.status === 'APPROVED') {
         alert("¡Pago aprobado! Referencia: " + transaction.id)
-        clearCart() // Solo limpiamos el carrito si el pago es exitoso
-        // TODO: Enviar email de confirmación (Resend) o redirigir a success.
+        clearCart() 
       } else {
-        // No se elimina el producto del carrito si el pago falla o es declinado
         alert("El pago no fue aprobado. Estado: " + transaction.status)
       }
       setIsProcessing(false)
@@ -85,103 +123,272 @@ export default function CheckoutPage() {
   }
 
   return (
-    <>
-      <SiteHeader />
-      <main className="min-h-screen pt-32 pb-20">
-        <div className="mx-auto max-w-3xl px-6 md:px-10">
-          <h1 className="mb-8 text-3xl font-serif text-neutral-900 md:text-4xl">Checkout</h1>
+    <main className="min-h-screen pt-32 pb-24 bg-white selection:bg-camel/20">
+      <div className="mx-auto max-w-7xl px-6 md:px-10 lg:px-12">
           
-          <div className="bg-white p-6 shadow-sm border border-neutral-200">
-            <h2 className="mb-6 text-xl font-serif text-camel-dark">Datos de Envío y Contacto</h2>
+        <form onSubmit={handlePayment} className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 items-start">
+          
+          {/* Columna Izquierda: Información de Facturación / Envío */}
+          <div className="lg:col-span-7 space-y-10">
             
-            <form onSubmit={handlePayment} className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="flex flex-col space-y-1">
-                  <label htmlFor="name" className="text-sm font-medium text-neutral-700">Nombre Completo</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="border border-neutral-300 px-3 py-2 outline-none focus:border-camel transition-colors"
-                  />
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label htmlFor="email" className="text-sm font-medium text-neutral-700">Correo Electrónico</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="border border-neutral-300 px-3 py-2 outline-none focus:border-camel transition-colors"
-                  />
-                </div>
+            {/* Contacto */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-serif text-neutral-900">Información de contacto</h2>
+              <div className="flex flex-col space-y-2">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Dirección de correo electrónico"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
+                />
+                <p className="text-xs text-neutral-500">Actualmente estás realizando el pago como invitado.</p>
               </div>
-              
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="flex flex-col space-y-1">
-                  <label htmlFor="phone" className="text-sm font-medium text-neutral-700">Teléfono</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="border border-neutral-300 px-3 py-2 outline-none focus:border-camel transition-colors"
-                  />
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label htmlFor="city" className="text-sm font-medium text-neutral-700">Ciudad</label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    required
-                    value={formData.city}
-                    onChange={handleChange}
-                    className="border border-neutral-300 px-3 py-2 outline-none focus:border-camel transition-colors"
-                  />
-                </div>
-              </div>
+            </div>
 
-              <div className="flex flex-col space-y-1 pb-4">
-                <label htmlFor="address" className="text-sm font-medium text-neutral-700">Dirección de Entrega</label>
+            {/* Envío */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-serif text-neutral-900">Dirección de envío</h2>
+              
+              <div className="space-y-4">
+                <div className="relative">
+                  <label className="absolute left-4 top-2 text-[10px] text-neutral-500">País/Región</label>
+                  <select 
+                    name="country" 
+                    value={formData.country} 
+                    onChange={handleChange}
+                    className="w-full border border-neutral-300 rounded-md px-4 pt-6 pb-2 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all appearance-none text-neutral-900 bg-white"
+                  >
+                    <option value="Colombia">Colombia</option>
+                  </select>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"></path></svg>
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="Nombre"
+                    required
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
+                  />
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Apellidos"
+                    required
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
+                  />
+                </div>
+
                 <input
                   type="text"
-                  id="address"
+                  name="company"
+                  placeholder="Empresa (opcional)"
+                  value={formData.company}
+                  onChange={handleChange}
+                  className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
+                />
+
+                <input
+                  type="text"
                   name="address"
+                  placeholder="Dirección"
                   required
                   value={formData.address}
                   onChange={handleChange}
-                  className="border border-neutral-300 px-3 py-2 outline-none focus:border-camel transition-colors"
+                  className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
                 />
-              </div>
 
-              <div className="border-t border-neutral-200 pt-6">
-                <div className="mb-6 flex justify-between items-center text-lg font-medium text-neutral-900">
-                  <span>Total a pagar</span>
+                <input
+                  type="text"
+                  name="apartment"
+                  placeholder="Apartamento, habitación, etc. (opcional)"
+                  value={formData.apartment}
+                  onChange={handleChange}
+                  className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
+                />
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  
+                  {/* Selector de Ciudad */}
+                  <div className="relative">
+                    <label className="absolute left-4 top-2 text-[10px] text-neutral-500">Ciudad</label>
+                    <select 
+                      name="city" 
+                      value={formData.city} 
+                      onChange={handleChange}
+                      required
+                      className="w-full border border-neutral-300 rounded-md px-4 pt-6 pb-2 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all appearance-none text-neutral-900 bg-white"
+                    >
+                      {COLOMBIA_LOCATIONS[formData.department]?.map((city) => (
+                        <option key={city} value={city}>{city}</option>
+                      ))}
+                    </select>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"></path></svg>
+                    </span>
+                  </div>
+
+                  {/* Selector de Departamento */}
+                  <div className="relative">
+                    <label className="absolute left-4 top-2 text-[10px] text-neutral-500">Departamento</label>
+                    <select 
+                      name="department" 
+                      value={formData.department} 
+                      onChange={handleChange}
+                      required
+                      className="w-full border border-neutral-300 rounded-md px-4 pt-6 pb-2 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all appearance-none text-neutral-900 bg-white"
+                    >
+                      {Object.keys(COLOMBIA_LOCATIONS).sort().map((dept) => (
+                        <option key={dept} value={dept}>{dept}</option>
+                      ))}
+                    </select>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"></path></svg>
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <input
+                    type="text"
+                    name="postalCode"
+                    placeholder="Código postal (opcional)"
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
+                  />
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Teléfono"
+                    required
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
+                  />
+                </div>
+
+                <label className="flex items-center gap-3 py-2 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    name="sameAsBilling"
+                    checked={formData.sameAsBilling}
+                    onChange={handleChange}
+                    className="w-4 h-4 text-camel rounded border-neutral-300 focus:ring-camel accent-camel"
+                  />
+                  <span className="text-sm text-neutral-600">Usar la misma dirección para facturación</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Opciones de envío */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-serif text-neutral-900">Opciones de envío</h2>
+              <div className="border border-neutral-300 rounded-md px-4 py-4 flex justify-between items-center bg-neutral-50">
+                <label className="flex items-center gap-3 cursor-pointer w-full">
+                  <input 
+                    type="radio" 
+                    name="shippingOption"
+                    defaultChecked
+                    className="w-4 h-4 text-camel border-neutral-300 focus:ring-camel accent-camel"
+                  />
+                  <span className="text-sm text-neutral-900">Precio fijo</span>
+                </label>
+                <span className="text-sm font-medium text-neutral-900">GRATIS</span>
+              </div>
+            </div>
+            
+          </div>
+
+          {/* Columna Derecha: Resumen del Carrito */}
+          <div className="lg:col-span-5">
+            <div className="bg-neutral-50 p-6 md:p-8 border border-neutral-200 sticky top-32 rounded-md">
+              <h2 className="mb-6 text-xl font-serif text-neutral-900 border-b border-neutral-200 pb-4">
+                Resumen de tu pedido
+              </h2>
+              
+              {!isMounted ? (
+                <p className="text-neutral-500 py-4 text-center">Cargando carrito...</p>
+              ) : cart.length === 0 ? (
+                <p className="text-neutral-500 py-4 text-center">No hay productos en el carrito.</p>
+              ) : (
+                <div className="space-y-6 max-h-[40vh] overflow-y-auto p-2 -m-2">
+                  {cart.map((item) => (
+                    <div key={item.id} className="flex gap-4">
+                      <div className="relative h-16 w-16 flex-shrink-0 bg-white border border-neutral-200 rounded-md overflow-visible">
+                        <Image 
+                          src={item.image} 
+                          alt={item.name} 
+                          fill 
+                          className="object-cover object-center mix-blend-multiply p-1 rounded-md" 
+                        />
+                        <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-500/90 text-[11px] text-white">
+                          {item.quantity}
+                        </span>
+                      </div>
+                      <div className="flex flex-1 flex-col justify-center">
+                        <h3 className="text-[14px] font-medium text-neutral-900 line-clamp-2 leading-snug">
+                          {item.name}
+                        </h3>
+                        <p className="text-[12px] text-neutral-500 mt-0.5">{item.category}</p>
+                      </div>
+                      <div className="text-right flex items-center">
+                        <p className="font-serif text-[15px] text-neutral-900">
+                          {formatCOP(item.price * item.quantity)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="border-t border-neutral-200 mt-6 pt-6 space-y-4">
+                <div className="flex justify-between text-sm text-neutral-600">
+                  <span>Subtotal</span>
+                  <span className="font-medium text-neutral-900">{formatCOP(cartTotal)}</span>
+                </div>
+                <div className="flex justify-between text-sm text-neutral-600">
+                  <span>Envío</span>
+                  <span className="text-neutral-500 text-xs">Calculado en el siguiente paso</span>
+                </div>
+                <div className="flex justify-between items-center text-lg md:text-xl font-medium text-neutral-900 border-t border-neutral-200 pt-4 mt-4">
+                  <span>Total</span>
                   <span className="font-serif text-camel-dark">{formatCOP(cartTotal)}</span>
                 </div>
-                
+              </div>
+
+              <div className="mt-8 space-y-4">
                 <button
                   type="submit"
-                  disabled={isProcessing}
-                  className="w-full bg-camel-dark py-4 text-white font-medium hover:bg-neutral-900 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                  disabled={!isMounted || isProcessing || cart.length === 0}
+                  className="w-full bg-camel-dark px-8 py-4 text-[14px] font-medium uppercase tracking-[0.1em] text-white hover:bg-neutral-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-md flex items-center justify-center gap-2 shadow-sm"
                 >
-                  {isProcessing ? 'Procesando...' : 'Pagar'}
+                  {isProcessing ? 'Procesando...' : 'Pagar con Wompi'}
                 </button>
+                <div className="text-center">
+                  <p className="text-xs text-neutral-500 flex items-center justify-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Pagos 100% seguros
+                  </p>
+                </div>
               </div>
-            </form>
+            </div>
           </div>
-        </div>
-      </main>
-      <SiteFooter />
-      <WhatsAppButton />
-    </>
+        </form>
+      </div>
+    </main>
   )
 }

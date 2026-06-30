@@ -3,9 +3,9 @@ import Image from 'next/image'
 import { ArchIcon, PalmIcon, VaseIcon } from '@/components/icons'
 
 export function Concept({ data }: { data?: any }) {
-  const title = data?.conceptTitle || 'Refleja quién eres en tus espacios.'
+  const title = data?.conceptTitle || 'Refleja quién eres en tus espacios'
   const subtitle = data?.conceptSubtitle || 'Visítanos hoy'
-  const quoteText = data?.conceptQuoteText || '“El futuro del diseño interior será más humano.”'
+  const quoteText = data?.conceptQuoteText || '“El futuro del diseño interior será más humano”'
   const quoteAuthor = data?.conceptQuoteAuthor || 'Andrés Barrientos - CEO Anbar Home'
 
   const defaultPillars = [

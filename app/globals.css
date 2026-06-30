@@ -112,6 +112,7 @@
   html {
     @apply font-sans;
     scroll-behavior: smooth;
+    font-size: 17px; /* Aumenta el tamaño base de la letra de 16px a 17px */
   }
   h1,
   h2,
