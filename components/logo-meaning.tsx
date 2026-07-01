@@ -15,7 +15,7 @@ export function LogoMeaning({ data }: { data?: any }) {
       title: 'Esculturas',
     },
     {
-      image: '/linea-suprema.webp',
+      image: '/linea-suprema-florero.png',
       title: 'Línea Suprema',
     },
   ]

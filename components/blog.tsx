@@ -181,13 +181,13 @@ export function Blog() {
             </p>
           </div>
 
-          {/* Quote */}
-          <div className="border-l-4 border-camel-dark py-4 pl-8 my-12 bg-neutral-50/50">
-            <p className="font-serif text-2xl italic leading-relaxed text-neutral-900 md:text-3xl">
+          {/* Quote (now normal text) */}
+          <div className="my-12 space-y-6">
+            <p className="text-[17px] leading-relaxed text-neutral-800 text-justify">
               “El futuro del diseño interior será más humano”
             </p>
-            <p className="mt-6 text-[15px] font-medium text-neutral-500 uppercase tracking-wider">
-              Andrés Barrientos. CEO Anbar Home
+            <p className="text-[17px] leading-relaxed text-neutral-800 font-medium">
+              — Andrés Barrientos. CEO Anbar Home
             </p>
           </div>
 

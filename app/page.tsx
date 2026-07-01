@@ -1,8 +1,6 @@
 import { SiteHeader } from '@/components/site-header'
 import { Hero } from '@/components/hero'
-import { Concept } from '@/components/concept'
 import { LogoMeaning } from '@/components/logo-meaning'
-import { Gallery } from '@/components/gallery'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 import { client } from '@/sanity/lib/client'
@@ -16,9 +14,7 @@ export default async function Page() {
       <SiteHeader />
       <main>
         <Hero data={data} />
-        <Concept data={data} />
         <LogoMeaning data={data} />
-        <Gallery data={data} />
       </main>
       <SiteFooter />
       <WhatsAppButton />

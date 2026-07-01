@@ -67,16 +67,16 @@ export function SiteHeader() {
     <>
       <header
         className={cn(
-          'fixed inset-x-0 top-0 z-50 transition-all duration-200 ease-in-out',
+          'sticky inset-x-0 top-0 z-50 transition-all duration-200 ease-in-out',
           scrolled
-            ? 'bg-ivory/85 backdrop-blur-md border-b border-border/60'
-            : 'bg-transparent',
+            ? 'bg-ivory/95 backdrop-blur-md border-b border-border/60'
+            : 'bg-ivory',
         )}
       >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
         <Link href="/" className="flex items-center" aria-label="Anbar Home">
           <Image
-            src="/Anbar_Home_Logo_Black.png.webp"
+            src="/LOGO ANBAR.png"
             alt="Anbar Home"
             width={150}
             height={62}
