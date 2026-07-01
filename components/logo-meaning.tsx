@@ -4,7 +4,7 @@ import { GridViewToggle } from '@/components/grid-view-toggle'
 
 export function LogoMeaning({ data }: { data?: any }) {
   const title = data?.collectionsTitle || 'Colección lujo silencioso'
-  
+
   const defaultCategories = [
     {
       image: '/jarrones.webp',
@@ -22,23 +22,19 @@ export function LogoMeaning({ data }: { data?: any }) {
 
   const categories = data?.collectionsList?.length > 0
     ? data.collectionsList.map((item: any) => ({
-        image: item.imageUrl || defaultCategories.find(c => c.title === item.title)?.image || '/jarrones.webp',
-        title: item.title
-      }))
+      image: item.imageUrl || defaultCategories.find(c => c.title === item.title)?.image || '/jarrones.webp',
+      title: item.title
+    }))
     : defaultCategories
 
   return (
     <section id="colecciones" className="bg-sand px-6 py-10">
       <div className="mx-auto w-full max-w-6xl">
-        <Reveal className="mb-6 text-center">
+        <Reveal className="mb-12 text-center">
           <h2 className="text-balance text-4xl font-light leading-tight tracking-tight md:text-5xl">
             {title}
           </h2>
         </Reveal>
-
-        <div className="mb-10 flex justify-end">
-          <GridViewToggle />
-        </div>
 
         <div className="grid gap-16 md:grid-cols-3 md:gap-8">
           {categories.map((item: any, i: number) => (
