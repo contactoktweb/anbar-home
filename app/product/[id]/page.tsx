@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { ProductImageZoom } from '@/components/product-image-zoom'
 import { notFound } from 'next/navigation'
 import { mockProducts } from '@/lib/mock-products'
 import { ProductActions } from './product-actions'
@@ -32,42 +32,49 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-white pt-32 pb-24 selection:bg-camel/20">
-      <article className="mx-auto max-w-7xl px-6 md:px-10 lg:px-12">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
+      <main className="min-h-screen bg-white pt-10 pb-10 selection:bg-camel/20">
+      <article className="mx-auto max-w-5xl px-6 md:px-10 lg:px-12">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-start lg:pt-8">
           
           {/* Image Gallery Column */}
-          <div className="flex flex-col gap-4">
-            <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-100">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-              />
+          <div className="flex flex-col gap-10 lg:sticky lg:top-28">
+            <ProductImageZoom src={product.image} alt={product.name} />
+            
+            {/* Extra Info Horizontal */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-neutral-100 px-4 lg:px-8">
+              <div className="group">
+                <h3 className="font-serif text-[1.05rem] text-neutral-800 group-hover:text-camel transition-colors">Detalles de envío</h3>
+                <p className="mt-3 text-[0.85rem] text-neutral-500 font-light leading-relaxed">
+                  Envíos estándar de 3 a 5 días hábiles a nivel nacional.
+                </p>
+              </div>
+              <div className="group">
+                <h3 className="font-serif text-[1.05rem] text-neutral-800 group-hover:text-camel transition-colors">Cuidados especiales</h3>
+                <p className="mt-3 text-[0.85rem] text-neutral-500 font-light leading-relaxed">
+                  Limpiar con un paño seco y suave. Evitar el contacto directo con la humedad.
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Product Details Column */}
-          <div className="flex flex-col py-6 lg:py-10">
+          <div className="flex flex-col">
             
             {/* Breadcrumb / Category */}
-            <div className="mb-6 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-neutral-500">
-              <span>Inicio</span>
-              <span className="mx-1 h-px w-4 bg-neutral-300"></span>
-              <span>{product.category}</span>
+            <div className="mb-6 flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.25em] text-neutral-400">
+              <span className="hover:text-camel cursor-pointer transition-colors">Inicio</span>
+              <span className="h-px w-6 bg-neutral-200"></span>
+              <span className="text-camel font-medium">{product.category}</span>
             </div>
 
             {/* Title */}
-            <h1 className="font-serif text-3xl font-normal leading-tight text-neutral-900 md:text-4xl lg:text-[42px]">
+            <h1 className="font-serif text-3xl md:text-4xl lg:text-[2.75rem] font-light leading-[1.1] text-neutral-900 mb-6">
               {product.name}
             </h1>
 
             {/* Price */}
-            <div className="mt-6 flex items-end gap-4">
-              <span className="font-sans text-2xl font-light text-neutral-900">
+            <div className="flex items-end gap-4 mb-8">
+              <span className="font-sans text-2xl font-normal tracking-wide text-neutral-800">
                 {formattedPrice}
               </span>
               {formattedOriginalPrice && (
@@ -78,10 +85,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             </div>
 
             {/* Divider */}
-            <hr className="my-10 border-neutral-200" />
+            <div className="h-[1px] w-full bg-neutral-100 mb-8" />
 
-            {/* Description / Content (Mock) */}
-            <div className="space-y-6 text-[15px] leading-relaxed text-neutral-600 font-light text-justify">
+            {/* Description / Content */}
+            <div className="space-y-5 text-[0.95rem] leading-[1.8] text-neutral-500 font-light text-justify pr-4">
               <p>
                 Una pieza excepcional que refleja la esencia del diseño interior más humano y orgánico. 
                 Elaborado con atención al detalle, este producto añade una capa de sofisticación y calma a cualquier espacio.
@@ -93,22 +100,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             </div>
 
             {/* Actions (Add to Cart / Favorites) */}
-            <ProductActions product={product} />
-
-            {/* Accordion / Extra Info (Mock) */}
-            <div className="mt-16 flex flex-col gap-6">
-              <div className="border-b border-neutral-200 pb-4">
-                <h3 className="font-serif text-lg text-neutral-900">Detalles de envío</h3>
-                <p className="mt-2 text-sm text-neutral-500 font-light">
-                  Envíos estándar de 3 a 5 días hábiles a nivel nacional.
-                </p>
-              </div>
-              <div className="border-b border-neutral-200 pb-4">
-                <h3 className="font-serif text-lg text-neutral-900">Cuidados especiales</h3>
-                <p className="mt-2 text-sm text-neutral-500 font-light">
-                  Limpiar con un paño seco y suave. Evitar el contacto directo con la humedad.
-                </p>
-              </div>
+            <div className="mt-10 mb-4">
+              <ProductActions product={product} />
             </div>
 
           </div>
