@@ -28,7 +28,7 @@ export function Hero({ data }: { data?: any }) {
       className="relative grid min-h-[calc(100dvh-76px)] grid-cols-1 lg:grid-cols-2 bg-gradient-to-b from-ivory to-white"
     >
       {/* Izquierda: Información del Hero */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-6 py-28 text-center mix-blend-multiply lg:py-20">
+      <div className="relative z-10 hidden flex-col items-center justify-center px-6 py-12 text-center mix-blend-multiply lg:flex lg:py-20">
         
         {/* Outline de arco decorativo sutil */}
         <svg
@@ -63,7 +63,7 @@ export function Hero({ data }: { data?: any }) {
         )}
 
         <Image
-          src="/Anbar_Home_Logo_Black.png.webp"
+          src="/Anbar_Home_Logo_Black.png"
           alt="Anbar Home"
           width={760}
           height={312}
@@ -87,7 +87,7 @@ export function Hero({ data }: { data?: any }) {
       </div>
 
       {/* Derecha: Carrusel de imágenes */}
-      <div className="relative h-[60vh] w-full lg:h-auto lg:min-h-[calc(100dvh-76px)]">
+      <div className="relative h-[calc(100dvh-76px)] w-full lg:h-auto lg:min-h-[calc(100dvh-76px)]">
         <HeroCarousel images={images} />
       </div>
     </section>
