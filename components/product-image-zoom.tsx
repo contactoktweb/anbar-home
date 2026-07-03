@@ -22,7 +22,7 @@ export function ProductImageZoom({ src, alt }: { src: string, alt: string }) {
   return (
     <div 
       ref={imageRef}
-      className="group relative aspect-square w-full max-w-[90%] mx-auto lg:max-w-[400px] overflow-hidden rounded-md bg-neutral-100 cursor-crosshair"
+      className="group relative aspect-square md:aspect-[4/5] w-full overflow-hidden bg-[#F8F6F2] cursor-crosshair"
       onMouseEnter={() => setIsZoomed(true)}
       onMouseLeave={() => {
         setIsZoomed(false)

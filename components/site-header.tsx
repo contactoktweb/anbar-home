@@ -78,10 +78,10 @@ export function SiteHeader() {
           <Image
             src="/LOGO ANBAR.png"
             alt="Anbar Home"
-            width={150}
-            height={62}
+            width={200}
+            height={83}
             priority
-            className="h-8 w-auto object-contain md:h-9"
+            className="h-12 w-auto object-contain md:h-16"
           />
         </Link>
 
@@ -90,26 +90,31 @@ export function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-[15px] font-medium text-neutral-900 transition-colors duration-300 hover:text-camel"
+              className="group relative text-[17px] font-medium text-neutral-900 transition-colors duration-300 hover:text-camel-dark"
             >
               {link.label}
+              <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#C19A6B] transition-all duration-300 group-hover:w-full"></span>
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-4 md:gap-6">
+        <div className="flex items-center gap-2 md:gap-4">
           <button onClick={() => setIsSearchOpen(true)} className="transition-colors hover:text-camel" aria-label="Buscar">
             <Search className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
           </button>
           
-          <button onClick={() => setIsFavoritesOpen(true)} className="flex items-center gap-1 transition-colors hover:text-camel" aria-label="Favoritos">
-            <Heart className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
-            <span className="text-sm font-medium text-camel-dark">{favorites.length}</span>
+          <button onClick={() => setIsFavoritesOpen(true)} className="relative flex items-center transition-colors hover:text-camel" aria-label="Favoritos">
+            <Heart className="h-6 w-6 md:h-[26px] md:w-[26px]" strokeWidth={1.5} />
+            {favorites.length > 0 && (
+              <span className="absolute top-0 right-0 h-2.5 w-2.5 rounded-full bg-camel-dark border-[1.5px] border-ivory" />
+            )}
           </button>
 
-          <button onClick={() => setIsCartOpen(true)} className="flex items-center gap-1 transition-colors hover:text-camel" aria-label="Carrito">
-            <ShoppingBag className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
-            <span className="text-sm font-medium text-camel-dark">{cart.length}</span>
+          <button onClick={() => setIsCartOpen(true)} className="relative flex items-center transition-colors hover:text-camel" aria-label="Carrito">
+            <ShoppingBag className="h-6 w-6 md:h-[26px] md:w-[26px]" strokeWidth={1.5} />
+            {cart.length > 0 && (
+              <span className="absolute top-0 right-0 h-2.5 w-2.5 rounded-full bg-camel-dark border-[1.5px] border-ivory" />
+            )}
           </button>
 
           <button

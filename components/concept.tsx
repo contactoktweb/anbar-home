@@ -37,42 +37,33 @@ export function Concept({ data }: { data?: any }) {
   }
 
   return (
-    <section id="concepto" className="bg-sand px-6 py-8 md:py-10">
+    <section id="concepto" className="bg-[#fdfbf7] px-6 py-12 md:py-16">
       <div className="mx-auto max-w-6xl">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="text-balance text-4xl font-light leading-tight tracking-tight text-neutral-900 md:text-5xl">
+        <Reveal className="mx-auto max-w-2xl text-center mb-12">
+          <h2 className="text-balance text-3xl font-serif font-light leading-tight tracking-tight text-neutral-900 md:text-4xl">
             {title}
           </h2>
         </Reveal>
 
-        <div className="mt-6 grid gap-px overflow-hidden rounded-sm border border-border/20 bg-border/20 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-3">
           {pillarsData.map((pillar: any, i: number) => {
             const Icon = getIcon(pillar.iconType)
             return (
               <Reveal
                 key={pillar.title}
                 delay={i * 120}
-                className="flex flex-col items-center bg-ivory px-8 py-6 text-center"
+                className="flex flex-col items-center bg-white px-8 py-10 text-center shadow-sm border border-neutral-100 rounded-sm"
               >
                 <Icon className="h-8 w-8 text-camel-dark" />
-                <h3 className="mt-4 text-xl font-normal tracking-wide">
+                <h3 className="mt-6 font-serif text-xl font-light tracking-wide text-neutral-950">
                   {pillar.title}
                 </h3>
+                <p className="mt-4 text-[0.9rem] font-light leading-[1.8] text-neutral-500">
+                  {pillar.text}
+                </p>
               </Reveal>
             )
           })}
-        </div>
-
-        <div className="mt-16 text-center">
-          <Reveal>
-            <p className="font-serif text-3xl font-light italic leading-relaxed text-neutral-900 md:text-4xl lg:text-5xl">
-              {quoteText}
-            </p>
-
-            <p className="mt-6 font-sans text-lg font-normal text-neutral-700 md:text-xl">
-              {quoteAuthor}
-            </p>
-          </Reveal>
         </div>
       </div>
     </section>

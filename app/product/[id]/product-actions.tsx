@@ -29,33 +29,37 @@ export function ProductActions({ product }: { product: Product }) {
   }
 
   return (
-    <div className="mt-10 flex gap-3">
+    <div className="mt-10 flex flex-col gap-4">
+      {/* Primera fila: Comprar Ahora */}
       <button
         onClick={handleBuyNow}
-        className="flex-[3] rounded-sm bg-camel-dark px-2 py-4 text-[12px] sm:text-[13px] font-medium uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white transition-all hover:bg-neutral-900"
+        className="w-full rounded-sm bg-camel-dark px-4 py-4 text-[13px] font-normal uppercase tracking-[0.2em] text-white transition-all hover:bg-neutral-950"
       >
-        Comprar
+        Comprar Ahora
       </button>
 
-      <button
-        onClick={handleAddToCart}
-        disabled={isAdding}
-        className="flex-[3] rounded-sm border border-neutral-900 bg-neutral-900 px-2 py-4 text-[12px] sm:text-[13px] font-medium uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white transition-all hover:bg-transparent hover:text-neutral-900 disabled:opacity-70"
-      >
-        {isAdding ? 'Añadido' : 'Al Carrito'}
-      </button>
+      {/* Segunda fila: Al carrito + Favoritos */}
+      <div className="flex gap-4 w-full">
+        <button
+          onClick={handleAddToCart}
+          disabled={isAdding}
+          className="flex-1 rounded-sm border border-neutral-950 bg-neutral-950 px-4 py-4 text-[13px] font-normal uppercase tracking-[0.2em] text-white transition-all hover:bg-transparent hover:text-neutral-950 disabled:opacity-70"
+        >
+          {isAdding ? 'Añadido' : 'Al Carrito'}
+        </button>
 
-      <button
-        onClick={() => toggleFavorite(product)}
-        className="flex flex-[1] max-w-[60px] items-center justify-center rounded-sm border border-neutral-200 bg-transparent transition-all hover:border-neutral-300 hover:bg-neutral-50"
-        aria-label="Añadir a favoritos"
-      >
-        <Heart
-          className={`h-5 w-5 transition-colors ${
-            favorite ? 'fill-neutral-900 text-neutral-900' : 'text-neutral-500'
-          }`}
-        />
-      </button>
+        <button
+          onClick={() => toggleFavorite(product)}
+          className="w-[64px] flex-shrink-0 flex items-center justify-center rounded-sm border border-neutral-200 bg-transparent transition-all hover:border-neutral-300 hover:bg-neutral-50"
+          aria-label="Añadir a favoritos"
+        >
+          <Heart
+            className={`h-5 w-5 transition-colors ${
+              favorite ? 'fill-neutral-950 text-neutral-950' : 'text-neutral-400'
+            }`}
+          />
+        </button>
+      </div>
     </div>
   )
 }

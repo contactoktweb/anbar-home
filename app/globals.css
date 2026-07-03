@@ -64,9 +64,9 @@
   --beige: #F5E6C4;
   --ivory: oklch(0.985 0.006 84);
 
-  --background: oklch(1 0 0);
+  --background: #fdfbf7;
   --foreground: oklch(0.24 0.008 60);
-  --card: oklch(1 0 0);
+  --card: #fdfbf7;
   --card-foreground: oklch(0.24 0.008 60);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.24 0.008 60);
@@ -112,7 +112,7 @@
   html {
     @apply font-sans;
     scroll-behavior: smooth;
-    font-size: 17px; /* Aumenta el tamaño base de la letra de 16px a 17px */
+    font-size: 19px; /* Aumenta el tamaño base de la letra a 19px */
   }
   h1,
   h2,
@@ -151,6 +151,15 @@
 @utility animate-fade-in {
   opacity: 0;
   animation: anbar-fade-in 1.4s ease forwards;
+}
+
+@keyframes anbar-marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@utility animate-marquee {
+  animation: anbar-marquee 30s linear infinite;
 }
 
 /* Scroll reveal */

@@ -1,5 +1,7 @@
 import { SiteHeader } from '@/components/site-header'
-import { Hero } from '@/components/hero'
+import { HeroWow } from '@/components/hero-wow'
+import { FeaturedProducts } from '@/components/featured-products'
+import { NewArrivals } from '@/components/new-arrivals'
 import { LogoMeaning } from '@/components/logo-meaning'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
@@ -13,7 +15,9 @@ export default async function Page() {
     <>
       <SiteHeader />
       <main>
-        <Hero data={data} />
+        <HeroWow />
+        <FeaturedProducts />
+        <NewArrivals />
         <LogoMeaning data={data} />
       </main>
       <SiteFooter />

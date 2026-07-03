@@ -292,22 +292,7 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Opciones de envío */}
-            <div className="space-y-4">
-              <h2 className="text-xl font-serif text-neutral-900">Opciones de envío</h2>
-              <div className="border border-neutral-300 rounded-md px-4 py-4 flex justify-between items-center bg-neutral-50">
-                <label className="flex items-center gap-3 cursor-pointer w-full">
-                  <input 
-                    type="radio" 
-                    name="shippingOption"
-                    defaultChecked
-                    className="w-4 h-4 text-camel border-neutral-300 focus:ring-camel accent-camel"
-                  />
-                  <span className="text-sm text-neutral-900">Precio fijo</span>
-                </label>
-                <span className="text-sm font-medium text-neutral-900">GRATIS</span>
-              </div>
-            </div>
+
             
           </div>
 
@@ -358,10 +343,7 @@ export default function CheckoutPage() {
                   <span>Subtotal</span>
                   <span className="font-medium text-neutral-900">{formatCOP(cartTotal)}</span>
                 </div>
-                <div className="flex justify-between text-sm text-neutral-600">
-                  <span>Envío</span>
-                  <span className="text-neutral-500 text-xs">Calculado en el siguiente paso</span>
-                </div>
+
                 <div className="flex justify-between items-center text-lg md:text-xl font-medium text-neutral-900 border-t border-neutral-200 pt-4 mt-4">
                   <span>Total</span>
                   <span className="font-serif text-camel-dark">{formatCOP(cartTotal)}</span>

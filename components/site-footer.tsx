@@ -57,44 +57,19 @@ export async function SiteFooter() {
       <div className="mx-auto max-w-7xl">
         
         {/* Top Row */}
-        <div className="grid gap-12 border-b border-white/10 pb-16 md:grid-cols-3 md:gap-10">
+        <div className="flex flex-col items-center gap-12 border-b border-white/10 pb-16 md:flex-row md:justify-between md:gap-10">
           <div className="flex items-center justify-start">
             <Image
               src="/LOGO ANBAR.png"
               alt="Anbar Home"
-              width={240}
-              height={96}
-              className="ml-6 h-10 w-auto object-contain brightness-0 invert md:ml-10 md:h-14"
+              width={280}
+              height={112}
+              className="h-14 w-auto object-contain brightness-0 invert md:h-16"
             />
           </div>
 
-          <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:items-end">
-            <div className="flex flex-col items-center gap-6 md:items-start">
-              <h2 className="font-serif text-3xl font-light tracking-wide text-white md:text-5xl">
-                Suscríbete
-              </h2>
-              <div className="flex w-full max-w-md items-center gap-2 border-b border-white/30 pb-2">
-                <input
-                  type="email"
-                  placeholder="CORREO ELECTRÓNICO"
-                  className="w-full bg-transparent text-sm tracking-[0.2em] text-white outline-none placeholder:text-white/50"
-                />
-                <button
-                  type="button"
-                  className="text-xs uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-white"
-                >
-                  Enviar
-                </button>
-              </div>
-              <p className="max-w-sm text-center text-xs font-light leading-relaxed text-white/50 md:text-left">
-                Regístrese para recibir actualizaciones sobre nuevas llegadas,
-                ofertas especiales y otra información de descuento.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-center md:items-end md:text-right">
-            <h3 className="font-serif text-lg font-medium text-white md:text-xl">
+          <div className="flex flex-col justify-center text-center md:items-end md:text-right">
+            <h3 className="font-serif text-[19px] font-medium text-white md:text-[23px]">
               {topGroup.title}
             </h3>
             <ul className="mt-6 space-y-4">
@@ -102,7 +77,7 @@ export async function SiteFooter() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm font-light text-neutral-400 transition-colors duration-300 hover:text-camel"
+                    className="text-[15px] md:text-[17px] font-light text-neutral-400 transition-colors duration-300 hover:text-camel"
                   >
                     {link.label}
                   </Link>
@@ -116,7 +91,7 @@ export async function SiteFooter() {
         <div className="grid gap-12 pt-16 sm:grid-cols-2 lg:flex lg:justify-between lg:gap-8">
           {bottomGroups.map((group) => (
             <div key={group.title}>
-              <h3 className="font-serif text-[17px] font-medium text-white">
+              <h3 className="font-serif text-[19px] font-medium text-white">
                 {group.title}
               </h3>
               <ul className="mt-6 space-y-4">
@@ -124,7 +99,7 @@ export async function SiteFooter() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[13px] font-light leading-relaxed text-neutral-400 transition-colors duration-300 hover:text-camel"
+                      className="text-[15px] font-light leading-relaxed text-neutral-400 transition-colors duration-300 hover:text-camel"
                     >
                       {link.label}
                     </Link>
@@ -136,7 +111,7 @@ export async function SiteFooter() {
         </div>
 
         {/* Copyright & K&T Mark */}
-        <div className="mt-20 flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-10 text-[13px] text-neutral-400 md:flex-row">
+        <div className="mt-20 flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-10 text-[14px] text-neutral-400 md:flex-row">
           <span>
             Anbar Home {new Date().getFullYear()} © Todos los derechos reservados
           </span>

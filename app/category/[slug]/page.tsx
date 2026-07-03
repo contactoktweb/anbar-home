@@ -44,7 +44,18 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-ivory pt-32 pb-24">
+      <main className="min-h-screen pb-24">
+        
+        {/* Store Banner */}
+        <div className="w-full bg-[#C19A6B] py-12 text-center mb-16 shadow-inner">
+          <h1 className="text-3xl md:text-4xl font-serif text-white tracking-widest uppercase">
+            Tienda
+          </h1>
+          <p className="text-white/80 mt-2 font-light tracking-wide">
+            Encuentra la pieza perfecta para tu espacio
+          </p>
+        </div>
+
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             

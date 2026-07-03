@@ -22,9 +22,9 @@ export function CategoryProductGrid({ products }: { products: Product[] }) {
 
   const gridColsClass = {
     '5': 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5',
-    '4': 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
-    '3': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-    '2': 'grid-cols-1 md:grid-cols-2',
+    '4': 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
+    '3': 'grid-cols-2 lg:grid-cols-3',
+    '2': 'grid-cols-2',
     '1': 'grid-cols-1',
   }[viewMode]
 
@@ -38,7 +38,7 @@ export function CategoryProductGrid({ products }: { products: Product[] }) {
 
         <div className="flex flex-col-reverse items-end md:flex-row md:items-center gap-6">
           <span className="text-sm font-serif italic text-foreground/70">
-            Showing 1 - {products.length} of {products.length} products in this category
+            Mostrando 1 - {products.length} de {products.length} productos en esta categoría
           </span>
           
           <div className="relative w-64">
