@@ -31,7 +31,9 @@ export default function SearchPage() {
             
             {/* Sidebar Column */}
             <div className="hidden md:block md:col-span-1">
-              <CategorySidebar />
+              <Suspense fallback={<div className="h-full w-full animate-pulse bg-gray-100 rounded-lg"></div>}>
+                <CategorySidebar />
+              </Suspense>
             </div>
 
             {/* Main Content Column */}

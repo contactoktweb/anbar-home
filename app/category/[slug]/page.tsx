@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
@@ -61,7 +62,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
             
             {/* Sidebar Column */}
             <div className="hidden md:block md:col-span-1">
-              <CategorySidebar />
+              <Suspense fallback={<div className="h-full w-full animate-pulse bg-gray-100 rounded-lg"></div>}>
+                <CategorySidebar />
+              </Suspense>
             </div>
 
             {/* Main Content Column */}
