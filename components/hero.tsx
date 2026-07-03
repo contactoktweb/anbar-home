@@ -7,15 +7,32 @@ export function Hero({ data }: { data?: any }) {
   const cta = data?.heroCta || 'Descubrir'
 
   const defaultImages = [
-    { src: '/Blogs-Anbar-1png.webp', alt: 'Interior sereno', label: 'Summer Sale', href: '/category/summer-sale' },
-    { src: '/Blogs-Anbar.png.webp', alt: 'Escultura de la mujer', label: 'Esculturas', href: '/category/esculturas' },
-    { src: '/linea-suprema.png', alt: 'Línea Suprema', label: 'Línea Suprema', href: '/category/linea-suprema' },
-    { src: '/Blogs-Anbar-2.png.webp', alt: 'Salón con luz natural', label: 'Accesorios', href: '/category/accesorios' },
+    { 
+      src: '/pc/imagen1.jpeg', 
+      srcMobile: '/movil/imagen1.jpeg',
+      alt: 'Interior sereno', label: 'Summer Sale', href: '/category/summer-sale' 
+    },
+    { 
+      src: '/pc/imgaen2.jpeg', 
+      srcMobile: '/movil/imagen2.jpeg',
+      alt: 'Escultura de la mujer', label: 'Esculturas', href: '/category/esculturas' 
+    },
+    { 
+      src: '/pc/imagen3.jpeg', 
+      srcMobile: '/movil/imagen3.jpeg',
+      alt: 'Línea Suprema', label: 'Línea Suprema', href: '/category/linea-suprema' 
+    },
+    { 
+      src: '/pc/imagen4.jpeg', 
+      srcMobile: '/movil/imagen3.jpeg',
+      alt: 'Accesorios', label: 'Accesorios', href: '/category/accesorios' 
+    },
   ]
 
   const images = data?.galleryImages?.length > 0 
     ? data.galleryImages.map((img: any, i: number) => ({
         src: img.imageUrl || defaultImages[i]?.src || '/Blogs-Anbar-1png.webp',
+        srcMobile: img.mobileImageUrl || defaultImages[i]?.srcMobile,
         alt: img.alt || defaultImages[i]?.alt || `Galería ${i + 1}`,
         label: img.label || defaultImages[i]?.label || 'Colección',
         href: img.href || defaultImages[i]?.href || '#'

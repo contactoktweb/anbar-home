@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 interface HeroCarouselProps {
   images: {
     src: string
+    srcMobile?: string
     alt: string
     label?: string
     href?: string
@@ -48,10 +49,20 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                 src={img.src}
                 alt={img.alt}
                 fill
-                className="object-cover object-center transition-transform duration-[2000ms] ease-out group-hover:scale-105"
+                className={`object-cover object-center transition-transform duration-[2000ms] ease-out group-hover:scale-105 ${img.srcMobile ? 'hidden md:block' : ''}`}
                 priority={index === 0}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
+              {img.srcMobile && (
+                <Image
+                  src={img.srcMobile}
+                  alt={img.alt}
+                  fill
+                  className="object-cover object-center transition-transform duration-[2000ms] ease-out group-hover:scale-105 md:hidden"
+                  priority={index === 0}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              )}
               {/* Degradado inferior más sutil para no opacar la foto completa */}
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-100" />
               {img.label && (
@@ -74,10 +85,20 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                 src={img.src}
                 alt={img.alt}
                 fill
-                className="object-cover object-center"
+                className={`object-cover object-center ${img.srcMobile ? 'hidden md:block' : ''}`}
                 priority={index === 0}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
+              {img.srcMobile && (
+                <Image
+                  src={img.srcMobile}
+                  alt={img.alt}
+                  fill
+                  className="object-cover object-center md:hidden"
+                  priority={index === 0}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              )}
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-70" />
               {img.label && (
                 <div className="absolute bottom-12 left-8 md:bottom-16 md:left-12">

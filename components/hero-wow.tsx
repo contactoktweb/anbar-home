@@ -2,9 +2,26 @@ import { HeroCarousel } from '@/components/hero-carousel'
 
 export function HeroWow() {
   const banners = [
-    { src: '/lux_banner_living.png', alt: 'Lujo Silencioso - Anbar Home' },
-    { src: '/lux_banner_vase.png', alt: 'Detalles que inspiran - Anbar Home' },
-    { src: '/lux_banner_dining.png', alt: 'Espacios únicos - Anbar Home' }
+    { 
+      src: '/pc/imagen1.jpeg', 
+      srcMobile: '/movil/imagen1.jpeg',
+      alt: 'Lujo Silencioso - Anbar Home'
+    },
+    { 
+      src: '/pc/imgaen2.jpeg', 
+      srcMobile: '/movil/imagen2.jpeg',
+      alt: 'Detalles que inspiran - Anbar Home'
+    },
+    { 
+      src: '/pc/imagen3.jpeg', 
+      srcMobile: '/movil/imagen3.jpeg',
+      alt: 'Espacios únicos - Anbar Home'
+    },
+    { 
+      src: '/pc/imagen4.jpeg', 
+      srcMobile: '/movil/imagen3.jpeg',
+      alt: 'Colección Exclusiva - Anbar Home'
+    }
   ]
 
   return (
