@@ -29,9 +29,15 @@ export default function SearchResults({ products = [] }: { products?: any[] }) {
 
   return (
     <div>
-      <h1 className="mb-8 text-3xl font-serif text-neutral-900 md:text-4xl">
-        Resultados para: <span className="text-camel-dark font-medium italic">"{query}"</span>
-      </h1>
+      {query ? (
+        <h1 className="mb-8 text-3xl font-serif text-neutral-900 md:text-4xl">
+          Resultados para: <span className="text-camel-dark font-medium italic">"{query}"</span>
+        </h1>
+      ) : (
+        <h1 className="mb-8 text-3xl font-serif text-neutral-900 md:text-4xl">
+          Todos los productos
+        </h1>
+      )}
       
       {filteredProducts.length > 0 ? (
         <CategoryProductGrid products={filteredProducts} />
