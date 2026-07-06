@@ -3,14 +3,39 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 import { CategorySidebar } from '@/components/category-sidebar'
-import { CategoryProductGrid } from '@/components/category-product-grid'
-import { mockProducts } from '@/lib/mock-products'
 import { Search } from 'lucide-react'
+import { client } from '@/sanity/lib/client'
+import { PRODUCTS_QUERY, CATEGORIES_QUERY } from '@/sanity/lib/queries'
 
 // Client component that reads search params
 import SearchResults from './search-results'
 
-export default function SearchPage() {
+export default async function SearchPage() {
+  const [sanityProducts, sanityCategories] = await Promise.all([
+    client.fetch(PRODUCTS_QUERY).catch(() => []),
+    client.fetch(CATEGORIES_QUERY).catch(() => [])
+  ])
+
+  const sidebarCategories = [
+    { name: 'Todos los productos', href: '/search' },
+    ...sanityCategories
+      .filter((c: any) => c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized')
+      .map((c: any) => ({
+        name: c.title,
+        href: `/category/${c.slug}`
+      }))
+  ]
+
+  const formattedSanityProducts = sanityProducts.map((p: any) => ({
+    id: p._id,
+    name: p.name,
+    price: p.price,
+    originalPrice: p.originalPrice,
+    category: p.category,
+    image: p.imageUrl,
+    rating: p.rating || 0
+  }))
+
   return (
     <>
       <SiteHeader />
@@ -32,7 +57,9 @@ export default function SearchPage() {
             {/* Sidebar Column */}
             <div className="hidden md:block md:col-span-1">
               <Suspense fallback={<div className="h-full w-full animate-pulse bg-gray-100 rounded-lg"></div>}>
-                <CategorySidebar />
+                <div className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto no-scrollbar pb-8">
+                  <CategorySidebar categories={sidebarCategories} />
+                </div>
               </Suspense>
             </div>
 
@@ -43,7 +70,7 @@ export default function SearchPage() {
                   <div className="text-camel-dark font-medium">Buscando productos...</div>
                 </div>
               }>
-                <SearchResults />
+                <SearchResults products={formattedSanityProducts} />
               </Suspense>
             </div>
             

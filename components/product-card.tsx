@@ -3,7 +3,16 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Product } from '@/lib/mock-products'
+
+export interface Product {
+  id: string
+  name: string
+  price: number
+  originalPrice?: number
+  category: string
+  image: string
+  rating: number
+}
 import { cn } from '@/lib/utils'
 import { ShoppingBag, Heart, Check } from 'lucide-react'
 import { useStore } from '@/components/store-provider'

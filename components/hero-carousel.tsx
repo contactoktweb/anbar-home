@@ -49,7 +49,7 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                 src={img.src}
                 alt={img.alt}
                 fill
-                className={`object-cover object-center transition-transform duration-[2000ms] ease-out group-hover:scale-105 ${img.srcMobile ? 'hidden md:block' : ''}`}
+                className={`object-cover md:object-contain object-center transition-transform duration-[2000ms] ease-out group-hover:scale-105 ${img.srcMobile ? 'hidden md:block' : ''}`}
                 priority={index === 0}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
@@ -85,7 +85,7 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                 src={img.src}
                 alt={img.alt}
                 fill
-                className={`object-cover object-center ${img.srcMobile ? 'hidden md:block' : ''}`}
+                className={`object-cover md:object-contain object-center ${img.srcMobile ? 'hidden md:block' : ''}`}
                 priority={index === 0}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />

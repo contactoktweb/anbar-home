@@ -5,16 +5,12 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
-const categories = [
-  { name: 'Todos los productos', href: '/search' },
-  { name: 'Línea Suprema', href: '/category/linea-suprema' },
-  { name: 'Esculturas', href: '/category/esculturas' },
-  { name: 'Summer Sale', href: '/category/summer-sale' },
-  { name: 'Accesorios Hogar', href: '/category/accesorios-hogar' },
-  { name: 'Jarrones Escultóricos', href: '/category/jarrones-escultoricos' },
-]
+export interface SidebarCategory {
+  name: string
+  href: string
+}
 
-export function CategorySidebar() {
+export function CategorySidebar({ categories = [] }: { categories?: SidebarCategory[] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -55,7 +51,7 @@ export function CategorySidebar() {
         </h2>
         <ul className="flex flex-col space-y-2">
           {categories.map((category) => (
-            <li key={category.name}>
+            <li key={category.href}>
               <Link
                 href={category.href}
                 className="text-[15px] font-light text-foreground/70 transition-colors hover:text-camel"

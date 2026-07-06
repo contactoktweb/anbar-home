@@ -12,8 +12,8 @@ const links = [
   { label: 'Línea Suprema', href: '/category/linea-suprema' },
   { label: 'Esculturas', href: '/category/esculturas' },
   { label: 'Summer Sale', href: '/category/summer-sale' },
-  { label: 'Accesorios Hogar', href: '/category/accesorios-hogar' },
-  { label: 'Jarrones Escultóricos', href: '/category/jarrones-escultoricos' },
+  { label: 'Accesorios Decorativos', href: '/category/accesorios-decorativos' },
+  { label: 'Jarrones', href: '/category/jarrones' },
   { label: 'Blog', href: '/blog' },
 ]
 

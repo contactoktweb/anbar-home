@@ -1,18 +1,65 @@
+import type { Metadata, ResolvingMetadata } from 'next'
 import { ProductImageZoom } from '@/components/product-image-zoom'
 import { notFound } from 'next/navigation'
-import { mockProducts } from '@/lib/mock-products'
 import { ProductActions } from './product-actions'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 import { FeaturedProducts } from '@/components/featured-products'
+import { ProductTabs } from '@/components/product-tabs'
+import { client } from '@/sanity/lib/client'
+import { PRODUCT_BY_ID_QUERY, LATEST_PRODUCTS_QUERY, HOME_PAGE_QUERY } from '@/sanity/lib/queries'
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ id: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const resolvedParams = await params
+  const sanityProduct = await client.fetch(PRODUCT_BY_ID_QUERY, { id: resolvedParams.id }).catch(() => null)
+  
+  if (!sanityProduct) {
+    return {
+      title: 'Producto no encontrado'
+    }
+  }
+
+  const plainDescription = sanityProduct.description 
+    ? sanityProduct.description.replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 160) 
+    : `Compra ${sanityProduct.name} en Anbar Home.`
+
+  return {
+    title: sanityProduct.name,
+    description: plainDescription,
+    openGraph: {
+      title: sanityProduct.name,
+      description: plainDescription,
+      images: [
+        {
+          url: sanityProduct.imageUrl || '',
+        },
+      ],
+    },
+  }
+}
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params
-  const product = mockProducts.find((p) => p.id === resolvedParams.id)
+  
+  const sanityProduct = await client.fetch(PRODUCT_BY_ID_QUERY, { id: resolvedParams.id })
 
-  if (!product) {
+  if (!sanityProduct) {
     notFound()
+  }
+
+  const product = {
+    id: sanityProduct._id,
+    name: sanityProduct.name,
+    price: sanityProduct.price,
+    originalPrice: sanityProduct.originalPrice,
+    category: sanityProduct.category,
+    image: sanityProduct.imageUrl,
+    rating: sanityProduct.rating || 0,
+    description: sanityProduct.description
   }
 
   // Format currency
@@ -30,9 +77,40 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       }).format(product.originalPrice)
     : null
 
+  const rawLatestProducts = await client.fetch(LATEST_PRODUCTS_QUERY).catch(() => [])
+  
+  const latestProducts = rawLatestProducts.map((p: any) => ({
+    id: p._id,
+    name: p.name,
+    price: p.price,
+    originalPrice: p.originalPrice,
+    category: p.category,
+    image: p.imageUrl,
+    rating: p.rating || 0
+  }))
+
   return (
     <>
       <SiteHeader />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: product.name,
+            image: product.image,
+            description: product.description ? product.description.replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim() : product.name,
+            offers: {
+              '@type': 'Offer',
+              priceCurrency: 'COP',
+              price: product.price,
+              availability: 'https://schema.org/InStock',
+              url: `https://anbarhome.com/product/${product.id}`,
+            }
+          })
+        }}
+      />
       <main className="min-h-screen bg-[#fdfbf7] pt-12 selection:bg-camel/20">
         <article className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 pb-24">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-20 items-start lg:pt-8">
@@ -72,46 +150,21 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               {/* Divider */}
               <div className="h-[1px] w-full bg-neutral-200/60 mb-8" />
 
-              {/* Description / Content */}
-              <div className="space-y-6 text-[0.95rem] lg:text-[1rem] leading-[1.9] text-neutral-600 font-light text-justify pr-4">
-                <p>
-                  Una pieza excepcional que refleja la esencia del diseño interior más humano y orgánico. 
-                  Elaborado con atención al detalle, este producto añade una capa de sofisticación y calma a cualquier espacio.
-                </p>
-                <p>
-                  Sus texturas y acabados rinden homenaje a las formas clásicas, integrándose de manera fluida 
-                  tanto en decoraciones contemporáneas como minimalistas. Eleva tu entorno con este símbolo de lujo silencioso.
-                </p>
-              </div>
-
               {/* Actions (Add to Cart / Favorites) */}
-              <div className="mt-12 mb-10">
+              <div className="mt-8 mb-10">
                 <ProductActions product={product} />
-              </div>
-
-              {/* Extra Info Horizontal */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-neutral-200/60">
-                <div className="group">
-                  <h3 className="font-serif text-[1.1rem] text-neutral-950 group-hover:text-camel-dark transition-colors">Detalles de envío</h3>
-                  <p className="mt-3 text-[0.85rem] text-neutral-600 font-light leading-relaxed">
-                    Envíos estándar de 3 a 5 días hábiles a nivel nacional. Embalaje seguro y premium.
-                  </p>
-                </div>
-                <div className="group">
-                  <h3 className="font-serif text-[1.1rem] text-neutral-950 group-hover:text-camel-dark transition-colors">Cuidados especiales</h3>
-                  <p className="mt-3 text-[0.85rem] text-neutral-600 font-light leading-relaxed">
-                    Limpiar con un paño seco y suave. Evitar el contacto directo con la humedad.
-                  </p>
-                </div>
               </div>
 
             </div>
           </div>
+
+          {/* Product Tabs (Description & Info) */}
+          <ProductTabs description={product.description} />
         </article>
 
         {/* Featured Products */}
         <div className="border-t border-neutral-200/40">
-          <FeaturedProducts />
+          <FeaturedProducts products={latestProducts} />
         </div>
       </main>
       <SiteFooter />

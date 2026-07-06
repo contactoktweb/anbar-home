@@ -10,6 +10,7 @@ export const homePage = defineType({
     { name: 'hero', title: 'Hero (Principal)' },
     { name: 'concept', title: 'Concepto' },
     { name: 'collections', title: 'Colecciones' },
+    { name: 'featured', title: 'Productos Destacados' },
     { name: 'gallery', title: 'Galería' },
   ],
   fields: [
@@ -36,6 +37,47 @@ export const homePage = defineType({
       group: 'hero',
       initialValue: 'Descubrir',
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'heroBanners',
+      title: 'Banners del Hero',
+      type: 'array',
+      group: 'hero',
+      description: 'Agrega las imágenes para el carrusel principal. Por cada banner, puedes subir la versión para PC y para Móvil.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'imageDesktop',
+              title: 'Imagen de Fondo (PC)',
+              type: 'image',
+              options: { hotspot: true },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'imageMobile',
+              title: 'Imagen de Fondo (Móvil)',
+              type: 'image',
+              options: { hotspot: true },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'alt',
+              title: 'Texto Alternativo (SEO)',
+              type: 'string',
+              description: 'Descripción breve de la imagen',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'alt',
+              media: 'imageDesktop',
+            },
+          },
+        },
+      ],
     }),
 
     defineField({
@@ -107,6 +149,26 @@ export const homePage = defineType({
       group: 'concept',
       initialValue: 'Andrés Barrientos - CEO Anbar Home',
       validation: (rule) => rule.required(),
+    }),
+
+    // --- FEATURED PRODUCTS ---
+    defineField({
+      name: 'featuredProducts',
+      title: 'Productos Destacados',
+      type: 'array',
+      group: 'featured',
+      description: 'Selecciona los productos que quieres destacar en la página de inicio. Si lo dejas vacío, el sistema mostrará automáticamente los últimos productos.',
+      of: [{ type: 'reference', to: [{ type: 'product' }] }],
+    }),
+
+    // --- NEW ARRIVALS ---
+    defineField({
+      name: 'newArrivalsProducts',
+      title: 'Nueva Colección',
+      type: 'array',
+      group: 'featured',
+      description: 'Selecciona los productos para la sección Nueva Colección. Si está vacío, se muestran los productos más recientes.',
+      of: [{ type: 'reference', to: [{ type: 'product' }] }],
     }),
 
     // --- COLLECTIONS ---

@@ -22,7 +22,7 @@ export function ProductImageZoom({ src, alt }: { src: string, alt: string }) {
   return (
     <div 
       ref={imageRef}
-      className="group relative aspect-square md:aspect-[4/5] w-full overflow-hidden bg-[#F8F6F2] cursor-crosshair"
+      className="group relative aspect-square w-full overflow-hidden bg-[#F8F6F2] cursor-crosshair"
       onMouseEnter={() => setIsZoomed(true)}
       onMouseLeave={() => {
         setIsZoomed(false)
@@ -34,7 +34,7 @@ export function ProductImageZoom({ src, alt }: { src: string, alt: string }) {
         src={src}
         alt={alt}
         fill
-        className="object-cover object-center mix-blend-multiply transition-transform duration-[400ms] ease-out"
+        className="object-contain object-center mix-blend-multiply transition-transform duration-[400ms] ease-out"
         style={{
           transformOrigin: `${position.x}% ${position.y}%`,
           transform: isZoomed ? 'scale(2.2)' : 'scale(1)',

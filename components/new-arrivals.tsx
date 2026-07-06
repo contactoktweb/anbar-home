@@ -1,13 +1,13 @@
 'use client'
 
 import { ProductCard } from '@/components/product-card'
-import { mockProducts } from '@/lib/mock-products'
 import Link from 'next/link'
 import { useEffect, useState, useCallback } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-export function NewArrivals() {
-  const originalProducts = mockProducts.slice(6, 14)
+export function NewArrivals({ products = [] }: { products?: any[] }) {
+  // Use passed products or fallback to mockProducts slice equivalent if empty for some reason
+  const originalProducts = products.length > 0 ? products : []
   const extendedProducts = [...originalProducts, ...originalProducts, ...originalProducts]
   
   const [currentIndex, setCurrentIndex] = useState(originalProducts.length)

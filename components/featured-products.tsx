@@ -1,13 +1,13 @@
 'use client'
 
 import { ProductCard } from '@/components/product-card'
-import { mockProducts } from '@/lib/mock-products'
 import Link from 'next/link'
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-export function FeaturedProducts() {
-  const carouselProducts = mockProducts.slice(0, 8)
+export function FeaturedProducts({ products = [] }: { products?: any[] }) {
+  // Use passed products or fallback to empty array
+  const carouselProducts = products.length > 0 ? products : []
   const extendedProducts = [...carouselProducts, ...carouselProducts, ...carouselProducts]
   
   const [currentIndex, setCurrentIndex] = useState(carouselProducts.length)

@@ -2,19 +2,29 @@
 
 import { useSearchParams } from 'next/navigation'
 import { CategoryProductGrid } from '@/components/category-product-grid'
-import { mockProducts } from '@/lib/mock-products'
 import { Search } from 'lucide-react'
 
-export default function SearchResults() {
+export default function SearchResults({ products = [] }: { products?: any[] }) {
   const searchParams = useSearchParams()
   const query = searchParams.get('q') || ''
+  const maxPriceParam = searchParams.get('maxPrice')
+  const maxPrice = maxPriceParam ? parseInt(maxPriceParam, 10) : null
   
   const normalizedQuery = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
   
-  const filteredProducts = mockProducts.filter((product) => {
-    const normalizedName = product.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-    // Include category if useful, but just name is good for now
-    return normalizedName.includes(normalizedQuery)
+  const filteredProducts = products.filter((product) => {
+    let match = true
+
+    if (query) {
+      const normalizedName = product.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+      match = match && normalizedName.includes(normalizedQuery)
+    }
+
+    if (maxPrice !== null) {
+      match = match && product.price <= maxPrice
+    }
+
+    return match
   })
 
   return (

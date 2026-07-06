@@ -1,5 +1,6 @@
 import { Reveal } from '@/components/reveal'
 import Image from 'next/image'
+import Link from 'next/link'
 import { GridViewToggle } from '@/components/grid-view-toggle'
 
 export function LogoMeaning({ data }: { data?: any }) {
@@ -37,27 +38,39 @@ export function LogoMeaning({ data }: { data?: any }) {
         </Reveal>
 
         <div className="grid gap-16 md:grid-cols-3 md:gap-8">
-          {categories.map((item: any, i: number) => (
-            <Reveal
-              key={item.title}
-              delay={i * 150}
-              className="group flex flex-col items-center"
-            >
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm bg-muted">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-              <div className="mt-8 flex flex-col items-center gap-4">
-                <h3 className="font-serif text-2xl font-light tracking-wide text-foreground">
-                  {item.title}
-                </h3>
-              </div>
-            </Reveal>
-          ))}
+          {categories.map((item: any, i: number) => {
+            const getCategorySlug = (title: string) => {
+              const lower = title.toLowerCase()
+              if (lower.includes('jarrones')) return 'jarrones'
+              if (lower.includes('esculturas')) return 'esculturas'
+              if (lower.includes('línea suprema') || lower.includes('linea suprema')) return 'linea-suprema'
+              return title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')
+            }
+
+            return (
+              <Reveal
+                key={item.title}
+                delay={i * 150}
+                className="group flex flex-col items-center"
+              >
+                <Link href={`/category/${getCategorySlug(item.title)}`} className="w-full flex flex-col items-center cursor-pointer">
+                  <div className="relative aspect-[4/5] w-full overflow-hidden rounded-sm bg-muted">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="mt-8 flex flex-col items-center gap-4">
+                    <h3 className="font-serif text-2xl font-light tracking-wide text-foreground transition-colors group-hover:text-camel-dark">
+                      {item.title}
+                    </h3>
+                  </div>
+                </Link>
+              </Reveal>
+            )
+          })}
         </div>
       </div>
     </section>
