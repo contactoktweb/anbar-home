@@ -10,7 +10,7 @@ export function ProductTabs({ description }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState<'description' | 'shipping' | 'care'>('description')
 
   return (
-    <div className="w-full mt-24">
+    <div className="w-full mt-12">
       {/* Tab Navigation */}
       <div className="flex justify-center border-b border-neutral-200">
         <button
