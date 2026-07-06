@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useStore } from '@/components/store-provider'
+import { Minus, Plus, Trash2 } from 'lucide-react'
 
 declare global {
   interface Window {
@@ -53,7 +54,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   
-  const { cart, clearCart } = useStore()
+  const { cart, clearCart, updateQuantity, removeFromCart } = useStore()
 
   useEffect(() => {
     setIsMounted(true)
@@ -139,7 +140,7 @@ export default function CheckoutPage() {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder="Dirección de correo electrónico"
+                  placeholder="Dirección de correo electrónico *"
                   required
                   value={formData.email}
                   onChange={handleChange}
@@ -318,15 +319,42 @@ export default function CheckoutPage() {
                           fill 
                           className="object-cover object-center mix-blend-multiply p-1 rounded-md" 
                         />
-                        <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-neutral-500/90 text-[11px] text-white">
-                          {item.quantity}
-                        </span>
                       </div>
                       <div className="flex flex-1 flex-col justify-center">
                         <h3 className="text-[14px] font-medium text-neutral-900 line-clamp-2 leading-snug">
                           {item.name}
                         </h3>
                         <p className="text-[12px] text-neutral-500 mt-0.5">{item.category}</p>
+                        
+                        <div className="flex items-center gap-3 mt-2">
+                          <div className="flex items-center gap-2 rounded border border-neutral-200 px-2 py-0.5 bg-neutral-50/50 w-fit">
+                            <button 
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              className="text-neutral-400 transition-colors hover:text-camel p-0.5"
+                              type="button"
+                              aria-label="Disminuir cantidad"
+                            >
+                              <Minus className="h-3 w-3" strokeWidth={2} />
+                            </button>
+                            <span className="text-xs font-medium w-4 text-center text-neutral-700">{item.quantity}</span>
+                            <button 
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              className="text-neutral-400 transition-colors hover:text-camel p-0.5"
+                              type="button"
+                              aria-label="Aumentar cantidad"
+                            >
+                              <Plus className="h-3 w-3" strokeWidth={2} />
+                            </button>
+                          </div>
+                          <button 
+                            onClick={() => removeFromCart(item.id)}
+                            className="text-neutral-400 hover:text-red-500 transition-colors p-1"
+                            type="button"
+                            aria-label="Eliminar producto"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
                       <div className="text-right flex items-center">
                         <p className="font-serif text-[15px] text-neutral-900">
@@ -348,6 +376,9 @@ export default function CheckoutPage() {
                   <span>Total</span>
                   <span className="font-serif text-camel-dark">{formatCOP(cartTotal)}</span>
                 </div>
+                <p className="text-[11px] text-neutral-500 text-right mt-2 leading-tight">
+                  * El valor total puede estar sujeto a cambios por el costo de envío aplicable a tu región.
+                </p>
               </div>
 
               <div className="mt-8 space-y-4">

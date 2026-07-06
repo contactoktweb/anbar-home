@@ -6,7 +6,7 @@ import { Product, CartItem } from '@/types'
 interface StoreContextType {
   cart: CartItem[]
   favorites: Product[]
-  addToCart: (product: Product) => void
+  addToCart: (product: Product, quantityToAdd?: number) => void
   removeFromCart: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
@@ -39,15 +39,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cart, favorites, isInitialized])
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Product, quantityToAdd: number = 1) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id)
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === product.id ? { ...item, quantity: item.quantity + quantityToAdd } : item
         )
       }
-      return [...prev, { ...product, quantity: 1 }]
+      return [...prev, { ...product, quantity: quantityToAdd }]
     })
   }
 

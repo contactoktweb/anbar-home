@@ -124,10 +124,10 @@ export function ProductCard({ product }: ProductCardProps) {
               aria-label="Añadir al carrito"
             >
               {isAdded ? (
-                <Check className="h-4 w-4" strokeWidth={2} />
+                <Check className="h-4 w-4 animate-pulse scale-125 transition-transform" strokeWidth={2} />
               ) : (
                 <ShoppingBag 
-                  className="h-4 w-4" 
+                  className="h-4 w-4 transition-transform" 
                   strokeWidth={1.5} 
                 />
               )}
