@@ -90,21 +90,26 @@ export async function SiteFooter() {
         {/* Bottom Row */}
         <div className="grid gap-12 pt-16 sm:grid-cols-2 lg:flex lg:justify-between lg:gap-8">
           {bottomGroups.map((group) => (
-            <div key={group.title}>
+            <div key={group.title} className="flex flex-col gap-6">
               <h3 className="font-serif text-[19px] font-medium text-white">
                 {group.title}
               </h3>
               <ul className="mt-6 space-y-4">
-                {group.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-[15px] font-light leading-relaxed text-neutral-400 transition-colors duration-300 hover:text-camel"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {group.links.map((link: string | { label: string; href: string }) => {
+                  const isString = typeof link === 'string';
+                  const name = isString ? link : link.label;
+                  const href = isString ? '#' : link.href;
+                  return (
+                    <li key={name}>
+                      <Link
+                        href={href}
+                        className="text-[15px] font-light leading-relaxed text-neutral-400 transition-colors duration-300 hover:text-camel"
+                      >
+                        {name}
+                      </Link>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           ))}

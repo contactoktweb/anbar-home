@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Product } from '@/lib/mock-products'
+import { Product } from '@/types'
 import { useStore } from '@/components/store-provider'
 import { Heart } from 'lucide-react'
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { GridViewMode, GridViewToggle } from '@/components/grid-view-toggle'
 import { ProductCard } from '@/components/product-card'
-import { Product } from '@/lib/mock-products'
+import { Product } from '@/types'
 import { cn } from '@/lib/utils'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 

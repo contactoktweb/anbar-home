@@ -1,17 +1,14 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { Product } from '@/lib/mock-products'
-
-export interface CartItem extends Product {
-  quantity: number
-}
+import { Product, CartItem } from '@/types'
 
 interface StoreContextType {
   cart: CartItem[]
   favorites: Product[]
   addToCart: (product: Product) => void
   removeFromCart: (productId: string) => void
+  updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
   clearFavorites: () => void
   toggleFavorite: (product: Product) => void
