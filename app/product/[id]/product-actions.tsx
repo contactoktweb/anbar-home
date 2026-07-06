@@ -29,7 +29,7 @@ export function ProductActions({ product }: { product: Product }) {
   }
 
   return (
-    <div className="mt-10 flex flex-col gap-4">
+    <div className="mt-2 flex flex-col gap-4">
       {/* Primera fila: Comprar Ahora */}
       <button
         onClick={handleBuyNow}

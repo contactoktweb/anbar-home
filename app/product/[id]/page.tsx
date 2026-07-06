@@ -148,10 +148,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               </div>
 
               {/* Divider */}
-              <div className="h-[1px] w-full bg-neutral-200/60 mb-8" />
+              <div className="h-[1px] w-full bg-neutral-200/60 mb-4" />
 
               {/* Actions (Add to Cart / Favorites) */}
-              <div className="mt-8 mb-10">
+              <div className="mb-6">
                 <ProductActions product={product} />
               </div>
 
