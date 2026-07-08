@@ -11,8 +11,9 @@ import { Metadata } from 'next'
 
 export const revalidate = 60
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug: params.slug })
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const resolvedParams = await params
+  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug: resolvedParams.slug })
   
   if (!post) {
     return {
@@ -80,8 +81,9 @@ const portableTextComponents = {
   },
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug: params.slug })
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params
+  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug: resolvedParams.slug })
 
   if (!post) {
     notFound()
