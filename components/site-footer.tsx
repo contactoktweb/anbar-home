@@ -11,12 +11,13 @@ const topGroup = {
 }
 
 import { client } from '@/sanity/lib/client'
-import { GLOBAL_SETTINGS_QUERY, CATEGORIES_QUERY } from '@/sanity/lib/queries'
+import { GLOBAL_SETTINGS_QUERY, CATEGORIES_QUERY, POSTS_QUERY } from '@/sanity/lib/queries'
 
 export async function SiteFooter() {
-  const [settings, categories] = await Promise.all([
+  const [settings, categories, posts] = await Promise.all([
     client.fetch(GLOBAL_SETTINGS_QUERY).catch(() => null),
-    client.fetch(CATEGORIES_QUERY).catch(() => [])
+    client.fetch(CATEGORIES_QUERY).catch(() => []),
+    client.fetch(POSTS_QUERY).catch(() => [])
   ])
   
   const storesLinks = settings?.physicalStores?.map((s: any) => ({
@@ -66,10 +67,15 @@ export async function SiteFooter() {
       links: collectionsLinks,
     },
     {
-      title: 'Blog Diseño Interior',
-      links: [
-        { label: 'El Regreso de los Espacios Sensoriales', href: '/blog' }
-      ],
+      title: 'Últimos Blogs',
+      links: posts && posts.length > 0
+        ? posts.slice(0, 4).map((p: any) => ({
+            label: p.title,
+            href: `/blog/${p.slug}`
+          }))
+        : [
+            { label: 'El Regreso de los Espacios Sensoriales', href: '/blog' }
+          ],
     },
   ]
 
