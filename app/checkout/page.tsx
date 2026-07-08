@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useStore } from '@/components/store-provider'
 import { Minus, Plus, Trash2 } from 'lucide-react'
+import { generateWompiSignature } from './actions'
 
 declare global {
   interface Window {
@@ -36,6 +38,8 @@ const COLOMBIA_LOCATIONS: Record<string, string[]> = {
 }
 
 export default function CheckoutPage() {
+  const router = useRouter()
+  
   const [formData, setFormData] = useState({
     email: '',
     country: 'Colombia',
@@ -84,13 +88,14 @@ export default function CheckoutPage() {
     })
   }
 
-  const handlePayment = (e: React.FormEvent) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsProcessing(true)
 
     const mockOrderId = `order-${Date.now()}`
     const realAmountInCents = cartTotal * 100
     const wompiPublicKey = process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY
+    const currency = 'COP'
 
     if (cart.length === 0) {
       alert("Tu carrito está vacío.")
@@ -104,23 +109,34 @@ export default function CheckoutPage() {
       return
     }
 
-    const checkout = new window.WidgetCheckout({
-      currency: 'COP',
-      amountInCents: realAmountInCents,
-      reference: mockOrderId,
-      publicKey: wompiPublicKey,
-    })
+    try {
+      const signature = await generateWompiSignature(mockOrderId, realAmountInCents, currency)
 
-    checkout.open((result: any) => {
-      var transaction = result.transaction
-      if (transaction.status === 'APPROVED') {
-        alert("¡Pago aprobado! Referencia: " + transaction.id)
-        clearCart() 
-      } else {
-        alert("El pago no fue aprobado. Estado: " + transaction.status)
-      }
+      const checkout = new window.WidgetCheckout({
+        currency: currency,
+        amountInCents: realAmountInCents,
+        reference: mockOrderId,
+        publicKey: wompiPublicKey,
+        signature: {
+          integrity: signature
+        }
+      })
+
+      checkout.open((result: any) => {
+        var transaction = result.transaction
+        if (transaction.status === 'APPROVED') {
+          clearCart()
+          router.push(`/checkout/success?ref=${transaction.id}`)
+        } else {
+          router.push(`/checkout/error?status=${transaction.status}&ref=${transaction.id || mockOrderId}`)
+        }
+        setIsProcessing(false)
+      })
+    } catch (error) {
+      console.error("Error al generar firma de Wompi:", error)
+      router.push('/checkout/error?status=ERROR')
       setIsProcessing(false)
-    })
+    }
   }
 
   return (

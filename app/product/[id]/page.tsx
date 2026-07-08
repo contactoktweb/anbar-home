@@ -7,8 +7,9 @@ import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 import { FeaturedProducts } from '@/components/featured-products'
 import { ProductTabs } from '@/components/product-tabs'
+import { ProductReviews } from '@/components/product-reviews'
 import { client } from '@/sanity/lib/client'
-import { PRODUCT_BY_ID_QUERY, LATEST_PRODUCTS_QUERY, HOME_PAGE_QUERY } from '@/sanity/lib/queries'
+import { PRODUCT_BY_ID_QUERY, LATEST_PRODUCTS_QUERY, REVIEWS_BY_PRODUCT_QUERY } from '@/sanity/lib/queries'
 
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> },
@@ -59,8 +60,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     category: sanityProduct.category,
     image: sanityProduct.imageUrl,
     rating: sanityProduct.rating || 0,
+    ratingCount: sanityProduct.ratingCount || 0,
     description: sanityProduct.description
   }
+
+  const reviews = await client.fetch(REVIEWS_BY_PRODUCT_QUERY, { productId: sanityProduct._id })
 
   // Format currency
   const formattedPrice = new Intl.NumberFormat('es-CO', {
@@ -160,6 +164,14 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
           {/* Product Tabs (Description & Info) */}
           <ProductTabs description={product.description} />
+
+          {/* Product Reviews */}
+          <ProductReviews 
+            productId={product.id}
+            reviews={reviews}
+            initialRating={product.rating}
+            ratingCount={product.ratingCount}
+          />
         </article>
 
         {/* Featured Products */}

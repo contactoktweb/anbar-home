@@ -66,6 +66,22 @@ export const product = defineType({
       of: [{ type: 'image', options: { hotspot: true } }],
       description: 'Imágenes adicionales del producto',
     }),
+    defineField({
+      name: 'rating',
+      title: 'Promedio de Calificación',
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+      description: 'Promedio general calculado a partir de las valoraciones de usuarios.',
+    }),
+    defineField({
+      name: 'ratingCount',
+      title: 'Total de Valoraciones',
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+      description: 'Cantidad total de reseñas recibidas.',
+    }),
   ],
   preview: {
     select: {

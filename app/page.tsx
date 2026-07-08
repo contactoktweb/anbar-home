@@ -49,37 +49,38 @@ export default async function Page() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
-            {
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'Anbar Home',
-              url: 'https://anbarhome.com',
-              logo: 'https://anbarhome.com/logo-A.png',
-              description: 'Anbar Home es una marca de decoración para el hogar inspirada en Medio Oriente y Egipto. Piezas artesanales, atemporales y serenas en tonos camel y blanco.',
-              contactPoint: {
-                '@type': 'ContactPoint',
-                telephone: '+57 322 7559139',
-                contactType: 'customer service',
-                areaServed: 'CO',
-                availableLanguage: 'es'
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'Organization',
+                name: 'Anbar Home',
+                url: 'https://anbarhome.com',
+                logo: 'https://anbarhome.com/logo-A.png',
+                description: 'Anbar Home es una marca de decoración para el hogar inspirada en Medio Oriente y Egipto. Piezas artesanales, atemporales y serenas en tonos camel y blanco.',
+                contactPoint: {
+                  '@type': 'ContactPoint',
+                  telephone: '+57 322 7559139',
+                  contactType: 'customer service',
+                  areaServed: 'CO',
+                  availableLanguage: 'es'
+                },
+                sameAs: [
+                  'https://www.instagram.com/anbar.home/'
+                ]
               },
-              sameAs: [
-                'https://www.instagram.com/anbar.home/'
-              ]
-            },
-            {
-              '@context': 'https://schema.org',
-              '@type': 'WebSite',
-              name: 'Anbar Home',
-              url: 'https://anbarhome.com',
-              potentialAction: {
-                '@type': 'SearchAction',
-                target: 'https://anbarhome.com/search?q={search_term_string}',
-                'query-input': 'required name=search_term_string'
+              {
+                '@type': 'WebSite',
+                name: 'Anbar Home',
+                url: 'https://anbarhome.com',
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: 'https://anbarhome.com/search?q={search_term_string}',
+                  'query-input': 'required name=search_term_string'
+                }
               }
-            }
-          ])
+            ]
+          })
         }}
       />
       <main>

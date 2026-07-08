@@ -11,24 +11,49 @@ const topGroup = {
 }
 
 import { client } from '@/sanity/lib/client'
-import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
+import { GLOBAL_SETTINGS_QUERY, CATEGORIES_QUERY } from '@/sanity/lib/queries'
 
 export async function SiteFooter() {
-  const settings = await client.fetch(GLOBAL_SETTINGS_QUERY).catch(() => null)
+  const [settings, categories] = await Promise.all([
+    client.fetch(GLOBAL_SETTINGS_QUERY).catch(() => null),
+    client.fetch(CATEGORIES_QUERY).catch(() => [])
+  ])
   
   const storesLinks = settings?.physicalStores?.map((s: any) => ({
     label: `${s.city}: ${s.address}`,
-    href: '#'
+    href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.city} ${s.address}`)}`
   })) || [
-    { label: 'Bogotá: Calle 109 #18B-52, Local 101', href: '#' },
-    { label: 'Bucaramanga: Calle 62 #30-99', href: '#' },
-    { label: 'Cabecera del Llano: Cra 36 #48-141 Local 5', href: '#' },
+    { label: 'Bogotá: Calle 109 #18B-52, Local 101', href: 'https://www.google.com/maps/search/?api=1&query=Bogota%20Calle%20109%20%2318B-52%20Local%20101' },
+    { label: 'Bucaramanga: Calle 62 #30-99', href: 'https://www.google.com/maps/search/?api=1&query=Bucaramanga%20Calle%2062%20%2330-99' },
+    { label: 'Cabecera del Llano: Cra 36 #48-141 Local 5', href: 'https://www.google.com/maps/search/?api=1&query=Cabecera%20del%20Llano%20Cra%2036%20%2348-141%20Local%205' },
   ]
+
+  // Filter out system or unwanted categories
+  const activeCategories = (categories || []).filter(
+    (c: any) => c.slug && c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized'
+  )
+
+  const collectionsLinks = activeCategories.length > 0
+    ? [
+        ...activeCategories.map((c: any) => ({
+          label: c.title,
+          href: `/category/${c.slug}`
+        })),
+        ...(activeCategories.some((c: any) => c.slug === 'summer-sale') ? [] : [{ label: 'Summer Sale', href: '/category/summer-sale' }])
+      ]
+    : [
+        { label: 'Línea Suprema', href: '/category/linea-suprema' },
+        { label: 'Esculturas', href: '/category/esculturas' },
+        { label: 'Summer Sale', href: '/category/summer-sale' },
+        { label: 'Accesorios Decorativos', href: '/category/accesorios-decorativos' },
+        { label: 'Jarrones', href: '/category/jarrones' }
+      ]
 
   const bottomGroups = [
     {
       title: 'Nuestra Empresa',
       links: [
+        { label: 'Nosotros', href: '/nosotros' },
         { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' }
       ],
     },
@@ -38,16 +63,12 @@ export async function SiteFooter() {
     },
     {
       title: 'Colecciones',
-      links: [
-        { label: 'Esculturas', href: '#' },
-        { label: 'Jarrones', href: '#' },
-        { label: 'Espejos', href: '#' }
-      ],
+      links: collectionsLinks,
     },
     {
       title: 'Blog Diseño Interior',
       links: [
-        { label: 'El Regreso de los Espacios Sensoriales', href: '#' }
+        { label: 'El Regreso de los Espacios Sensoriales', href: '/blog' }
       ],
     },
   ]
@@ -88,7 +109,7 @@ export async function SiteFooter() {
         </div>
 
         {/* Bottom Row */}
-        <div className="grid gap-12 pt-16 sm:grid-cols-2 lg:flex lg:justify-between lg:gap-8">
+        <div className="grid gap-12 pt-16 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {bottomGroups.map((group) => (
             <div key={group.title} className="flex flex-col gap-6">
               <h3 className="font-serif text-[19px] font-medium text-white">
@@ -99,10 +120,13 @@ export async function SiteFooter() {
                   const isString = typeof link === 'string';
                   const name = isString ? link : link.label;
                   const href = isString ? '#' : link.href;
+                  const isExternal = href.startsWith('http://') || href.startsWith('https://');
                   return (
                     <li key={name}>
                       <Link
                         href={href}
+                        target={isExternal ? '_blank' : undefined}
+                        rel={isExternal ? 'noopener noreferrer' : undefined}
                         className="text-[15px] font-light leading-relaxed text-neutral-400 transition-colors duration-300 hover:text-camel"
                       >
                         {name}
@@ -121,7 +145,7 @@ export async function SiteFooter() {
             Anbar Home {new Date().getFullYear()} © Todos los derechos reservados
           </span>
           <a
-            href="https://www.kytcode.lat/"
+            href="https://www.kytcode.lat"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 transition-colors duration-300 hover:text-camel"

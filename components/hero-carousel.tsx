@@ -50,7 +50,9 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                 alt={img.alt}
                 fill
                 className={`object-cover md:object-contain object-center transition-transform duration-[2000ms] ease-out group-hover:scale-105 ${img.srcMobile ? 'hidden md:block' : ''}`}
-                priority
+                priority={index === 0}
+                quality={90}
+                loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
@@ -60,7 +62,9 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                   alt={img.alt}
                   fill
                   className="object-cover object-center transition-transform duration-[2000ms] ease-out group-hover:scale-105 md:hidden"
-                  priority
+                  priority={index === 0}
+                  quality={90}
+                  loading={index === 0 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "auto"}
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
@@ -88,7 +92,9 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                 alt={img.alt}
                 fill
                 className={`object-cover md:object-contain object-center ${img.srcMobile ? 'hidden md:block' : ''}`}
-                priority
+                priority={index === 0}
+                quality={90}
+                loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
@@ -98,7 +104,9 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                   alt={img.alt}
                   fill
                   className="object-cover object-center md:hidden"
-                  priority
+                  priority={index === 0}
+                  quality={90}
+                  loading={index === 0 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "auto"}
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />

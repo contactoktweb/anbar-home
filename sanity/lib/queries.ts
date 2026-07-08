@@ -106,6 +106,56 @@ export const PRODUCT_BY_ID_QUERY = groq`
     "category": category->title,
     "imageUrl": image.asset->url,
     rating,
+    ratingCount,
     description
+  }
+`
+
+export const POSTS_QUERY = groq`
+  *[_type == "post"] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    "authorName": author->name,
+    "authorImage": author->image.asset->url,
+    "imageUrl": mainImage.asset->url,
+    "imageAlt": mainImage.alt,
+    publishedAt,
+    "categories": categories[]->title
+  }
+`
+
+export const POST_BY_SLUG_QUERY = groq`
+  *[_type == "post" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    "authorName": author->name,
+    "authorBio": author->bio,
+    "authorImage": author->image.asset->url,
+    "imageUrl": mainImage.asset->url,
+    "imageAlt": mainImage.alt,
+    publishedAt,
+    body,
+    "categories": categories[]->title
+  }
+`
+
+export const REVIEWS_BY_PRODUCT_QUERY = groq`
+  *[_type == "review" && product._ref == $productId && status == 'approved'] | order(_createdAt desc) {
+    _id,
+    userName,
+    rating,
+    comment,
+    "imageUrl": image.asset->url,
+    "_createdAt": _createdAt
+  }
+`
+
+export const FAQ_QUERY = groq`
+  *[_type == "faq"] | order(_createdAt asc) {
+    _id,
+    question,
+    answer
   }
 `
