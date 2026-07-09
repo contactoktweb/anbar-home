@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { XCircle } from 'lucide-react'
 
 export default async function CheckoutErrorPage(props: {
@@ -11,9 +9,7 @@ export default async function CheckoutErrorPage(props: {
   const reference = searchParams.ref || 'Desconocida'
 
   return (
-    <>
-      <SiteHeader />
-      <main className="min-h-screen pt-32 pb-24 bg-white flex items-center justify-center">
+    <main className="min-h-screen pt-32 pb-24 bg-white flex items-center justify-center">
         <div className="max-w-xl mx-auto px-6 text-center space-y-8">
           <div className="flex justify-center mb-8">
             <XCircle className="w-20 h-20 text-red-800/80" strokeWidth={1} />
@@ -55,7 +51,5 @@ export default async function CheckoutErrorPage(props: {
           </div>
         </div>
       </main>
-      <SiteFooter />
-    </>
   )
 }

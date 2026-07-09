@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
 import { CheckCircle } from 'lucide-react'
 import { adminClient } from '@/sanity/lib/adminClient'
 
@@ -36,9 +34,7 @@ export default async function CheckoutSuccessPage(props: {
   const displayReference = transactionId || 'Desconocida'
 
   return (
-    <>
-      <SiteHeader />
-      <main className="min-h-screen pt-32 pb-24 bg-white flex items-center justify-center">
+    <main className="min-h-screen pt-32 pb-24 bg-white flex items-center justify-center">
         <div className="max-w-xl mx-auto px-6 text-center space-y-8">
           <div className="flex justify-center mb-8">
             <CheckCircle className="w-20 h-20 text-camel-dark" strokeWidth={1} />
@@ -68,7 +64,5 @@ export default async function CheckoutSuccessPage(props: {
           </div>
         </div>
       </main>
-      <SiteFooter />
-    </>
   )
 }
