@@ -136,8 +136,24 @@ export default function CheckoutPage() {
         }
       })
 
-      checkout.open((result: any) => {
+      checkout.open(async (result: any) => {
         var transaction = result.transaction
+        
+        // Sincronizar estado instantáneamente al cerrar el widget (útil para localhost y como respaldo en prod)
+        try {
+          await fetch('/api/orders/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              reference: sanityOrderId,
+              status: transaction.status,
+              wompiReference: transaction.id
+            }),
+          })
+        } catch (syncError) {
+          console.error("Error sincronizando el pedido:", syncError)
+        }
+
         if (transaction.status === 'APPROVED') {
           clearCart()
           router.push(`/checkout/success?ref=${transaction.id}`)

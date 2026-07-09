@@ -2,12 +2,38 @@ import Link from 'next/link'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { CheckCircle } from 'lucide-react'
+import { adminClient } from '@/sanity/lib/adminClient'
 
 export default async function CheckoutSuccessPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const searchParams = await props.searchParams
-  const reference = searchParams.ref || 'Desconocida'
+  const transactionId = searchParams.ref as string | undefined
+
+  if (transactionId) {
+    try {
+      // Validar la transacción con Wompi para mayor seguridad y obtener la referencia de Sanity
+      const isTest = process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY?.startsWith('pub_test_')
+      const wompiUrl = isTest ? 'https://sandbox.wompi.co/v1' : 'https://production.wompi.co/v1'
+      
+      const response = await fetch(`${wompiUrl}/transactions/${transactionId}`, { cache: 'no-store' })
+      if (response.ok) {
+        const result = await response.json()
+        const transaction = result.data
+        if (transaction && transaction.status === 'APPROVED' && transaction.reference) {
+          // transaction.reference es el ID de nuestro pedido en Sanity
+          await adminClient.patch(transaction.reference).set({ 
+            status: 'APPROVED', 
+            wompiReference: transaction.id 
+          }).commit()
+        }
+      }
+    } catch (e) {
+      console.error('Error sincronizando la orden en la página de éxito:', e)
+    }
+  }
+
+  const displayReference = transactionId || 'Desconocida'
 
   return (
     <>
@@ -29,7 +55,7 @@ export default async function CheckoutSuccessPage(props: {
 
           <div className="bg-neutral-50 p-6 rounded-md border border-neutral-100 mt-8">
             <p className="text-sm text-neutral-500 uppercase tracking-widest mb-2">Referencia de transacción</p>
-            <p className="font-mono text-neutral-900 font-medium">{reference}</p>
+            <p className="font-mono text-neutral-900 font-medium">{displayReference}</p>
           </div>
 
           <div className="pt-8">
