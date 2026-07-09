@@ -393,7 +393,7 @@ export default function CheckoutPage() {
                   <span className="font-serif text-camel-dark">{formatCOP(cartTotal)}</span>
                 </div>
                 <p className="text-[11px] text-neutral-500 text-right mt-2 leading-tight">
-                  * El valor total puede estar sujeto a cambios por el costo de envío aplicable a tu región.
+                  * El envío es asumido por el cliente y pagado en el momento de recibir el producto a la transportadora.
                 </p>
               </div>
 
