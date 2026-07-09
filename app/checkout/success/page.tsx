@@ -3,11 +3,10 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { CheckCircle } from 'lucide-react'
 
-export default function CheckoutSuccessPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
+export default async function CheckoutSuccessPage(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
+  const searchParams = await props.searchParams
   const reference = searchParams.ref || 'Desconocida'
 
   return (

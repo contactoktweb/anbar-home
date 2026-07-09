@@ -6,7 +6,8 @@ import { categoryType } from './categoryType'
 import { legalPage } from './legalPage'
 import { reviewType } from './reviewType'
 import { faqType } from './faqType'
+import { order } from './order'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [globalSettings, homePage, categoryType, product, legalPage, reviewType, faqType],
+  types: [globalSettings, homePage, categoryType, product, legalPage, reviewType, faqType, order],
 }

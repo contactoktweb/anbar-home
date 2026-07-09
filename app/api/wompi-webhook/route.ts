@@ -14,16 +14,18 @@ export async function POST(request: Request) {
       console.log(`Transacción ${transaction.id} para referencia ${reference} está en estado: ${status}`)
 
       // ==========================================
-      // TODO: INTEGRACIÓN CON SANITY
+      // INTEGRACIÓN CON SANITY
       // ==========================================
       // 1. Buscar la orden en Sanity usando el 'reference'.
       // 2. Actualizar el estado de la orden (ej. de 'PENDING' a 'PAID' si status es 'APPROVED').
-      // 
-      // const sanityToken = process.env.SANITY_API_TOKEN
-      // const sanityProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
-      // if (status === 'APPROVED') {
-      //   await sanityClient.patch(orderDocumentId).set({ status: 'PAID' }).commit()
-      // }
+      
+      const { adminClient } = require('@/sanity/lib/adminClient')
+      try {
+        await adminClient.patch(reference).set({ status: status, wompiReference: transaction.id }).commit()
+        console.log(`Orden ${reference} actualizada a estado ${status} en Sanity`)
+      } catch (patchError) {
+        console.error(`Error actualizando orden en Sanity (${reference}):`, patchError)
+      }
 
       // ==========================================
       // TODO: INTEGRACIÓN CON RESEND

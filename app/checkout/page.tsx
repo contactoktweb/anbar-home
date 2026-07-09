@@ -92,8 +92,6 @@ export default function CheckoutPage() {
     e.preventDefault()
     setIsProcessing(true)
 
-    const mockOrderId = `order-${Date.now()}`
-    const realAmountInCents = cartTotal * 100
     const wompiPublicKey = process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY
     const currency = 'COP'
 
@@ -110,12 +108,28 @@ export default function CheckoutPage() {
     }
 
     try {
-      const signature = await generateWompiSignature(mockOrderId, realAmountInCents, currency)
+      // 1. Crear el pedido en Sanity primero
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ formData, cart, cartTotal }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al crear el pedido en la base de datos')
+      }
+
+      const data = await response.json()
+      const sanityOrderId = data.orderId
+
+      // 2. Generar la firma de Wompi usando el ID del pedido de Sanity como referencia
+      const realAmountInCents = cartTotal * 100
+      const signature = await generateWompiSignature(sanityOrderId, realAmountInCents, currency)
 
       const checkout = new window.WidgetCheckout({
         currency: currency,
         amountInCents: realAmountInCents,
-        reference: mockOrderId,
+        reference: sanityOrderId,
         publicKey: wompiPublicKey,
         signature: {
           integrity: signature
@@ -128,12 +142,12 @@ export default function CheckoutPage() {
           clearCart()
           router.push(`/checkout/success?ref=${transaction.id}`)
         } else {
-          router.push(`/checkout/error?status=${transaction.status}&ref=${transaction.id || mockOrderId}`)
+          router.push(`/checkout/error?status=${transaction.status}&ref=${transaction.id || sanityOrderId}`)
         }
         setIsProcessing(false)
       })
     } catch (error) {
-      console.error("Error al generar firma de Wompi:", error)
+      console.error("Error al procesar el pago:", error)
       router.push('/checkout/error?status=ERROR')
       setIsProcessing(false)
     }
