@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { CheckCircle } from 'lucide-react'
 import { adminClient } from '@/sanity/lib/adminClient'
+import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
+import { processOrderEmails } from '@/lib/emails'
 
 export default async function CheckoutSuccessPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -18,12 +20,24 @@ export default async function CheckoutSuccessPage(props: {
       if (response.ok) {
         const result = await response.json()
         const transaction = result.data
-        if (transaction && transaction.status === 'APPROVED' && transaction.reference) {
-          // transaction.reference es el ID de nuestro pedido en Sanity
-          await adminClient.patch(transaction.reference).set({ 
-            status: 'APPROVED', 
-            wompiReference: transaction.id 
-          }).commit()
+        if (transaction && transaction.status && transaction.reference) {
+          // Obtener orden
+          const order = await adminClient.getDocument(transaction.reference)
+          
+          if (order && !order.emailSent) {
+            // Actualizar Sanity
+            await adminClient.patch(transaction.reference).set({ 
+              status: transaction.status, 
+              wompiReference: transaction.id,
+              emailSent: true
+            }).commit()
+            
+            // Obtener configuración global (logo y email admin)
+            const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY)
+            
+            // Procesar envío de correos
+            await processOrderEmails(order, settings, transaction.status)
+          }
         }
       }
     } catch (e) {

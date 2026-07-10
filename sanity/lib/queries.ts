@@ -2,6 +2,8 @@ import { groq } from 'next-sanity'
 
 export const GLOBAL_SETTINGS_QUERY = groq`
   *[_type == "globalSettings"][0]{
+    "logoUrl": logo.asset->url,
+    notificationEmail,
     whatsappNumber,
     physicalStores[]{
       _key,

@@ -87,6 +87,13 @@ export const order = defineType({
       type: 'string',
       readOnly: true,
     }),
+    defineField({
+      name: 'emailSent',
+      title: 'Correo Enviado',
+      type: 'boolean',
+      initialValue: false,
+      readOnly: true,
+    }),
   ],
   preview: {
     select: {

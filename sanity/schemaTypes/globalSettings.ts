@@ -8,6 +8,20 @@ export const globalSettings = defineType({
   icon: EarthGlobeIcon,
   fields: [
     defineField({
+      name: 'logo',
+      title: 'Logo de la Empresa (Para web y correos)',
+      type: 'image',
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: 'notificationEmail',
+      title: 'Correo de Notificaciones (Órdenes)',
+      type: 'string',
+      initialValue: 'anbarhomesas@gmail.com',
+      description: 'El correo del administrador al que llegarán los avisos de nuevas compras.',
+      validation: (rule) => rule.email(),
+    }),
+    defineField({
       name: 'whatsappNumber',
       title: 'Número de WhatsApp',
       type: 'string',

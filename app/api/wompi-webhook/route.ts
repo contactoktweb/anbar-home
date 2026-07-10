@@ -20,28 +20,28 @@ export async function POST(request: Request) {
       // 2. Actualizar el estado de la orden (ej. de 'PENDING' a 'PAID' si status es 'APPROVED').
       
       const { adminClient } = require('@/sanity/lib/adminClient')
+      const { GLOBAL_SETTINGS_QUERY } = require('@/sanity/lib/queries')
+      const { processOrderEmails } = require('@/lib/emails')
+
       try {
-        await adminClient.patch(reference).set({ status: status, wompiReference: transaction.id }).commit()
-        console.log(`Orden ${reference} actualizada a estado ${status} en Sanity`)
+        const order = await adminClient.getDocument(reference)
+        
+        if (order && !order.emailSent) {
+          await adminClient.patch(reference).set({ 
+            status: status, 
+            wompiReference: transaction.id,
+            emailSent: true 
+          }).commit()
+          console.log(`Orden ${reference} actualizada a estado ${status} en Sanity`)
+
+          const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY)
+          await processOrderEmails(order, settings, status)
+        } else {
+          console.log(`Orden ${reference} ya procesada o no existe.`)
+        }
       } catch (patchError) {
         console.error(`Error actualizando orden en Sanity (${reference}):`, patchError)
       }
-
-      // ==========================================
-      // TODO: INTEGRACIÓN CON RESEND
-      // ==========================================
-      // 1. Obtener el email del cliente (posiblemente de Sanity o de Wompi si lo incluye).
-      // 2. Si el pago fue aprobado, enviar un email de "Confirmación de Pedido".
-      // 
-      // const resendApiKey = process.env.RESEND_API_KEY
-      // if (status === 'APPROVED') {
-      //   await resend.emails.send({
-      //     from: 'ventas@anbarhome.com',
-      //     to: customerEmail,
-      //     subject: 'Confirmación de tu pedido',
-      //     html: '<p>Gracias por tu compra...</p>'
-      //   })
-      // }
     }
 
     // Wompi requiere un HTTP 200 OK para confirmar recepción
