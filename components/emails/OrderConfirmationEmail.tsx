@@ -116,9 +116,7 @@ export const OrderConfirmationEmail = ({
 
             <Hr style={hr} />
 
-            <Text style={text}>
-              Te notificaremos por correo cuando tu pedido sea enviado. Si tienes alguna pregunta, no dudes en contactarnos.
-            </Text>
+            
 
             <Section style={btnContainer}>
               <Button style={button} href="https://anbarhome.com">
