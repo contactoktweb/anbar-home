@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { client } from '@/sanity/lib/client';
 import { sanityToMetaProduct } from '@/lib/product-meta-mapper';
 
-export const revalidate = 3600; // Cache de 1 hora
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
@@ -25,7 +25,7 @@ export async function GET() {
 
     const csvRows = [];
     // Cabeceras estándar de Meta Catalog
-    csvRows.push('id,title,description,availability,condition,price,link,image_link,brand,inventory,origin_country');
+    csvRows.push('id,title,description,availability,condition,price,link,image_link,brand,inventory,origin_country,importer_name,importer_address,manufacturer_info');
 
     const seenIds = new Set<string>();
 
@@ -41,7 +41,7 @@ export async function GET() {
       
       // Asegurarse de que no haya comas problemáticas envolviendo los strings con comillas dobles
       csvRows.push(
-        `${finalId},"${metaProd.title}","${metaProd.description}",${metaProd.availability},${metaProd.condition},${metaProd.price},${metaProd.link},${metaProd.image_link},"${metaProd.brand}",${metaProd.inventory},${metaProd.origin_country}`
+        `${finalId},"${metaProd.title}","${metaProd.description}",${metaProd.availability},${metaProd.condition},${metaProd.price},${metaProd.link},${metaProd.image_link},"${metaProd.brand}",${metaProd.inventory},${metaProd.origin_country},"Anbar Home","Colombia","Anbar Home"`
       );
     }
 
