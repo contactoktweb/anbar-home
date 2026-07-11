@@ -17,6 +17,7 @@ export async function GET() {
       availability,
       condition,
       brand,
+      stock,
       "imageUrl": image.asset->url
     }`;
 
@@ -24,14 +25,23 @@ export async function GET() {
 
     const csvRows = [];
     // Cabeceras estándar de Meta Catalog
-    csvRows.push('id,title,description,availability,condition,price,link,image_link,brand');
+    csvRows.push('id,title,description,availability,condition,price,link,image_link,brand,inventory,origin_country');
+
+    const seenIds = new Set<string>();
 
     for (const product of products) {
       const metaProd = sanityToMetaProduct(product);
       
+      // Deduplicar ID si el SKU está repetido en diferentes productos de Sanity
+      let finalId = metaProd.id;
+      if (seenIds.has(finalId)) {
+        finalId = `${finalId}-${product._id}`;
+      }
+      seenIds.add(finalId);
+      
       // Asegurarse de que no haya comas problemáticas envolviendo los strings con comillas dobles
       csvRows.push(
-        `${metaProd.id},"${metaProd.title}","${metaProd.description}",${metaProd.availability},${metaProd.condition},${metaProd.price},${metaProd.link},${metaProd.image_link},"${metaProd.brand}"`
+        `${finalId},"${metaProd.title}","${metaProd.description}",${metaProd.availability},${metaProd.condition},${metaProd.price},${metaProd.link},${metaProd.image_link},"${metaProd.brand}",${metaProd.inventory},${metaProd.origin_country}`
       );
     }
 

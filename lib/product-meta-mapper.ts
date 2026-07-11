@@ -16,6 +16,7 @@ export interface SanityProductPartial {
   availability?: string;
   brand?: string;
   imageUrl?: string;
+  stock?: number;
 }
 
 export interface MetaProductFormat {
@@ -28,6 +29,8 @@ export interface MetaProductFormat {
   link: string;
   image_link: string;
   brand: string;
+  inventory: number;
+  origin_country: string;
 }
 
 /**
@@ -80,6 +83,12 @@ export function sanityToMetaProduct(product: SanityProductPartial): MetaProductF
   
   const imageLink = product.imageUrl || '';
   const brand = product.brand || 'Anbar Home';
+  
+  // Inventory: Meta exige mayor a 0 para que sea "comprable"
+  const inventory = typeof product.stock === 'number' ? Math.max(1, product.stock) : 100;
+  
+  // Origin Country: CO para Colombia por defecto para evitar error de India
+  const origin_country = 'CO';
 
   return {
     id,
@@ -90,7 +99,9 @@ export function sanityToMetaProduct(product: SanityProductPartial): MetaProductF
     price,
     link,
     image_link: imageLink,
-    brand
+    brand,
+    inventory,
+    origin_country
   };
 }
 
