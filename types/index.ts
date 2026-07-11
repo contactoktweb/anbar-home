@@ -7,6 +7,7 @@ export interface Product {
   originalPrice?: number
   category: string
   image: string
+  images?: string[]
   rating: number
   ratingCount?: number
   description?: string

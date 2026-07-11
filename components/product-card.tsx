@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Product } from '@/types'
@@ -14,9 +14,33 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const [isAdded, setIsAdded] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  
   const { cart, addToCart, toggleFavorite, isFavorite } = useStore()
   const favorite = isFavorite(product.id)
   const isInCart = cart.some(item => item.id === product.id)
+
+  // Recopilar todas las imágenes disponibles (principal + galería)
+  const allImages = product.image ? [product.image, ...(product.images || [])] : []
+  const hasMultipleImages = allImages.length > 1
+
+  // Ciclo automático de imágenes al hacer hover
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    
+    if (isHovered && hasMultipleImages) {
+      interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % allImages.length)
+      }, 1500) // Cambia de imagen cada 1.5s
+    } else {
+      setCurrentImageIndex(0) // Reinicia a la imagen principal al quitar el hover
+    }
+
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [isHovered, hasMultipleImages, allImages.length])
 
   // Format prices in COP
   const formatCOP = (amount: number) =>
@@ -30,7 +54,12 @@ export function ProductCard({ product }: ProductCardProps) {
   const formattedOriginalPrice = product.originalPrice ? formatCOP(product.originalPrice) : null
 
   return (
-    <Link href={`/product/${product.slug || product.id}`} className="group flex h-full flex-col cursor-pointer">
+    <Link 
+      href={`/product/${product.slug || product.id}`} 
+      className="group flex h-full flex-col cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div className="relative mb-4 aspect-square overflow-hidden bg-white flex items-center justify-center p-4 shrink-0">
         {/* Sale badge */}
         {product.originalPrice && (
@@ -38,15 +67,46 @@ export function ProductCard({ product }: ProductCardProps) {
             Sale
           </span>
         )}
-        {product.image && (
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover object-center mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
-          />
+        
+        {/* Render all images stacked, fading between them based on currentImageIndex */}
+        {allImages.length > 0 ? (
+          allImages.map((img, idx) => (
+            <Image
+              key={`${img}-${idx}`}
+              src={img}
+              alt={`${product.name} - Imagen ${idx + 1}`}
+              fill
+              className={cn(
+                "object-cover object-center mix-blend-multiply transition-all duration-700",
+                currentImageIndex === idx ? "opacity-100 group-hover:scale-105" : "opacity-0 scale-100"
+              )}
+            />
+          ))
+        ) : (
+          product.image && (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover object-center mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
+            />
+          )
         )}
         
+        {/* Dots indicators for hover (optional nice UI touch when hovering) */}
+        {hasMultipleImages && (
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {allImages.map((_, idx) => (
+              <div 
+                key={idx} 
+                className={cn(
+                  "h-1 rounded-full transition-all duration-300",
+                  currentImageIndex === idx ? "w-4 bg-camel-dark" : "w-1.5 bg-neutral-300"
+                )}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col space-y-1">
