@@ -20,6 +20,7 @@ export default async function Page() {
 
   const featuredProducts = rawFeaturedProducts.map((p: any) => ({
     id: p._id,
+    slug: p.slug,
     name: p.name,
     price: p.price,
     originalPrice: p.originalPrice,
@@ -35,6 +36,7 @@ export default async function Page() {
 
   const newArrivals = rawNewArrivals.map((p: any) => ({
     id: p._id,
+    slug: p.slug,
     name: p.name,
     price: p.price,
     originalPrice: p.originalPrice,

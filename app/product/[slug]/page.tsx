@@ -103,6 +103,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const latestProducts = rawLatestProducts.map((p: any) => ({
     id: p._id,
     sku: p.sku,
+    slug: p.slug,
     name: p.name,
     price: p.price,
     originalPrice: p.originalPrice,

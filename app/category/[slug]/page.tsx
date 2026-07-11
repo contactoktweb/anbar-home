@@ -67,6 +67,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   // Format Sanity products to match our internal Product type
   const formattedSanityProducts = sanityProducts.map((p: any) => ({
     id: p._id,
+    slug: p.slug,
     name: p.name,
     price: p.price,
     originalPrice: p.originalPrice,
