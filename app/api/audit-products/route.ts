@@ -75,7 +75,7 @@ export async function GET() {
 
       // Validar URL (El link público se genera con el _id según nuestra arquitectura actual)
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.com';
-      const link = `${siteUrl.replace(/\/$/, '')}/product/${product._id}`;
+      const link = `${siteUrl.replace(/\/$/, '')}/product/${product.slug?.current || product._id}`;
       if (!link.startsWith('http')) {
         urlIssues.push('URL generada es inválida o no absoluta');
       }

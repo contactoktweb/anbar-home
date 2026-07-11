@@ -48,6 +48,7 @@ export const HOME_PAGE_QUERY = groq`
     featuredProducts[]->{
       _id,
       name,
+      "slug": slug.current,
       sku,
       price,
       originalPrice,
@@ -58,6 +59,7 @@ export const HOME_PAGE_QUERY = groq`
     newArrivalsProducts[]->{
       _id,
       name,
+      "slug": slug.current,
       sku,
       price,
       originalPrice,
@@ -72,6 +74,7 @@ export const PRODUCTS_QUERY = groq`
   *[_type == "product"] | order(_createdAt desc) {
     _id,
     name,
+    "slug": slug.current,
     sku,
     price,
     originalPrice,
@@ -94,6 +97,7 @@ export const LATEST_PRODUCTS_QUERY = groq`
   *[_type == "product"] | order(_createdAt desc)[0...16] {
     _id,
     name,
+    "slug": slug.current,
     sku,
     price,
     originalPrice,
@@ -103,10 +107,11 @@ export const LATEST_PRODUCTS_QUERY = groq`
   }
 `
 
-export const PRODUCT_BY_ID_QUERY = groq`
-  *[_type == "product" && _id == $id][0] {
+export const PRODUCT_BY_SLUG_QUERY = groq`
+  *[_type == "product" && slug.current == $slug][0] {
     _id,
     name,
+    "slug": slug.current,
     sku,
     price,
     originalPrice,

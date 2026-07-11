@@ -30,7 +30,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const formattedOriginalPrice = product.originalPrice ? formatCOP(product.originalPrice) : null
 
   return (
-    <Link href={`/product/${product.id}`} className="group flex h-full flex-col cursor-pointer">
+    <Link href={`/product/${product.slug || product.id}`} className="group flex h-full flex-col cursor-pointer">
       <div className="relative mb-4 aspect-square overflow-hidden bg-white flex items-center justify-center p-4 shrink-0">
         {/* Sale badge */}
         {product.originalPrice && (

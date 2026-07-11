@@ -11,14 +11,14 @@ import { ProductReviews } from '@/components/product-reviews'
 import { ProductTracker } from '@/components/ui/product-tracker'
 import { ShareButtons } from '@/components/share-buttons'
 import { client } from '@/sanity/lib/client'
-import { PRODUCT_BY_ID_QUERY, LATEST_PRODUCTS_QUERY, REVIEWS_BY_PRODUCT_QUERY } from '@/sanity/lib/queries'
+import { PRODUCT_BY_SLUG_QUERY, LATEST_PRODUCTS_QUERY, REVIEWS_BY_PRODUCT_QUERY } from '@/sanity/lib/queries'
 
 export async function generateMetadata(
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ slug: string }> },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const resolvedParams = await params
-  const sanityProduct = await client.fetch(PRODUCT_BY_ID_QUERY, { id: resolvedParams.id }).catch(() => null)
+  const sanityProduct = await client.fetch(PRODUCT_BY_SLUG_QUERY, { slug: resolvedParams.slug }).catch(() => null)
   
   if (!sanityProduct) {
     return {
@@ -31,7 +31,7 @@ export async function generateMetadata(
     : `Compra ${sanityProduct.name} en Anbar Home.`
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.com'
-  const productUrl = `${siteUrl}/product/${sanityProduct._id}`
+  const productUrl = `${siteUrl}/product/${sanityProduct.slug}`
 
   return {
     title: sanityProduct.name,
@@ -58,10 +58,10 @@ export async function generateMetadata(
   }
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params
   
-  const sanityProduct = await client.fetch(PRODUCT_BY_ID_QUERY, { id: resolvedParams.id })
+  const sanityProduct = await client.fetch(PRODUCT_BY_SLUG_QUERY, { slug: resolvedParams.slug })
 
   if (!sanityProduct) {
     notFound()
@@ -70,6 +70,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   const product = {
     id: sanityProduct._id,
     sku: sanityProduct.sku,
+    slug: sanityProduct.slug,
     name: sanityProduct.name,
     price: sanityProduct.price,
     originalPrice: sanityProduct.originalPrice,
@@ -111,7 +112,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   }))
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.com'
-  const productUrl = `${siteUrl}/product/${product.id}`
+  const productUrl = `${siteUrl}/product/${product.slug}`
 
   return (
     <>
@@ -131,7 +132,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               priceCurrency: 'COP',
               price: product.price,
               availability: 'https://schema.org/InStock',
-              url: `https://anbarhome.com/product/${product.id}`,
+              url: `https://anbarhome.com/product/${product.slug}`,
             }
           })
         }}

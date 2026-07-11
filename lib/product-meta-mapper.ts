@@ -77,9 +77,8 @@ export function sanityToMetaProduct(product: SanityProductPartial): MetaProductF
   const price = `${product.price || 0} ${product.currency || 'COP'}`;
   
   // Link
-  // Usamos _id para la ruta si la plataforma usa app/product/[id].
-  // Si en el futuro cambian a slug, aquí se modificará a product.slug?.current.
-  const link = `${siteUrl}/product/${product._id}`;
+  // Usamos slug para la ruta de la página de producto si existe, sino usamos _id.
+  const link = `${siteUrl}/product/${product.slug?.current || product._id}`;
   
   const imageLink = product.imageUrl || '';
   const brand = product.brand || 'Anbar Home';

@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categories = await client.fetch(CATEGORIES_QUERY).catch(() => [])
 
   const productUrls = products.map((product: any) => ({
-    url: `${baseUrl}/product/${product._id}`,
+    url: `${baseUrl}/product/${product.slug?.current || product._id}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.8,
