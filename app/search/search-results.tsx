@@ -3,6 +3,8 @@
 import { useSearchParams } from 'next/navigation'
 import { CategoryProductGrid } from '@/components/category-product-grid'
 import { Search } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { trackEvent } from '@/lib/fb-tracking'
 
 export default function SearchResults({ products = [] }: { products?: any[] }) {
   const searchParams = useSearchParams()
@@ -10,6 +12,17 @@ export default function SearchResults({ products = [] }: { products?: any[] }) {
   const maxPriceParam = searchParams.get('maxPrice')
   const maxPrice = maxPriceParam ? parseInt(maxPriceParam, 10) : null
   
+  const searchTracked = useRef('')
+
+  useEffect(() => {
+    if (query && searchTracked.current !== query) {
+      trackEvent('Search', {
+        search_string: query
+      })
+      searchTracked.current = query
+    }
+  }, [query])
+
   const normalizedQuery = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
   
   const filteredProducts = products.filter((product) => {

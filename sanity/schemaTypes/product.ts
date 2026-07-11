@@ -14,22 +14,41 @@ export const product = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'name',
+        maxLength: 96,
+      },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'sku',
-      title: 'SKU',
+      title: 'SKU / ID para Meta',
       type: 'string',
       validation: (rule) => rule.required(),
+      description: 'El ID único que se usará para rastreo en Meta Ads y el feed del catálogo.',
     }),
     defineField({
       name: 'description',
       title: 'Descripción',
       type: 'text',
-      description: 'Descripción corta o larga del producto',
+      validation: (rule) => rule.required(),
+      description: 'Descripción detallada requerida por Meta Ads',
     }),
     defineField({
       name: 'price',
       title: 'Precio (Rebajado o Actual)',
       type: 'number',
-      validation: (rule) => rule.required().min(0),
+      validation: (rule) => rule.required().min(1),
+    }),
+    defineField({
+      name: 'currency',
+      title: 'Moneda',
+      type: 'string',
+      initialValue: 'COP',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'originalPrice',
@@ -40,10 +59,46 @@ export const product = defineType({
     }),
     defineField({
       name: 'stock',
-      title: 'Inventario',
+      title: 'Inventario Numérico',
       type: 'number',
       initialValue: 0,
       validation: (rule) => rule.min(0),
+    }),
+    defineField({
+      name: 'availability',
+      title: 'Disponibilidad (Para Catálogo)',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'In Stock', value: 'in stock' },
+          { title: 'Out of Stock', value: 'out of stock' },
+          { title: 'Preorder', value: 'preorder' },
+          { title: 'Available for Order', value: 'available for order' },
+        ],
+      },
+      initialValue: 'in stock',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'condition',
+      title: 'Condición',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'New', value: 'new' },
+          { title: 'Refurbished', value: 'refurbished' },
+          { title: 'Used', value: 'used' },
+        ],
+      },
+      initialValue: 'new',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'brand',
+      title: 'Marca',
+      type: 'string',
+      initialValue: 'Anbar Home',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'category',

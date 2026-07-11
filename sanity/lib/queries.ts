@@ -48,6 +48,7 @@ export const HOME_PAGE_QUERY = groq`
     featuredProducts[]->{
       _id,
       name,
+      sku,
       price,
       originalPrice,
       "category": category->title,
@@ -57,6 +58,7 @@ export const HOME_PAGE_QUERY = groq`
     newArrivalsProducts[]->{
       _id,
       name,
+      sku,
       price,
       originalPrice,
       "category": category->title,
@@ -70,6 +72,7 @@ export const PRODUCTS_QUERY = groq`
   *[_type == "product"] | order(_createdAt desc) {
     _id,
     name,
+    sku,
     price,
     originalPrice,
     "category": category->title,
@@ -91,6 +94,7 @@ export const LATEST_PRODUCTS_QUERY = groq`
   *[_type == "product"] | order(_createdAt desc)[0...16] {
     _id,
     name,
+    sku,
     price,
     originalPrice,
     "category": category->title,
@@ -103,6 +107,7 @@ export const PRODUCT_BY_ID_QUERY = groq`
   *[_type == "product" && _id == $id][0] {
     _id,
     name,
+    sku,
     price,
     originalPrice,
     "category": category->title,

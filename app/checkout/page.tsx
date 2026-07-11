@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useStore } from '@/components/store-provider'
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import { generateWompiSignature } from './actions'
+import { trackEvent, getCookie } from '@/lib/fb-tracking'
+import React from 'react'
 
 declare global {
   interface Window {
@@ -60,9 +62,25 @@ export default function CheckoutPage() {
   
   const { cart, clearCart, updateQuantity, removeFromCart } = useStore()
 
+  const checkoutTracked = React.useRef(false)
+
   useEffect(() => {
     setIsMounted(true)
-  }, [])
+    if (cart.length > 0 && !checkoutTracked.current) {
+      trackEvent('InitiateCheckout', {
+        currency: 'COP',
+        value: cart.reduce((total, item) => total + item.price * item.quantity, 0),
+        num_items: cart.reduce((total, item) => total + item.quantity, 0),
+        content_ids: cart.map(item => item.sku || item.id),
+        contents: cart.map(item => ({
+          id: item.sku || item.id,
+          quantity: item.quantity,
+          item_price: item.price
+        }))
+      })
+      checkoutTracked.current = true
+    }
+  }, [cart])
 
   const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
   
@@ -108,11 +126,40 @@ export default function CheckoutPage() {
     }
 
     try {
+      trackEvent('AddPaymentInfo', {
+        currency: 'COP',
+        value: cartTotal,
+        content_ids: cart.map(item => item.sku || item.id),
+        contents: cart.map(item => ({
+          id: item.sku || item.id,
+          quantity: item.quantity,
+          item_price: item.price
+        }))
+      }, {
+        em: formData.email,
+        ph: formData.phone,
+        fn: formData.firstName,
+        ln: formData.lastName,
+        ct: formData.city,
+        st: formData.department,
+        country: 'co' // FB ISO format usually 2 letters
+      })
+
+      // Extraer meta fields
+      const fbp = getCookie('_fbp')
+      const fbc = getCookie('_fbc')
+      const eventSourceUrl = window.location.href
+
       // 1. Crear el pedido en Sanity primero
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ formData, cart, cartTotal }),
+        body: JSON.stringify({ 
+          formData, 
+          cart, 
+          cartTotal,
+          meta: { fbp, fbc, eventSourceUrl }
+        }),
       })
 
       if (!response.ok) {

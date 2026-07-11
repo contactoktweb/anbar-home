@@ -55,6 +55,7 @@ export const order = defineType({
           type: 'object',
           fields: [
             { name: 'name', type: 'string', title: 'Nombre' },
+            { name: 'sku', type: 'string', title: 'SKU' },
             { name: 'quantity', type: 'number', title: 'Cantidad' },
             { name: 'price', type: 'number', title: 'Precio' },
           ]
@@ -93,6 +94,46 @@ export const order = defineType({
       type: 'boolean',
       initialValue: false,
       readOnly: true,
+    }),
+    defineField({
+      name: 'paidAt',
+      title: 'Fecha de Pago',
+      type: 'datetime',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'wompiTransactionId',
+      title: 'ID Transacción Wompi (Interno)',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'wompiRawStatus',
+      title: 'Estado Crudo Wompi',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'wompiPaymentMethodType',
+      title: 'Método de Pago',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'meta',
+      title: 'Meta Tracking Data',
+      type: 'object',
+      readOnly: true,
+      fields: [
+        { name: 'fbp', type: 'string', title: '_fbp Cookie' },
+        { name: 'fbc', type: 'string', title: '_fbc Cookie' },
+        { name: 'clientIp', type: 'string', title: 'IP del Cliente' },
+        { name: 'clientUserAgent', type: 'string', title: 'User Agent' },
+        { name: 'eventSourceUrl', type: 'string', title: 'Source URL' },
+        { name: 'purchaseEventId', type: 'string', title: 'Purchase Event ID' },
+        { name: 'purchaseSentToMeta', type: 'boolean', title: 'Enviado a Meta CAPI', initialValue: false },
+        { name: 'purchaseSentToMetaAt', type: 'datetime', title: 'Fecha de Envío a CAPI' },
+      ]
     }),
   ],
   preview: {

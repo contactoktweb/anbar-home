@@ -8,6 +8,8 @@ import { WhatsAppButton } from '@/components/whatsapp-button'
 import { FeaturedProducts } from '@/components/featured-products'
 import { ProductTabs } from '@/components/product-tabs'
 import { ProductReviews } from '@/components/product-reviews'
+import { ProductTracker } from '@/components/ui/product-tracker'
+import { ShareButtons } from '@/components/share-buttons'
 import { client } from '@/sanity/lib/client'
 import { PRODUCT_BY_ID_QUERY, LATEST_PRODUCTS_QUERY, REVIEWS_BY_PRODUCT_QUERY } from '@/sanity/lib/queries'
 
@@ -28,18 +30,31 @@ export async function generateMetadata(
     ? sanityProduct.description.replace(/\\n/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 160) 
     : `Compra ${sanityProduct.name} en Anbar Home.`
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.com'
+  const productUrl = `${siteUrl}/product/${sanityProduct._id}`
+
   return {
     title: sanityProduct.name,
     description: plainDescription,
+    alternates: {
+      canonical: productUrl,
+    },
     openGraph: {
       title: sanityProduct.name,
       description: plainDescription,
+      url: productUrl,
       images: [
         {
           url: sanityProduct.imageUrl || '',
         },
       ],
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: sanityProduct.name,
+      description: plainDescription,
+      images: [sanityProduct.imageUrl || ''],
+    }
   }
 }
 
@@ -54,6 +69,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
   const product = {
     id: sanityProduct._id,
+    sku: sanityProduct.sku,
     name: sanityProduct.name,
     price: sanityProduct.price,
     originalPrice: sanityProduct.originalPrice,
@@ -85,6 +101,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   
   const latestProducts = rawLatestProducts.map((p: any) => ({
     id: p._id,
+    sku: p.sku,
     name: p.name,
     price: p.price,
     originalPrice: p.originalPrice,
@@ -93,8 +110,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     rating: p.rating || 0
   }))
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.com'
+  const productUrl = `${siteUrl}/product/${product.id}`
+
   return (
     <>
+      <ProductTracker product={product} />
       <SiteHeader />
       <script
         type="application/ld+json"
@@ -158,6 +179,9 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               <div className="mb-6">
                 <ProductActions product={product} />
               </div>
+
+              {/* Share Buttons */}
+              <ShareButtons url={productUrl} title={product.name} />
 
             </div>
           </div>

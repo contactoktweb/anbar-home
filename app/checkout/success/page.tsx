@@ -3,12 +3,18 @@ import { CheckCircle } from 'lucide-react'
 import { adminClient } from '@/sanity/lib/adminClient'
 import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
 import { processOrderEmails } from '@/lib/emails'
+// Eliminado el PurchaseTracker del frontend porque ahora se hace en el webhook
 
 export default async function CheckoutSuccessPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const searchParams = await props.searchParams
   const transactionId = searchParams.ref as string | undefined
+
+  let orderValue = 0
+  let orderContentIds: string[] = []
+  let orderContents: any[] = []
+  let orderId = ''
 
   if (transactionId) {
     try {
@@ -21,22 +27,36 @@ export default async function CheckoutSuccessPage(props: {
         const result = await response.json()
         const transaction = result.data
         if (transaction && transaction.status && transaction.reference) {
+          orderValue = transaction.amount_in_cents / 100
+          
           // Obtener orden
           const order = await adminClient.getDocument(transaction.reference)
           
-          if (order && !order.emailSent) {
-            // Actualizar Sanity
-            await adminClient.patch(transaction.reference).set({ 
-              status: transaction.status, 
-              wompiReference: transaction.id,
-              emailSent: true
-            }).commit()
-            
-            // Obtener configuración global (logo y email admin)
-            const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY)
-            
-            // Procesar envío de correos
-            await processOrderEmails(order, settings, transaction.status)
+          if (order) {
+            orderId = order._id
+            if (order.cart) {
+              orderContentIds = (order.cart as any[]).map((item: any) => item.id)
+              orderContents = (order.cart as any[]).map((item: any) => ({
+                id: item.id,
+                quantity: item.quantity,
+                item_price: item.price
+              }))
+            }
+
+            if (!order.emailSent) {
+              // Actualizar Sanity
+              await adminClient.patch(transaction.reference).set({ 
+                status: transaction.status, 
+                wompiReference: transaction.id,
+                emailSent: true
+              }).commit()
+              
+              // Obtener configuración global (logo y email admin)
+              const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY)
+              
+              // Procesar envío de correos
+              await processOrderEmails(order, settings, transaction.status)
+            }
           }
         }
       }

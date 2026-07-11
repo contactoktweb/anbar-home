@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Product } from '@/types'
 import { useStore } from '@/components/store-provider'
 import { Heart, Check, Minus, Plus, Loader2 } from 'lucide-react'
+import { trackEvent } from '@/lib/fb-tracking'
 
 export function ProductActions({ product }: { product: Product }) {
   const { cart, addToCart, toggleFavorite, isFavorite } = useStore()
@@ -22,6 +23,22 @@ export function ProductActions({ product }: { product: Product }) {
     // Simulate a longer loading state for better UX
     setTimeout(() => {
       addToCart(product, quantity)
+      
+      trackEvent('AddToCart', {
+        content_name: product.name,
+        content_ids: [product.sku || product.id],
+        content_type: 'product',
+        value: product.price * quantity,
+        currency: 'COP',
+        contents: [
+          {
+            id: product.sku || product.id,
+            quantity: quantity,
+            item_price: product.price
+          }
+        ]
+      })
+
       setStatus('added')
       
       // Reset back to idle after a few seconds
@@ -34,6 +51,23 @@ export function ProductActions({ product }: { product: Product }) {
 
   const handleBuyNow = () => {
     addToCart(product, quantity)
+    
+    trackEvent('InitiateCheckout', {
+      content_name: product.name,
+      content_ids: [product.sku || product.id],
+      content_type: 'product',
+      num_items: quantity,
+      value: product.price * quantity,
+      currency: 'COP',
+      contents: [
+        {
+          id: product.sku || product.id,
+          quantity: quantity,
+          item_price: product.price
+        }
+      ]
+    })
+
     router.push('/checkout')
   }
 
