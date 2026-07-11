@@ -30,6 +30,30 @@ export interface MetaProductFormat {
   brand: string;
 }
 
+/**
+ * Corrige textos que están completamente en mayúsculas (rechazados por Meta)
+ */
+function formatMetaText(str: string, isTitle: boolean = false): string {
+  if (!str) return '';
+  const upperCount = (str.match(/[A-ZÁÉÍÓÚÑ]/g) || []).length;
+  const letterCount = (str.match(/[a-zA-ZáéíóúñÁÉÍÓÚÑ]/g) || []).length;
+  
+  // Si más del 40% del texto son mayúsculas, lo formateamos
+  if (letterCount > 0 && (upperCount / letterCount) > 0.4) {
+    if (isTitle) {
+      // Title Case: "Reno Felpa Mediano"
+      return str.toLowerCase().split(/\s+/).map(word => {
+        if (!word) return word;
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }).join(' ');
+    } else {
+      // Sentence Case para descripciones
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+  }
+  return str;
+}
+
 export function sanityToMetaProduct(product: SanityProductPartial): MetaProductFormat {
   // El ID del catálogo DEBE ser idéntico al content_ids que se manda en el pixel.
   // Prioridad 1: SKU. Prioridad 2: ID de Sanity.
@@ -37,10 +61,12 @@ export function sanityToMetaProduct(product: SanityProductPartial): MetaProductF
   
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.com').replace(/\/$/, '');
   
-  // Limpieza de strings
-  const title = (product.name || '').replace(/"/g, '""');
-  const rawDescription = product.description || product.name || '';
-  const description = rawDescription.replace(/"/g, '""').replace(/\n/g, ' ').substring(0, 5000);
+  // Limpieza de strings y corrección de MAYÚSCULAS
+  const rawTitle = (product.name || '').replace(/"/g, '""');
+  const title = formatMetaText(rawTitle, true);
+  
+  const rawDescription = (product.description || product.name || '').replace(/"/g, '""').replace(/\n/g, ' ').substring(0, 5000);
+  const description = formatMetaText(rawDescription, false);
   
   // Valores seguros por defecto
   const availability = product.availability || 'in stock';
