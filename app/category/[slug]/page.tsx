@@ -74,6 +74,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     category: p.category,
     categorySlug: p.categorySlug,
     image: p.imageUrl,
+    images: p.images || [],
     rating: p.rating || 0
   }))
 

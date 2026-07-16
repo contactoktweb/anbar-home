@@ -54,6 +54,7 @@ export const HOME_PAGE_QUERY = groq`
       originalPrice,
       "category": category->title,
       "imageUrl": image.asset->url,
+      "images": gallery[].asset->url,
       rating
     },
     newArrivalsProducts[]->{
@@ -65,6 +66,7 @@ export const HOME_PAGE_QUERY = groq`
       originalPrice,
       "category": category->title,
       "imageUrl": image.asset->url,
+      "images": gallery[].asset->url,
       rating
     }
   }
@@ -81,6 +83,7 @@ export const PRODUCTS_QUERY = groq`
     "category": category->title,
     "categorySlug": category->slug.current,
     "imageUrl": image.asset->url,
+    "images": gallery[].asset->url,
     rating
   }
 `
@@ -103,6 +106,7 @@ export const LATEST_PRODUCTS_QUERY = groq`
     originalPrice,
     "category": category->title,
     "imageUrl": image.asset->url,
+    "images": gallery[].asset->url,
     rating
   }
 `
@@ -117,6 +121,7 @@ export const PRODUCT_BY_SLUG_QUERY = groq`
     originalPrice,
     "category": category->title,
     "imageUrl": image.asset->url,
+    "images": gallery[].asset->url,
     rating,
     ratingCount,
     description

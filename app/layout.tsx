@@ -19,11 +19,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: {
     template: '%s | Anbar Home',
-    default: 'Anbar Home — Decoración inspirada en Medio Oriente y Egipto',
+    default: 'Anbar Home — Decoración Exclusiva',
   },
   description:
-    'Anbar Home es una marca de decoración para el hogar inspirada en Medio Oriente y Egipto. Piezas artesanales, atemporales y serenas en tonos camel y blanco.',
-  keywords: ['decoración del hogar', 'decoración medio oriente', 'piezas artesanales', 'anbar home', 'jarrones', 'esculturas', 'diseño de interiores colombia', 'lujo silencioso'],
+    'Anbar Home es una marca de decoración para el hogar. Piezas artesanales, atemporales y serenas en tonos camel y blanco.',
+  keywords: ['decoración del hogar', 'decoración', 'piezas artesanales', 'anbar home', 'jarrones', 'esculturas', 'diseño de interiores colombia', 'lujo silencioso'],
   generator: 'Next.js',
   authors: [{ name: 'Anbar Home' }],
   creator: 'Anbar Home',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Anbar Home — Decoración Exclusiva',
-    description: 'Piezas artesanales, atemporales y serenas inspiradas en Medio Oriente.',
+    description: 'Piezas artesanales, atemporales y serenas.',
     url: 'https://anbarhome.com',
     siteName: 'Anbar Home',
     images: [
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Anbar Home — Decoración Exclusiva',
-    description: 'Piezas artesanales, atemporales y serenas inspiradas en Medio Oriente.',
+    description: 'Piezas artesanales, atemporales y serenas.',
     images: ['/logo-A.png'],
   },
   icons: {

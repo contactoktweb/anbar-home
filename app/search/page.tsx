@@ -34,6 +34,7 @@ export default async function SearchPage() {
     originalPrice: p.originalPrice,
     category: p.category,
     image: p.imageUrl,
+    images: p.images || [],
     rating: p.rating || 0
   }))
 

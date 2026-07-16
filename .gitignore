@@ -47,3 +47,7 @@ __v0_jsx-dev-runtime.ts
 # Scripts and build artifacts
 migrate-legal.js
 scratch/
+
+# Data
+*.xlsx
+*.csv

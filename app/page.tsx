@@ -15,7 +15,7 @@ export default async function Page() {
 
   // Si no hay productos destacados seleccionados, obtenemos los últimos del 0 al 8
   const rawFeaturedProducts = data?.featuredProducts?.length > 0 
-    ? data.featuredProducts 
+    ? [...data.featuredProducts].reverse() 
     : latestProducts.slice(0, 8)
 
   const featuredProducts = rawFeaturedProducts.map((p: any) => ({
@@ -26,12 +26,13 @@ export default async function Page() {
     originalPrice: p.originalPrice,
     category: p.category,
     image: p.imageUrl,
+    images: p.images || [],
     rating: p.rating || 0
   }))
 
   // Si no hay nueva colección, obtenemos los últimos del 8 al 16 para que no sean los mismos
   const rawNewArrivals = data?.newArrivalsProducts?.length > 0 
-    ? data.newArrivalsProducts 
+    ? [...data.newArrivalsProducts].reverse() 
     : latestProducts.slice(8, 16)
 
   const newArrivals = rawNewArrivals.map((p: any) => ({
@@ -42,6 +43,7 @@ export default async function Page() {
     originalPrice: p.originalPrice,
     category: p.category,
     image: p.imageUrl,
+    images: p.images || [],
     rating: p.rating || 0
   }))
 
@@ -59,7 +61,7 @@ export default async function Page() {
                 name: 'Anbar Home',
                 url: 'https://anbarhome.com',
                 logo: 'https://anbarhome.com/logo-A.png',
-                description: 'Anbar Home es una marca de decoración para el hogar inspirada en Medio Oriente y Egipto. Piezas artesanales, atemporales y serenas en tonos camel y blanco.',
+                description: 'Anbar Home es una marca de decoración para el hogar. Piezas artesanales, atemporales y serenas en tonos camel y blanco.',
                 contactPoint: {
                   '@type': 'ContactPoint',
                   telephone: '+57 322 7559139',

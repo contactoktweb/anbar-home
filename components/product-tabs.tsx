@@ -2,12 +2,15 @@
 
 import { useState } from 'react'
 
+import { cn } from '@/lib/utils'
+
 interface ProductTabsProps {
   description?: string | null
 }
 
 export function ProductTabs({ description }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState<'description' | 'shipping' | 'care'>('description')
+  const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <div className="w-full mt-12">
@@ -61,24 +64,44 @@ export function ProductTabs({ description }: ProductTabsProps) {
                 .trim()
             : "Una pieza excepcional que refleja la esencia del diseño interior más humano y orgánico. Elaborado con atención al detalle, este producto añade una capa de sofisticación y calma a cualquier espacio."
 
+          const needsExpand = formattedDescription.length > 300
+
           return (
-            <div 
-              className="text-[0.95rem] lg:text-[1rem] leading-[1.9] text-neutral-600 font-light text-justify animate-in fade-in duration-500 whitespace-pre-line [&>p]:mb-4 [&>strong]:font-medium [&>span]:block"
-              dangerouslySetInnerHTML={{ 
-                __html: formattedDescription
-              }}
-            />
+            <div className="flex flex-col items-center">
+              <div className="relative w-full">
+                <div 
+                  className={cn(
+                    "text-[0.85rem] lg:text-[0.9rem] leading-[1.9] text-neutral-600 font-light text-justify animate-in fade-in duration-500 whitespace-pre-line [&>p]:mb-4 [&>strong]:font-medium [&>span]:block transition-all duration-300",
+                    !isExpanded && needsExpand ? "max-h-[160px] overflow-hidden" : ""
+                  )}
+                  dangerouslySetInnerHTML={{ 
+                    __html: formattedDescription
+                  }}
+                />
+                {!isExpanded && needsExpand && (
+                  <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#fdfbf7] to-transparent pointer-events-none" />
+                )}
+              </div>
+              {needsExpand && (
+                <button 
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="mt-6 font-serif text-[0.95rem] font-medium text-camel-dark underline underline-offset-4 hover:text-neutral-900 transition-colors"
+                >
+                  {isExpanded ? 'Ver menos' : 'Ver más'}
+                </button>
+              )}
+            </div>
           )
         })()}
 
         {activeTab === 'shipping' && (
-          <div className="text-[0.95rem] lg:text-[1rem] leading-[1.9] text-neutral-600 font-light animate-in fade-in duration-500">
+          <div className="text-[0.85rem] lg:text-[0.9rem] leading-[1.9] text-neutral-600 font-light animate-in fade-in duration-500">
             <p>Envíos estándar de 3 a 5 días hábiles a nivel nacional. Embalaje seguro y premium para garantizar que su pieza llegue en perfectas condiciones.</p>
           </div>
         )}
 
         {activeTab === 'care' && (
-          <div className="text-[0.95rem] lg:text-[1rem] leading-[1.9] text-neutral-600 font-light animate-in fade-in duration-500">
+          <div className="text-[0.85rem] lg:text-[0.9rem] leading-[1.9] text-neutral-600 font-light animate-in fade-in duration-500">
             <p>Limpiar con un paño seco y suave. Evitar el contacto directo con la humedad y productos químicos abrasivos para preservar su acabado original a lo largo del tiempo.</p>
           </div>
         )}

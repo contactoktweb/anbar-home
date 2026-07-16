@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Product } from '@/types'
 import { cn } from '@/lib/utils'
-import { ShoppingBag, Heart, Check } from 'lucide-react'
+import { ShoppingBag, Heart, Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useStore } from '@/components/store-provider'
 
 interface ProductCardProps {
@@ -30,6 +30,10 @@ export function ProductCard({ product }: ProductCardProps) {
     let interval: NodeJS.Timeout
     
     if (isHovered && hasMultipleImages) {
+      if (currentImageIndex === 0) {
+        setCurrentImageIndex(1)
+      }
+      
       interval = setInterval(() => {
         setCurrentImageIndex((prev) => (prev + 1) % allImages.length)
       }, 1500) // Cambia de imagen cada 1.5s
@@ -107,6 +111,34 @@ export function ProductCard({ product }: ProductCardProps) {
             ))}
           </div>
         )}
+
+        {/* Navigation Buttons */}
+        {hasMultipleImages && (
+          <>
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))
+              }}
+              className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/80 p-1.5 text-neutral-600 opacity-0 transition-all duration-300 hover:bg-white hover:text-camel group-hover:opacity-100 hidden md:flex"
+              aria-label="Imagen anterior"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentImageIndex((prev) => (prev + 1) % allImages.length)
+              }}
+              className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/80 p-1.5 text-neutral-600 opacity-0 transition-all duration-300 hover:bg-white hover:text-camel group-hover:opacity-100 hidden md:flex"
+              aria-label="Siguiente imagen"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col space-y-1">
@@ -140,11 +172,11 @@ export function ProductCard({ product }: ProductCardProps) {
         
         <div className="flex items-center justify-between mt-auto pt-2">
           <div className="flex items-baseline gap-2 min-h-[1.2em]">
-            <span className="text-[15px] font-serif text-camel-dark">
+            <span className="text-[15px] font-sans font-medium text-neutral-900 tracking-tight">
               {product.price > 0 ? formattedPrice : '$'}
             </span>
             {formattedOriginalPrice && (
-              <span className="text-[13px] font-serif text-neutral-400 line-through">
+              <span className="text-[13px] font-sans text-neutral-400 line-through">
                 {formattedOriginalPrice}
               </span>
             )}

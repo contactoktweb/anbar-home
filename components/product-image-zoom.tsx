@@ -3,10 +3,13 @@
 import { useState, useRef } from 'react'
 import Image from 'next/image'
 
-export function ProductImageZoom({ src, alt }: { src: string, alt: string }) {
+export function ProductImageZoom({ src, images = [], alt }: { src: string, images?: string[], alt: string }) {
   const [position, setPosition] = useState({ x: 50, y: 50 })
   const [isZoomed, setIsZoomed] = useState(false)
+  const [activeImage, setActiveImage] = useState(src)
   const imageRef = useRef<HTMLDivElement>(null)
+
+  const allImages = [src, ...images].filter((v, i, a) => a.indexOf(v) === i) // Unique images
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!imageRef.current) return
@@ -36,7 +39,7 @@ export function ProductImageZoom({ src, alt }: { src: string, alt: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-4 w-full">
       <div 
         ref={imageRef}
         className="group relative aspect-square w-full overflow-hidden bg-[#F8F6F2] cursor-crosshair select-none"
@@ -62,7 +65,7 @@ export function ProductImageZoom({ src, alt }: { src: string, alt: string }) {
         }}
       >
         <Image
-          src={src}
+          src={activeImage}
           alt={alt}
           fill
           className="object-contain object-center mix-blend-multiply transition-transform duration-[400ms] ease-out"
@@ -75,9 +78,31 @@ export function ProductImageZoom({ src, alt }: { src: string, alt: string }) {
           draggable={false}
         />
       </div>
-      <p className="text-center text-[11px] uppercase tracking-widest text-neutral-400 md:hidden mt-2">
+      <p className="text-center text-[11px] uppercase tracking-widest text-neutral-400 md:hidden mt-0">
         Mantén presionada la imagen para ver el detalle
       </p>
+      
+      {allImages.length > 1 && (
+        <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+          {allImages.map((img, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveImage(img)}
+              className={`relative h-20 w-20 shrink-0 overflow-hidden border-2 transition-colors ${
+                activeImage === img ? 'border-camel-dark' : 'border-transparent hover:border-neutral-300'
+              } bg-[#F8F6F2]`}
+            >
+              <Image
+                src={img}
+                alt={`${alt} - vista ${idx + 1}`}
+                fill
+                className="object-cover object-center mix-blend-multiply"
+                sizes="80px"
+              />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

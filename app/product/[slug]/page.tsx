@@ -76,6 +76,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     originalPrice: sanityProduct.originalPrice,
     category: sanityProduct.category,
     image: sanityProduct.imageUrl,
+    images: sanityProduct.images || [],
     rating: sanityProduct.rating || 0,
     ratingCount: sanityProduct.ratingCount || 0,
     description: sanityProduct.description
@@ -109,6 +110,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     originalPrice: p.originalPrice,
     category: p.category,
     image: p.imageUrl,
+    images: p.images || [],
     rating: p.rating || 0
   }))
 
@@ -144,7 +146,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             
             {/* Image Gallery Column (Seamless open) */}
             <div className="flex flex-col lg:sticky lg:top-28">
-              <ProductImageZoom src={product.image} alt={product.name} />
+              <ProductImageZoom src={product.image} images={product.images} alt={product.name} />
             </div>
 
             {/* Product Details Column (Open & Luxurious) */}

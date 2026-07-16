@@ -9,12 +9,11 @@ import { Search, Heart, ShoppingBag, X, Trash2, Plus, Minus } from 'lucide-react
 import { useStore } from '@/components/store-provider'
 
 const links = [
-  { label: 'Línea Suprema', href: '/category/linea-suprema' },
+  { label: 'Línea suprema', href: '/category/linea-suprema' },
+  { label: 'Jarrones escultoricos', href: '/category/jarrones' },
   { label: 'Esculturas', href: '/category/esculturas' },
-  { label: 'Summer Sale', href: '/category/summer-sale' },
   { label: 'Accesorios Decorativos', href: '/category/accesorios-decorativos' },
-  { label: 'Jarrones', href: '/category/jarrones' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Blogs', href: '/blog' },
 ]
 
 export function SiteHeader() {
