@@ -101,11 +101,12 @@ export const product = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'category',
-      title: 'Categoría',
-      type: 'reference',
-      to: [{ type: 'category' }],
-      validation: (rule) => rule.required(),
+      name: 'categories',
+      title: 'Categorías',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'category' }] }],
+      description: 'Selecciona una o más categorías para este producto.',
+      validation: (rule) => rule.required().min(1),
     }),
     defineField({
       name: 'image',

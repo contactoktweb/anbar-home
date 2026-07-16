@@ -5,7 +5,12 @@ export interface Product {
   name: string
   price: number
   originalPrice?: number
+  /** Primary category name (first in the array) */
   category: string
+  /** All category names */
+  categories?: string[]
+  /** All category slugs (for filtering) */
+  categorySlugs?: string[]
   image: string
   images?: string[]
   rating: number

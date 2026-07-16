@@ -3,19 +3,8 @@
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
-const categories = [
-  'Todos los productos',
-  'Accesorios decorativos',
-  'Animales',
-  'Bandeja',
-  'Bandejas',
-  'Candelabros',
-  'Esculturas',
-  'Eslabones',
-  'Figuras de Personas',
-  'Figuras Decorativas',
-]
-
+// Note: This sidebar is used only in mobile/fallback contexts.
+// For the main category sidebar, see category-sidebar.tsx which fetches from Sanity.
 export function SidebarFilters() {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -63,20 +52,7 @@ export function SidebarFilters() {
 
         {/* Categories */}
         <div className="mb-6">
-          <ul className="flex flex-col space-y-2.5">
-            {categories.map((category, index) => (
-              <li key={category}>
-                <button
-                  className={cn(
-                    'text-left text-[14px] font-light transition-colors hover:text-camel-dark',
-                    index === 0 ? 'text-foreground' : 'text-foreground/70',
-                  )}
-                >
-                  {category}
-                </button>
-              </li>
-            ))}
-          </ul>
+          <p className="text-[13px] font-light text-foreground/50 italic">Usa el menú superior para filtrar por categoría.</p>
         </div>
 
         <div className="my-4 h-px w-full bg-border/40" />

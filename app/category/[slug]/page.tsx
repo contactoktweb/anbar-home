@@ -71,8 +71,9 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     name: p.name,
     price: p.price,
     originalPrice: p.originalPrice,
-    category: p.category,
-    categorySlug: p.categorySlug,
+    category: p.category || '',
+    categories: p.categories || [],
+    categorySlugs: p.categorySlugs || [],
     image: p.imageUrl,
     images: p.images || [],
     rating: p.rating || 0
@@ -80,8 +81,10 @@ export default async function CategoryPage({ params, searchParams }: { params: P
 
   const allProducts = formattedSanityProducts
   
-  // Filter products by categorySlug exactly matching the URL slug
-  let filteredProducts = allProducts.filter((product: any) => product.categorySlug === slug)
+  // Filter products by any of their categorySlugs matching the URL slug
+  let filteredProducts = allProducts.filter((product: any) =>
+    (product.categorySlugs || []).includes(slug)
+  )
 
   // Override for Summer Sale: show all products with discounts
   if (slug === 'summer-sale') {

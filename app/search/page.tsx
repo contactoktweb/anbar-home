@@ -32,7 +32,9 @@ export default async function SearchPage() {
     name: p.name,
     price: p.price,
     originalPrice: p.originalPrice,
-    category: p.category,
+    category: p.category || '',
+    categories: p.categories || [],
+    categorySlugs: p.categorySlugs || [],
     image: p.imageUrl,
     images: p.images || [],
     rating: p.rating || 0
