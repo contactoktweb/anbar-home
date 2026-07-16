@@ -1,3 +1,5 @@
+export const revalidate = 60
+
 import { SiteHeader } from '@/components/site-header'
 import { HeroWow } from '@/components/hero-wow'
 import { FeaturedProducts } from '@/components/featured-products'

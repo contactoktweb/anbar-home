@@ -1,3 +1,5 @@
+export const revalidate = 60
+
 import { Suspense } from 'react'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { SiteHeader } from '@/components/site-header'

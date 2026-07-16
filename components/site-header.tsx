@@ -10,7 +10,7 @@ import { useStore } from '@/components/store-provider'
 
 const links = [
   { label: 'Línea suprema', href: '/category/linea-suprema' },
-  { label: 'Jarrones escultoricos', href: '/category/jarrones' },
+  { label: 'Jarrones escultoricos', href: '/category/jarrones-escultoricos' },
   { label: 'Esculturas', href: '/category/esculturas' },
   { label: 'Accesorios Decorativos', href: '/category/accesorios-decorativos' },
   { label: 'Blogs', href: '/blog' },
@@ -72,16 +72,16 @@ export function SiteHeader() {
             : 'bg-ivory',
         )}
       >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 md:px-10">
         <Link href="/" className="flex items-center" aria-label="Anbar Home">
           <Image
             src="/LOGO ANBAR.png"
             alt="Anbar Home"
-            width={200}
-            height={83}
+            width={160}
+            height={66}
             priority
             fetchPriority="high"
-            className="h-12 w-auto object-contain md:h-16"
+            className="h-9 w-auto object-contain md:h-12"
           />
         </Link>
 

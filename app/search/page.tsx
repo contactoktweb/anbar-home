@@ -1,3 +1,5 @@
+export const revalidate = 60
+
 import { Suspense } from 'react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
@@ -12,7 +14,7 @@ import SearchResults from './search-results'
 
 export default async function SearchPage() {
   const [sanityProducts, sanityCategories] = await Promise.all([
-    client.fetch(PRODUCTS_QUERY).catch(() => []),
+    client.fetch(PRODUCTS_QUERY),
     client.fetch(CATEGORIES_QUERY).catch(() => [])
   ])
 

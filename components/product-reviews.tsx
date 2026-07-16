@@ -99,7 +99,7 @@ export function ProductReviews({ productId, reviews, initialRating, ratingCount 
 
   return (
     <div className="mt-20 pt-16 border-t border-neutral-200">
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-6">
           <div>
             <h2 className="font-serif text-2xl md:text-3xl text-neutral-900 mb-2">Reseñas de Clientes</h2>

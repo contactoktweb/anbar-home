@@ -51,3 +51,10 @@ scratch/
 # Data
 *.xlsx
 *.csv
+
+# Temporary test/migration outputs and scripts
+query-output.json
+test-search.html
+dev-logs.txt
+scripts/*.mjs
+scripts/*.json
