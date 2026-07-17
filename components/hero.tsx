@@ -10,7 +10,7 @@ export function Hero({ data }: { data?: any }) {
     { 
       src: '/pc/imagen1.jpeg', 
       srcMobile: '/movil/imagen1.jpeg',
-      alt: 'Interior sereno', label: 'Summer Sale', href: '/category/summer-sale' 
+      alt: 'Interior sereno', label: 'SALE', href: '/category/sale' 
     },
     { 
       src: '/pc/imgaen2.jpeg', 

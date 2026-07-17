@@ -37,15 +37,15 @@ export async function SiteFooter() {
   const collectionsLinks = activeCategories.length > 0
     ? [
         ...activeCategories.map((c: any) => ({
-          label: c.title,
+          label: c.title === 'Summer Sale' || c.title === 'sale' ? 'SALE' : c.title,
           href: `/category/${c.slug}`
         })),
-        ...(activeCategories.some((c: any) => c.slug === 'summer-sale') ? [] : [{ label: 'Summer Sale', href: '/category/summer-sale' }])
+        ...(activeCategories.some((c: any) => c.slug === 'summer-sale' || c.slug === 'sale') ? [] : [{ label: 'SALE', href: '/category/sale' }])
       ]
     : [
         { label: 'Línea Suprema', href: '/category/linea-suprema' },
         { label: 'Esculturas', href: '/category/esculturas' },
-        { label: 'Summer Sale', href: '/category/summer-sale' },
+        { label: 'SALE', href: '/category/sale' },
         { label: 'Accesorios Decorativos', href: '/category/accesorios-decorativos' },
         { label: 'Jarrones', href: '/category/jarrones' }
       ]

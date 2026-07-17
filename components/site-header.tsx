@@ -13,6 +13,7 @@ const links = [
   { label: 'Jarrones escultoricos', href: '/category/jarrones-escultoricos' },
   { label: 'Esculturas', href: '/category/esculturas' },
   { label: 'Accesorios Decorativos', href: '/category/accesorios-decorativos' },
+  { label: 'SALE', href: '/category/sale' },
   { label: 'Blogs', href: '/blog' },
 ]
 

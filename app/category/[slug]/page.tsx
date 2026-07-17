@@ -23,8 +23,8 @@ export async function generateMetadata(
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
 
-  if (slug === 'summer-sale') {
-    categoryName = 'Summer Sale'
+  if (slug === 'summer-sale' || slug === 'sale') {
+    categoryName = 'SALE'
   }
 
   const title = `${categoryName} | Colección Exclusiva`
@@ -53,17 +53,27 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   
   // Find current category name
   const currentCategory = sanityCategories.find((c: any) => c.slug === slug)
-  const categoryName = currentCategory ? currentCategory.title : 'Tienda'
+  let categoryName = currentCategory ? currentCategory.title : 'Tienda'
+  if (slug === 'summer-sale' || slug === 'sale') {
+    categoryName = 'SALE'
+  }
 
   // Format sidebar categories
+  const hasSaleCategory = sanityCategories.some((c: any) => c.slug === 'summer-sale' || c.slug === 'sale')
   const sidebarCategories = [
     { name: 'Todos los productos', href: '/search' },
     ...sanityCategories
-      .filter((c: any) => c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized')
+      .filter((c: any) => c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized' && c.slug !== 'summer-sale' && c.slug !== 'sale')
       .map((c: any) => ({
         name: c.title,
         href: `/category/${c.slug}`
-      }))
+      })),
+    ...(hasSaleCategory 
+      ? sanityCategories
+          .filter((c: any) => c.slug === 'summer-sale' || c.slug === 'sale')
+          .map((c: any) => ({ name: 'SALE', href: `/category/${c.slug}` }))
+      : [{ name: 'SALE', href: '/category/sale' }]
+    )
   ]
 
   // Format Sanity products to match our internal Product type
@@ -88,8 +98,8 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     (product.categorySlugs || []).includes(slug)
   )
 
-  // Override for Summer Sale: show all products with discounts
-  if (slug === 'summer-sale') {
+  // Override for Summer Sale & SALE: show all products with discounts
+  if (slug === 'summer-sale' || slug === 'sale') {
     filteredProducts = allProducts.filter((product: any) => product.originalPrice && product.originalPrice > product.price)
   }
 

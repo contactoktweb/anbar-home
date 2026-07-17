@@ -22,10 +22,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }))
 
-  // Ensure 'summer-sale' and 'todas' categories are mapped explicitly
+  // Ensure 'summer-sale', 'sale', and 'todas' categories are mapped explicitly
   const staticCategoryUrls = [
     {
       url: `${baseUrl}/category/summer-sale`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/category/sale`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
