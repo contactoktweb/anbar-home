@@ -18,6 +18,7 @@ export async function GET() {
       condition,
       brand,
       stock,
+      categories[]->{title},
       "imageUrl": image.asset->url
     }`;
 
@@ -25,7 +26,7 @@ export async function GET() {
 
     const csvRows = [];
     // Cabeceras estándar de Meta Catalog
-    csvRows.push('id,title,description,availability,condition,price,link,image_link,brand,inventory,origin_country,importer_name,importer_address,manufacturer_info');
+    csvRows.push('id,title,description,availability,condition,price,link,image_link,brand,inventory,origin_country,importer_name,importer_address,manufacturer_info,product_type');
 
     const seenIds = new Set<string>();
 
@@ -41,7 +42,7 @@ export async function GET() {
       
       // Asegurarse de que no haya comas problemáticas envolviendo los strings con comillas dobles
       csvRows.push(
-        `${finalId},"${metaProd.title}","${metaProd.description}",${metaProd.availability},${metaProd.condition},${metaProd.price},${metaProd.link},${metaProd.image_link},"${metaProd.brand}",${metaProd.inventory},${metaProd.origin_country},"Anbar Home","Colombia","Anbar Home"`
+        `${finalId},"${metaProd.title}","${metaProd.description}",${metaProd.availability},${metaProd.condition},${metaProd.price},${metaProd.link},${metaProd.image_link},"${metaProd.brand}",${metaProd.inventory},${metaProd.origin_country},"Anbar Home","Colombia","Anbar Home","${metaProd.product_type}"`
       );
     }
 

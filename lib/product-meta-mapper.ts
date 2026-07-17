@@ -17,6 +17,7 @@ export interface SanityProductPartial {
   brand?: string;
   imageUrl?: string;
   stock?: number;
+  categories?: { title: string }[];
 }
 
 export interface MetaProductFormat {
@@ -31,6 +32,7 @@ export interface MetaProductFormat {
   brand: string;
   inventory: number;
   origin_country: string;
+  product_type: string;
 }
 
 /**
@@ -89,6 +91,10 @@ export function sanityToMetaProduct(product: SanityProductPartial): MetaProductF
   // Origin Country: CO para Colombia por defecto para evitar error de India
   const origin_country = 'CO';
 
+  const product_type = product.categories && product.categories.length > 0 
+    ? product.categories.map(c => c.title).join(' > ').replace(/"/g, '""')
+    : '';
+
   return {
     id,
     title,
@@ -100,7 +106,8 @@ export function sanityToMetaProduct(product: SanityProductPartial): MetaProductF
     image_link: imageLink,
     brand,
     inventory,
-    origin_country
+    origin_country,
+    product_type
   };
 }
 
