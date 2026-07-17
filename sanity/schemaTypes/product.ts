@@ -48,7 +48,7 @@ export const product = defineType({
       title: 'Moneda',
       type: 'string',
       initialValue: 'COP',
-      validation: (rule) => rule.required(),
+      hidden: true,
     }),
     defineField({
       name: 'originalPrice',
@@ -77,7 +77,7 @@ export const product = defineType({
         ],
       },
       initialValue: 'in stock',
-      validation: (rule) => rule.required(),
+      hidden: true,
     }),
     defineField({
       name: 'condition',
@@ -91,14 +91,14 @@ export const product = defineType({
         ],
       },
       initialValue: 'new',
-      validation: (rule) => rule.required(),
+      hidden: true,
     }),
     defineField({
       name: 'brand',
       title: 'Marca',
       type: 'string',
       initialValue: 'Anbar Home',
-      validation: (rule) => rule.required(),
+      hidden: true,
     }),
     defineField({
       name: 'categories',
