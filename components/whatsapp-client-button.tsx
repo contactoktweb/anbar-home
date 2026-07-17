@@ -23,7 +23,7 @@ export function WhatsAppClientButton({ href }: WhatsAppClientButtonProps) {
       <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-full bg-foreground/90 px-4 py-2 text-[0.7rem] uppercase tracking-[0.18em] text-background opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:block">
         Escríbenos
       </span>
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-lg shadow-foreground/15 ring-1 ring-foreground/5 transition-transform duration-300 ease-out hover:scale-105">
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] shadow-lg shadow-foreground/15 ring-1 ring-foreground/5 transition-transform duration-300 ease-out hover:scale-105">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 448 512"
