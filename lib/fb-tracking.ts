@@ -12,12 +12,13 @@ export const trackEvent = async (
   eventName: string,
   eventData: Record<string, any> = {},
   userData: Record<string, any> = {},
-  eventSourceUrl: string = typeof window !== 'undefined' ? window.location.href : ''
+  eventSourceUrl: string = typeof window !== 'undefined' ? window.location.href : '',
+  customEventId?: string
 ) => {
   if (typeof window === 'undefined') return;
 
   // Generate a unique ID for deduplication between Pixel and CAPI
-  const eventId = crypto.randomUUID();
+  const eventId = customEventId || crypto.randomUUID();
   const eventTime = Math.floor(Date.now() / 1000);
 
   // Capture _fbp and _fbc cookies

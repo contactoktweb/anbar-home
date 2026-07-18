@@ -3,7 +3,8 @@ import { CheckCircle } from 'lucide-react'
 import { adminClient } from '@/sanity/lib/adminClient'
 import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
 import { processOrderEmails } from '@/lib/emails'
-// Eliminado el PurchaseTracker del frontend porque ahora se hace en el webhook
+import { PurchaseTracker } from '@/components/ui/purchase-tracker'
+// Restaurado PurchaseTracker con eventId para deduplicación con el webhook
 
 export default async function CheckoutSuccessPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -15,6 +16,7 @@ export default async function CheckoutSuccessPage(props: {
   let orderContentIds: string[] = []
   let orderContents: any[] = []
   let orderId = ''
+  let purchaseEventId = ''
 
   if (transactionId) {
     try {
@@ -34,6 +36,13 @@ export default async function CheckoutSuccessPage(props: {
           
           if (order) {
             orderId = order._id
+            
+            if (order.meta && order.meta.purchaseEventId) {
+              purchaseEventId = order.meta.purchaseEventId
+            } else {
+              purchaseEventId = `purchase_${transaction.reference}`
+            }
+
             if (order.cart) {
               orderContentIds = (order.cart as any[]).map((item: any) => item.id)
               orderContents = (order.cart as any[]).map((item: any) => ({
@@ -69,6 +78,18 @@ export default async function CheckoutSuccessPage(props: {
 
   return (
     <main className="min-h-screen pt-32 pb-24 bg-white flex items-center justify-center">
+        {orderValue > 0 && (
+          <PurchaseTracker 
+            eventId={purchaseEventId}
+            orderData={{
+              currency: 'COP',
+              value: orderValue,
+              content_ids: orderContentIds,
+              contents: orderContents,
+              order_id: transactionId
+            }} 
+          />
+        )}
         <div className="max-w-xl mx-auto px-6 text-center space-y-8">
           <div className="flex justify-center mb-8">
             <CheckCircle className="w-20 h-20 text-camel-dark" strokeWidth={1} />

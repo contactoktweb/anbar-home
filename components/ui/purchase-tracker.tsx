@@ -11,9 +11,10 @@ interface PurchaseTrackerProps {
     contents?: any[]
     order_id?: string
   }
+  eventId?: string
 }
 
-export function PurchaseTracker({ orderData }: PurchaseTrackerProps) {
+export function PurchaseTracker({ orderData, eventId }: PurchaseTrackerProps) {
   const tracked = useRef(false)
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export function PurchaseTracker({ orderData }: PurchaseTrackerProps) {
         ...(orderData.content_ids && orderData.content_ids.length > 0 ? { content_ids: orderData.content_ids } : {}),
         ...(orderData.contents && orderData.contents.length > 0 ? { contents: orderData.contents } : {}),
         ...(orderData.order_id ? { order_id: orderData.order_id } : {})
-      })
+      }, {}, '', eventId)
       tracked.current = true
     }
   }, [orderData])
