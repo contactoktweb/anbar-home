@@ -21,7 +21,6 @@ export async function POST(request: Request) {
           stringToHash += body[prop];
         }
       }
-      stringToHash += body.timestamp; // Wompi documentation says it uses timestamp in properties: properties array is usually ['transaction.id', 'transaction.status', 'transaction.amount_in_cents', 'timestamp']
       stringToHash += eventsSecret;
       
       const hashBuffer = crypto.createHash('sha256').update(stringToHash).digest('hex');
