@@ -17,6 +17,7 @@ export default async function CheckoutSuccessPage(props: {
   let orderContents: any[] = []
   let orderId = ''
   let purchaseEventId = ''
+  let purchasedItems: any[] = []
 
   if (transactionId) {
     try {
@@ -43,10 +44,11 @@ export default async function CheckoutSuccessPage(props: {
               purchaseEventId = `purchase_${transaction.reference}`
             }
 
-            if (order.cart) {
-              orderContentIds = (order.cart as any[]).map((item: any) => item.id)
-              orderContents = (order.cart as any[]).map((item: any) => ({
-                id: item.id,
+            if (order.items) {
+              purchasedItems = order.items
+              orderContentIds = (order.items as any[]).map((item: any) => item.sku || item._key)
+              orderContents = (order.items as any[]).map((item: any) => ({
+                id: item.sku || item._key,
                 quantity: item.quantity,
                 item_price: item.price
               }))
@@ -104,9 +106,36 @@ export default async function CheckoutSuccessPage(props: {
             </p>
           </div>
 
-          <div className="bg-neutral-50 p-6 rounded-md border border-neutral-100 mt-8">
-            <p className="text-sm text-neutral-500 uppercase tracking-widest mb-2">Referencia de transacción</p>
-            <p className="font-mono text-neutral-900 font-medium">{displayReference}</p>
+          <div className="bg-neutral-50 p-6 rounded-md border border-neutral-100 mt-8 space-y-6 text-left max-w-md mx-auto">
+            <div className="text-center">
+              <p className="text-sm text-neutral-500 uppercase tracking-widest mb-2">Referencia de transacción</p>
+              <p className="font-mono text-neutral-900 font-medium">{displayReference}</p>
+            </div>
+            
+            {purchasedItems.length > 0 && (
+              <div className="border-t border-neutral-200 pt-6">
+                <h3 className="font-serif text-xl text-neutral-900 mb-4 text-center">Resumen de tu pedido</h3>
+                <div className="space-y-4">
+                  {purchasedItems.map((item, idx) => (
+                    <div key={idx} className="flex justify-between text-sm">
+                      <div className="flex-1 pr-4">
+                        <p className="text-neutral-900 font-medium">{item.name}</p>
+                        <p className="text-neutral-500 mt-1">Cant: {item.quantity} x {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(item.price)}</p>
+                      </div>
+                      <p className="text-neutral-900 font-medium whitespace-nowrap">
+                        {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(item.price * item.quantity)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-between items-center border-t border-neutral-200 pt-4 mt-4">
+                  <p className="font-medium text-neutral-900 uppercase tracking-widest text-sm">Total Pagado</p>
+                  <p className="font-medium text-lg text-neutral-900">
+                    {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(orderValue)}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="pt-8">

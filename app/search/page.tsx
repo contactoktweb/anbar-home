@@ -21,11 +21,15 @@ export default async function SearchPage() {
   const sidebarCategories = [
     { name: 'Todos los productos', href: '/search' },
     ...sanityCategories
-      .filter((c: any) => c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized')
+      .filter((c: any) => {
+        const titleUpper = (c.title || '').toUpperCase().replace(/\s+/g, '')
+        return c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized' && c.slug !== 'summer-sale' && c.slug !== 'sale' && titleUpper !== 'SALE'
+      })
       .map((c: any) => ({
         name: c.title,
         href: `/category/${c.slug}`
-      }))
+      })),
+    { name: 'SALE', href: '/category/sale' }
   ]
 
   const formattedSanityProducts = sanityProducts.map((p: any) => ({

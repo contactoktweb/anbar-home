@@ -34,7 +34,7 @@ export async function SiteFooter() {
     (c: any) => c.slug && c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized'
   )
 
-  const collectionsLinks = activeCategories.length > 0
+  const rawCollectionsLinks = activeCategories.length > 0
     ? [
         ...activeCategories.map((c: any) => ({
           label: c.title === 'Summer Sale' || c.title === 'sale' ? 'SALE' : c.title,
@@ -49,6 +49,10 @@ export async function SiteFooter() {
         { label: 'Accesorios Decorativos', href: '/category/accesorios-decorativos' },
         { label: 'Jarrones', href: '/category/jarrones' }
       ]
+
+  const collectionsLinks = rawCollectionsLinks.filter(
+    (link, index, self) => index === self.findIndex((l) => l.label.toLowerCase() === link.label.toLowerCase())
+  )
 
   const bottomGroups = [
     {

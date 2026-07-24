@@ -58,22 +58,19 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     categoryName = 'SALE'
   }
 
-  // Format sidebar categories
-  const hasSaleCategory = sanityCategories.some((c: any) => c.slug === 'summer-sale' || c.slug === 'sale')
+  // Format sidebar categories (guaranteeing a single SALE link)
   const sidebarCategories = [
     { name: 'Todos los productos', href: '/search' },
     ...sanityCategories
-      .filter((c: any) => c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized' && c.slug !== 'summer-sale' && c.slug !== 'sale')
+      .filter((c: any) => {
+        const titleUpper = (c.title || '').toUpperCase().replace(/\s+/g, '')
+        return c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized' && c.slug !== 'summer-sale' && c.slug !== 'sale' && titleUpper !== 'SALE'
+      })
       .map((c: any) => ({
         name: c.title,
         href: `/category/${c.slug}`
       })),
-    ...(hasSaleCategory 
-      ? sanityCategories
-          .filter((c: any) => c.slug === 'summer-sale' || c.slug === 'sale')
-          .map((c: any) => ({ name: 'SALE', href: `/category/${c.slug}` }))
-      : [{ name: 'SALE', href: '/category/sale' }]
-    )
+    { name: 'SALE', href: '/category/sale' }
   ]
 
   // Format Sanity products to match our internal Product type

@@ -15,21 +15,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  const categoryUrls = categories.map((category: any) => ({
-    url: `${baseUrl}/category/${category.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  }))
-
-  // Ensure 'summer-sale', 'sale', and 'todas' categories are mapped explicitly
-  const staticCategoryUrls = [
-    {
-      url: `${baseUrl}/category/summer-sale`,
+  const categoryUrls = categories
+    .filter((category: any) => category.slug !== 'summer-sale' && category.slug !== 'sale')
+    .map((category: any) => ({
+      url: `${baseUrl}/category/${category.slug}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
-    },
+    }))
+
+  const staticCategoryUrls = [
     {
       url: `${baseUrl}/category/sale`,
       lastModified: new Date(),
