@@ -8,6 +8,28 @@ export const getCookie = (name: string): string | undefined => {
   return undefined;
 };
 
+const ensureFbq = () => {
+  if (typeof window === 'undefined') return null;
+  if (typeof (window as any).fbq === 'function') {
+    return (window as any).fbq;
+  }
+  // Initialize fbq stub if not loaded yet so events are queued and never dropped
+  const fbq: any = function () {
+    if (fbq.callMethod) {
+      fbq.callMethod.apply(fbq, arguments);
+    } else {
+      fbq.queue.push(arguments);
+    }
+  };
+  if (!(window as any)._fbq) (window as any)._fbq = fbq;
+  fbq.push = fbq;
+  fbq.loaded = true;
+  fbq.version = '2.0';
+  fbq.queue = (window as any).fbq?.queue || [];
+  (window as any).fbq = fbq;
+  return fbq;
+};
+
 export const trackEvent = async (
   eventName: string,
   eventData: Record<string, any> = {},
@@ -29,8 +51,9 @@ export const trackEvent = async (
   if (fbc) userData.fbc = fbc;
 
   // 1. Client-Side tracking (Pixel)
-  if (typeof (window as any).fbq === 'function') {
-    (window as any).fbq('track', eventName, eventData, { eventID: eventId });
+  const fbq = ensureFbq();
+  if (fbq) {
+    fbq('track', eventName, eventData, { eventID: eventId });
   }
 
   // 2. Server-Side tracking (CAPI)
