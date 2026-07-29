@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // 1. Validar la firma del evento (Webhook Signature)
-    const eventsSecret = process.env.WOMPI_EVENTS_SECRET;
+    const eventsSecret = process.env.WOMPI_EVENTS_SECRET || process.env.WOMPI_EVENTS_KEY;
     if (eventsSecret && body.signature && body.signature.properties && body.signature.checksum) {
       let stringToHash = '';
       for (const prop of body.signature.properties) {

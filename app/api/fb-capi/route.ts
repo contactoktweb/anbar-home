@@ -6,7 +6,7 @@ const hashData = (data: string) => {
   return crypto.createHash('sha256').update(data.trim().toLowerCase()).digest('hex');
 };
 
-const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1068742772254099';
 const ACCESS_TOKEN = process.env.META_CAPI_ACCESS_TOKEN;
 const API_VERSION = process.env.META_GRAPH_API_VERSION || 'v25.0';
 

@@ -3,10 +3,10 @@
 import crypto from 'crypto'
 
 export async function generateWompiSignature(reference: string, amountInCents: number, currency: string) {
-  const integrityKey = process.env.WOMPI_INTEGRITY_KEY
+  const integrityKey = process.env.WOMPI_INTEGRITY_KEY || process.env.WOMPI_INTEGRITY_SECRET
   
   if (!integrityKey) {
-    throw new Error('Missing WOMPI_INTEGRITY_KEY in environment variables')
+    throw new Error('Missing WOMPI_INTEGRITY_KEY or WOMPI_INTEGRITY_SECRET in environment variables')
   }
 
   const stringToHash = `${reference}${amountInCents}${currency}${integrityKey}`
