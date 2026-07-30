@@ -84,15 +84,10 @@ export default function RootLayout({
       lang="es"
       className={`${playfair.variable} ${inter.variable} bg-background`}
     >
-      <body className="font-sans antialiased overflow-x-hidden">
-        <StoreProvider>
-          {children}
-          {process.env.NODE_ENV === 'production' && <Analytics />}
-          <Script src="https://checkout.wompi.co/widget.js" strategy="beforeInteractive" />
-          
+        <head>
           {/* Meta Pixel Code */}
-          <Script id="meta-pixel" strategy="afterInteractive">
-            {`
+          <script dangerouslySetInnerHTML={{
+            __html: `
               !function(f,b,e,v,n,t,s)
               {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
               n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -103,8 +98,8 @@ export default function RootLayout({
               'https://connect.facebook.net/en_US/fbevents.js');
               fbq('init', '${process.env.NEXT_PUBLIC_META_PIXEL_ID || '1068742772254099'}');
               fbq('track', 'PageView');
-            `}
-          </Script>
+            `
+          }} />
           <noscript>
             <img
               height="1"
@@ -115,6 +110,12 @@ export default function RootLayout({
             />
           </noscript>
           {/* End Meta Pixel Code */}
+        </head>
+      <body className="font-sans antialiased overflow-x-hidden">
+        <StoreProvider>
+          {children}
+          {process.env.NODE_ENV === 'production' && <Analytics />}
+          <Script src="https://checkout.wompi.co/widget.js" strategy="beforeInteractive" />
           
           {/* Microsoft Clarity */}
           <Script id="microsoft-clarity" strategy="afterInteractive">

@@ -3,7 +3,6 @@ import { CheckCircle } from 'lucide-react'
 import { adminClient } from '@/sanity/lib/adminClient'
 import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
 import { processOrderEmails } from '@/lib/emails'
-import { PurchaseTracker } from '@/components/ui/purchase-tracker'
 // Restaurado PurchaseTracker con eventId para deduplicación con el webhook
 
 export default async function CheckoutSuccessPage(props: {
@@ -81,16 +80,16 @@ export default async function CheckoutSuccessPage(props: {
   return (
     <main className="min-h-screen pt-32 pb-24 bg-white flex items-center justify-center">
         {orderValue > 0 && (
-          <PurchaseTracker 
-            eventId={purchaseEventId}
-            orderData={{
-              currency: 'COP',
-              value: orderValue,
-              content_ids: orderContentIds,
-              contents: orderContents,
-              order_id: transactionId
-            }} 
-          />
+          <script dangerouslySetInnerHTML={{
+            __html: `
+              fbq('track', 'Purchase', {
+                value: ${orderValue},
+                currency: 'COP',
+                contents: ${JSON.stringify(orderContents)},
+                content_ids: ${JSON.stringify(orderContentIds)},
+              });
+            `
+          }} />
         )}
         <div className="max-w-xl mx-auto px-6 text-center space-y-8">
           <div className="flex justify-center mb-8">
