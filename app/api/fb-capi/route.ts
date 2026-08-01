@@ -35,10 +35,26 @@ export async function POST(req: Request) {
     if (userData.country) processedUserData.country = [hashData(userData.country)];
     if (userData.db) processedUserData.db = [hashData(userData.db)];
     if (userData.ge) processedUserData.ge = [hashData(userData.ge)];
+    // Parse cookies from headers as a fallback
+    const cookieHeader = req.headers.get('cookie') || '';
+    const cookies: Record<string, string> = {};
+    cookieHeader.split(';').forEach(cookie => {
+      const parts = cookie.split('=');
+      if (parts.length >= 2) {
+        cookies[parts[0].trim()] = parts.slice(1).join('=').trim();
+      }
+    });
     
     // Asignar fbp y fbc sin cifrar (ya están generados por Meta)
     if (userData.fbp) processedUserData.fbp = userData.fbp;
+    else if (cookies['_fbp']) processedUserData.fbp = cookies['_fbp'];
+
     if (userData.fbc) processedUserData.fbc = userData.fbc;
+    else if (cookies['_fbc']) processedUserData.fbc = cookies['_fbc'];
+
+    // Asignar external_id cifrado
+    if (userData.external_id) processedUserData.external_id = [hashData(userData.external_id)];
+    else if (cookies['_anbar_ext_id']) processedUserData.external_id = [hashData(cookies['_anbar_ext_id'])];
 
     // Eliminar propiedades nulas o vacías del custom_data
     const cleanEventData = Object.fromEntries(
@@ -60,8 +76,8 @@ export async function POST(req: Request) {
       ]
     };
 
-    // Agregar test_event_code si existe (usualmente solo en desarrollo)
-    if (testEventCode) {
+    // Agregar test_event_code si existe y solo en entorno de desarrollo
+    if (testEventCode && process.env.NODE_ENV === 'development') {
       payload.test_event_code = testEventCode;
     }
 

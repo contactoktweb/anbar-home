@@ -1,11 +1,19 @@
 export const FB_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1068742772254099';
-const TEST_EVENT_CODE = process.env.NEXT_PUBLIC_META_TEST_EVENT_CODE;
+const TEST_EVENT_CODE = process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_META_TEST_EVENT_CODE : undefined;
 
 export const getCookie = (name: string): string | undefined => {
   if (typeof document === 'undefined') return undefined;
   const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
   if (match) return match[2];
   return undefined;
+};
+
+export const setCookie = (name: string, value: string, days: number = 365) => {
+  if (typeof document === 'undefined') return;
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + date.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/";
 };
 
 const ensureFbq = () => {
@@ -49,6 +57,14 @@ export const trackEvent = async (
   
   if (fbp) userData.fbp = fbp;
   if (fbc) userData.fbc = fbc;
+
+  // Generate or retrieve persistent external_id for the user
+  let externalId = getCookie('_anbar_ext_id');
+  if (!externalId) {
+    externalId = crypto.randomUUID();
+    setCookie('_anbar_ext_id', externalId);
+  }
+  userData.external_id = externalId;
 
   // 1. Client-Side tracking (Pixel)
   const fbq = ensureFbq();

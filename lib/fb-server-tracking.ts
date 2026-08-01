@@ -8,7 +8,7 @@ const hashData = (data: string) => {
 const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1068742772254099';
 const ACCESS_TOKEN = process.env.META_CAPI_ACCESS_TOKEN;
 const API_VERSION = process.env.META_GRAPH_API_VERSION || 'v25.0';
-const TEST_EVENT_CODE = process.env.NEXT_PUBLIC_META_TEST_EVENT_CODE;
+const TEST_EVENT_CODE = process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_META_TEST_EVENT_CODE : undefined;
 
 export interface CAPIEventPayload {
   eventName: string;

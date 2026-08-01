@@ -18,6 +18,7 @@ export default async function CheckoutSuccessPage(props: {
   let orderId = ''
   let purchaseEventId = ''
   let purchasedItems: any[] = []
+  let userData: any = {}
 
   if (transactionId) {
     try {
@@ -42,6 +43,16 @@ export default async function CheckoutSuccessPage(props: {
               purchaseEventId = order.meta.purchaseEventId
             } else {
               purchaseEventId = `purchase_${transaction.reference}`
+            }
+
+            userData = {
+              em: order.customerEmail,
+              ph: order.customerPhone,
+              fn: order.customerFirstName,
+              ln: order.customerLastName,
+              ct: order.shippingAddress?.city,
+              st: order.shippingAddress?.department,
+              country: 'co'
             }
 
             if (order.items) {
@@ -90,6 +101,7 @@ export default async function CheckoutSuccessPage(props: {
             contents: orderContents,
             order_id: transactionId
           }}
+          userData={userData}
         />
       )}
       <div className="max-w-xl mx-auto px-6 text-center space-y-8">
