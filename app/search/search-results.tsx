@@ -29,7 +29,7 @@ export default function SearchResults({ products = [] }: { products?: any[] }) {
     let match = true
 
     if (query) {
-      const normalizedName = product.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+      const normalizedName = (product.name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
       match = match && normalizedName.includes(normalizedQuery)
     }
 
