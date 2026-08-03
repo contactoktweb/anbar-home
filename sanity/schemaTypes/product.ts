@@ -8,6 +8,13 @@ export const product = defineType({
   icon: TagIcon,
   fields: [
     defineField({
+      name: 'isActive',
+      title: 'Producto Activo',
+      type: 'boolean',
+      initialValue: true,
+      description: 'Desactiva este interruptor para ocultar el producto de la tienda.',
+    }),
+    defineField({
       name: 'name',
       title: 'Nombre del Producto',
       type: 'string',

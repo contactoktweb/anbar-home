@@ -45,7 +45,7 @@ export const HOME_PAGE_QUERY = groq`
       "imageUrl": asset->url,
       alt
     },
-    featuredProducts[]->{
+    featuredProducts[@->isActive != false]->{
       _id,
       name,
       "slug": slug.current,
@@ -59,7 +59,7 @@ export const HOME_PAGE_QUERY = groq`
       "images": gallery[].asset->url,
       rating
     },
-    newArrivalsProducts[]->{
+    newArrivalsProducts[@->isActive != false]->{
       _id,
       name,
       "slug": slug.current,
@@ -77,7 +77,7 @@ export const HOME_PAGE_QUERY = groq`
 `
 
 export const PRODUCTS_QUERY = groq`
-  *[_type == "product"] | order(_createdAt desc) {
+  *[_type == "product" && isActive != false] | order(_createdAt desc) {
     _id,
     name,
     "slug": slug.current,
@@ -103,7 +103,7 @@ export const CATEGORIES_QUERY = groq`
 `
 
 export const LATEST_PRODUCTS_QUERY = groq`
-  *[_type == "product"] | order(_createdAt desc)[0...16] {
+  *[_type == "product" && isActive != false] | order(_createdAt desc)[0...16] {
     _id,
     name,
     "slug": slug.current,
@@ -120,7 +120,7 @@ export const LATEST_PRODUCTS_QUERY = groq`
 `
 
 export const PRODUCT_BY_SLUG_QUERY = groq`
-  *[_type == "product" && slug.current == $slug][0] {
+  *[_type == "product" && slug.current == $slug && isActive != false][0] {
     _id,
     name,
     "slug": slug.current,
