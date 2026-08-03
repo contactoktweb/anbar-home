@@ -41,7 +41,7 @@ export function LogoMeaning({ data }: { data?: any }) {
           {categories.map((item: any, i: number) => {
             const getCategorySlug = (title: string) => {
               const lower = title.toLowerCase()
-              if (lower.includes('jarrones')) return 'jarrones'
+              if (lower.includes('jarrones')) return 'jarrones-escultoricos'
               if (lower.includes('esculturas')) return 'esculturas'
               if (lower.includes('línea suprema') || lower.includes('linea suprema')) return 'linea-suprema'
               return title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')
