@@ -75,7 +75,7 @@ export function NewArrivals({ products = [] }: { products?: any[] }) {
           </div>
           <div className="flex items-center gap-6">
             <Link 
-              href="/tienda"
+              href="/search"
               className="group inline-flex items-center gap-4 text-xs uppercase tracking-[0.2em] text-neutral-800 hover:text-camel transition-colors pb-2 border-b border-neutral-300 hover:border-camel"
             >
               Ver Todo
