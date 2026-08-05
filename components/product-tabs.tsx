@@ -71,7 +71,7 @@ export function ProductTabs({ description }: ProductTabsProps) {
               <div className="relative w-full">
                 <div 
                   className={cn(
-                    "text-[0.85rem] lg:text-[0.9rem] leading-[1.9] text-neutral-600 font-light text-justify animate-in fade-in duration-500 whitespace-pre-line [&>p]:mb-4 [&>strong]:font-medium [&>span]:block transition-all duration-300",
+                    "text-[0.8rem] lg:text-[0.85rem] leading-[1.6] text-neutral-600 font-light text-justify animate-in fade-in duration-500 whitespace-pre-line [&>p]:mb-4 [&>strong]:font-medium [&>span]:block transition-all duration-300",
                     !isExpanded && needsExpand ? "max-h-[160px] overflow-hidden" : ""
                   )}
                   dangerouslySetInnerHTML={{ 
@@ -95,7 +95,7 @@ export function ProductTabs({ description }: ProductTabsProps) {
         })()}
 
         {activeTab === 'shipping' && (
-          <div className="text-[0.85rem] lg:text-[0.9rem] leading-[1.9] text-neutral-600 font-light animate-in fade-in duration-500 space-y-2">
+          <div className="text-[0.8rem] lg:text-[0.85rem] leading-[1.6] text-neutral-600 font-light animate-in fade-in duration-500 space-y-2">
             <p><strong className="font-medium text-neutral-900">Entrega rápida:</strong> Entrega en 48 horas en ciudades principales de Colombia.</p>
             <p><strong className="font-medium text-neutral-900">Resto del país:</strong> Envíos estándar de 3 a 5 días hábiles a nivel nacional.</p>
             <p>Embalaje seguro y premium para garantizar que su pieza llegue en perfectas condiciones.</p>
@@ -103,7 +103,7 @@ export function ProductTabs({ description }: ProductTabsProps) {
         )}
 
         {activeTab === 'care' && (
-          <div className="text-[0.85rem] lg:text-[0.9rem] leading-[1.9] text-neutral-600 font-light animate-in fade-in duration-500">
+          <div className="text-[0.8rem] lg:text-[0.85rem] leading-[1.6] text-neutral-600 font-light animate-in fade-in duration-500">
             <p>Limpiar con un paño seco y suave. Evitar el contacto directo con la humedad y productos químicos abrasivos para preservar su acabado original a lo largo del tiempo.</p>
           </div>
         )}
