@@ -20,7 +20,7 @@ interface OrderConfirmationEmailProps {
   customerName: string;
   orderReference: string;
   totalAmount: number;
-  items: Array<{ name: string; quantity: number; price: number }>;
+  items: Array<{ name: string; quantity: number; price: number; image?: string }>;
   logoUrl?: string;
   shippingAddress?: {
     address: string;
@@ -105,10 +105,21 @@ export const OrderConfirmationEmail = ({
             <Heading as="h3" style={subheading}>Resumen de Artículos</Heading>
             {items.map((item, index) => (
               <Row key={index} style={itemRow}>
-                <Column style={{ width: '70%' }}>
+                {item.image && (
+                  <Column style={{ width: '64px', verticalAlign: 'top' }}>
+                    <Img
+                      src={item.image}
+                      width="50"
+                      height="50"
+                      alt={item.name}
+                      style={itemImage}
+                    />
+                  </Column>
+                )}
+                <Column style={{ verticalAlign: 'top' }}>
                   <Text style={itemName}>{item.name} <span style={itemQuantity}>(x{item.quantity})</span></Text>
                 </Column>
-                <Column style={{ width: '30%', textAlign: 'right' }}>
+                <Column style={{ width: '100px', textAlign: 'right', verticalAlign: 'top' }}>
                   <Text style={itemPrice}>{formatCOP(item.price * item.quantity)}</Text>
                 </Column>
               </Row>
@@ -237,6 +248,12 @@ const detailText = {
 
 const itemRow = {
   marginBottom: '15px',
+};
+
+const itemImage = {
+  borderRadius: '6px',
+  objectFit: 'cover' as const,
+  border: '1px solid #eaeaea',
 };
 
 const itemName = {
