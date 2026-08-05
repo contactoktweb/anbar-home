@@ -95,8 +95,10 @@ export function ProductTabs({ description }: ProductTabsProps) {
         })()}
 
         {activeTab === 'shipping' && (
-          <div className="text-[0.85rem] lg:text-[0.9rem] leading-[1.9] text-neutral-600 font-light animate-in fade-in duration-500">
-            <p>Envíos estándar de 3 a 5 días hábiles a nivel nacional. Embalaje seguro y premium para garantizar que su pieza llegue en perfectas condiciones.</p>
+          <div className="text-[0.85rem] lg:text-[0.9rem] leading-[1.9] text-neutral-600 font-light animate-in fade-in duration-500 space-y-2">
+            <p><strong className="font-medium text-neutral-900">Entrega rápida:</strong> Entrega en 48 horas en ciudades principales de Colombia.</p>
+            <p><strong className="font-medium text-neutral-900">Resto del país:</strong> Envíos estándar de 3 a 5 días hábiles a nivel nacional.</p>
+            <p>Embalaje seguro y premium para garantizar que su pieza llegue en perfectas condiciones.</p>
           </div>
         )}
 

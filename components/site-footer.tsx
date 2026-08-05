@@ -46,7 +46,7 @@ export async function SiteFooter() {
         { label: 'Línea Suprema', href: '/category/linea-suprema' },
         { label: 'Esculturas', href: '/category/esculturas' },
         { label: 'SALE', href: '/category/sale' },
-        { label: 'Accesorios Decorativos', href: '/category/accesorios-decorativos' },
+        { label: 'Acentos Decorativos', href: '/category/acentos-decorativos' },
         { label: 'Jarrones', href: '/category/jarrones' }
       ]
 

@@ -12,7 +12,7 @@ const links = [
   { label: 'Línea suprema', href: '/category/linea-suprema' },
   { label: 'Jarrones escultoricos', href: '/category/jarrones-escultoricos' },
   { label: 'Esculturas', href: '/category/esculturas' },
-  { label: 'Accesorios Decorativos', href: '/category/accesorios-decorativos' },
+  { label: 'Acentos Decorativos', href: '/category/acentos-decorativos' },
   { label: 'SALE', href: '/category/sale' },
   { label: 'Blogs', href: '/blog' },
 ]

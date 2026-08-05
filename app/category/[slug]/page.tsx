@@ -1,6 +1,7 @@
 export const revalidate = 60
 
 import { Suspense } from 'react'
+import { redirect } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
@@ -16,7 +17,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const resolvedParams = await params
-  const slug = resolvedParams.slug
+  const slug = resolvedParams.slug === 'accesorios-decorativos' || resolvedParams.slug === 'accesorios' ? 'acentos-decorativos' : resolvedParams.slug
 
   let categoryName = slug
     .split('-')
@@ -44,6 +45,10 @@ export async function generateMetadata(
 export default async function CategoryPage({ params, searchParams }: { params: Promise<{ slug: string }>, searchParams: Promise<{ maxPrice?: string }> }) {
   const { slug } = await params
   const { maxPrice } = await searchParams
+
+  if (slug === 'accesorios-decorativos' || slug === 'accesorios') {
+    redirect('/category/acentos-decorativos')
+  }
 
   // Fetch all products and categories from Sanity
   const [sanityProducts, sanityCategories] = await Promise.all([

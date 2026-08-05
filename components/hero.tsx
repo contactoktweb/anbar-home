@@ -25,7 +25,7 @@ export function Hero({ data }: { data?: any }) {
     { 
       src: '/pc/imagen4.jpeg', 
       srcMobile: '/movil/imagen3.jpeg',
-      alt: 'Accesorios', label: 'Accesorios', href: '/category/accesorios' 
+      alt: 'Acentos Decorativos', label: 'Acentos Decorativos', href: '/category/acentos-decorativos' 
     },
   ]
 

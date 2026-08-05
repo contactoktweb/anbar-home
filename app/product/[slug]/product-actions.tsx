@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Product } from '@/types'
 import { useStore } from '@/components/store-provider'
-import { Heart, Check, Minus, Plus, Loader2 } from 'lucide-react'
+import { Heart, Check, Minus, Plus, Loader2, Truck, ShieldCheck } from 'lucide-react'
 import { trackEvent } from '@/lib/fb-tracking'
 
 export function ProductActions({ product }: { product: Product }) {
@@ -135,6 +135,17 @@ export function ProductActions({ product }: { product: Product }) {
             }`}
           />
         </button>
+      </div>
+
+      {/* Banner Informativo de Entrega */}
+      <div className="mt-2 rounded-md border border-neutral-200/80 bg-[#f7f5f0]/80 p-3.5 flex items-center gap-3.5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-camel-dark/10 text-camel-dark shrink-0">
+          <Truck className="h-4 w-4" strokeWidth={2} />
+        </div>
+        <div className="flex flex-col text-xs">
+          <span className="font-semibold text-neutral-900">Entrega en 48 horas</span>
+          <span className="text-neutral-600 font-light">En ciudades principales de Colombia</span>
+        </div>
       </div>
     </div>
   )
