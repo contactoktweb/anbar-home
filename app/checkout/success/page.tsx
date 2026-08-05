@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { CheckCircle } from 'lucide-react'
 import { adminClient } from '@/sanity/lib/adminClient'
 import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
@@ -10,7 +11,7 @@ export default async function CheckoutSuccessPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const searchParams = await props.searchParams
-  const transactionId = searchParams.ref as string | undefined
+  const transactionId = (searchParams.id || searchParams.ref) as string | undefined
 
   let orderValue = 0
   let orderContentIds: string[] = []
@@ -19,6 +20,8 @@ export default async function CheckoutSuccessPage(props: {
   let purchaseEventId = ''
   let purchasedItems: any[] = []
   let userData: any = {}
+  let customerInfo: any = null
+  let shippingInfo: any = null
 
   if (transactionId) {
     try {
@@ -54,6 +57,14 @@ export default async function CheckoutSuccessPage(props: {
               st: order.shippingAddress?.department,
               country: 'co'
             }
+
+            customerInfo = {
+              name: `${order.customerFirstName || ''} ${order.customerLastName || ''}`.trim(),
+              email: order.customerEmail,
+              phone: order.customerPhone
+            }
+
+            shippingInfo = order.shippingAddress
 
             if (order.items) {
               purchasedItems = order.items
@@ -119,20 +130,52 @@ export default async function CheckoutSuccessPage(props: {
         </div>
 
         <div className="bg-neutral-50 p-6 rounded-md border border-neutral-100 mt-8 space-y-6 text-left max-w-md mx-auto">
-          <div className="text-center">
-            <p className="text-sm text-neutral-500 uppercase tracking-widest mb-2">Referencia de transacción</p>
+          <div className="text-center border-b border-neutral-200 pb-4">
+            <p className="text-xs text-neutral-500 uppercase tracking-widest mb-1">Referencia de transacción</p>
             <p className="font-mono text-neutral-900 font-medium">{displayReference}</p>
           </div>
 
+          {customerInfo && (customerInfo.name || customerInfo.email) && (
+            <div className="space-y-2 text-sm border-b border-neutral-200 pb-4">
+              <h3 className="font-serif text-base text-neutral-900 font-medium">Información de contacto</h3>
+              <div className="text-neutral-600 space-y-1">
+                {customerInfo.name && <p><span className="font-medium text-neutral-800">Cliente:</span> {customerInfo.name}</p>}
+                {customerInfo.email && <p><span className="font-medium text-neutral-800">Email:</span> {customerInfo.email}</p>}
+                {customerInfo.phone && <p><span className="font-medium text-neutral-800">Teléfono:</span> {customerInfo.phone}</p>}
+              </div>
+            </div>
+          )}
+
+          {shippingInfo && shippingInfo.address && (
+            <div className="space-y-2 text-sm border-b border-neutral-200 pb-4">
+              <h3 className="font-serif text-base text-neutral-900 font-medium">Dirección de envío</h3>
+              <p className="text-neutral-600 leading-relaxed">
+                {shippingInfo.address}{shippingInfo.apartment ? `, ${shippingInfo.apartment}` : ''}<br />
+                {shippingInfo.city}, {shippingInfo.department}<br />
+                {shippingInfo.country || 'Colombia'}
+              </p>
+            </div>
+          )}
+
           {purchasedItems.length > 0 && (
-            <div className="border-t border-neutral-200 pt-6">
-              <h3 className="font-serif text-xl text-neutral-900 mb-4 text-center">Resumen de tu pedido</h3>
+            <div>
+              <h3 className="font-serif text-base text-neutral-900 font-medium mb-3">Detalle del pedido</h3>
               <div className="space-y-4">
                 {purchasedItems.map((item, idx) => (
-                  <div key={idx} className="flex justify-between text-sm">
-                    <div className="flex-1 pr-4">
-                      <p className="text-neutral-900 font-medium">{item.name}</p>
-                      <p className="text-neutral-500 mt-1">Cant: {item.quantity} x {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(item.price)}</p>
+                  <div key={idx} className="flex items-center gap-4 text-sm">
+                    {item.image && (
+                      <div className="relative h-14 w-14 flex-shrink-0 bg-white border border-neutral-200 rounded-md overflow-hidden">
+                        <Image
+                          src={item.image}
+                          alt={item.name || 'Producto'}
+                          fill
+                          className="object-cover object-center p-1 mix-blend-multiply"
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0 pr-2">
+                      <p className="text-neutral-900 font-medium line-clamp-2">{item.name}</p>
+                      <p className="text-neutral-500 mt-0.5 text-xs">Cant: {item.quantity} x {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(item.price)}</p>
                     </div>
                     <p className="text-neutral-900 font-medium whitespace-nowrap">
                       {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(item.price * item.quantity)}
@@ -141,7 +184,7 @@ export default async function CheckoutSuccessPage(props: {
                 ))}
               </div>
               <div className="flex justify-between items-center border-t border-neutral-200 pt-4 mt-4">
-                <p className="font-medium text-neutral-900 uppercase tracking-widest text-sm">Total Pagado</p>
+                <p className="font-medium text-neutral-900 uppercase tracking-widest text-xs">Total Pagado</p>
                 <p className="font-medium text-lg text-neutral-900">
                   {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(orderValue)}
                 </p>

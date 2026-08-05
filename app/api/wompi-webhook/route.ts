@@ -126,6 +126,13 @@ export async function POST(request: Request) {
               console.error(`Error enviando Purchase a Meta para orden ${reference}:`, capiResponse.error);
             }
           }
+        } else if (status === 'DECLINED' || status === 'ERROR' || status === 'VOIDED') {
+          if (!order.declinedEmailSent && !order.emailSent) {
+            const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY);
+            await processOrderEmails(order, settings, status);
+            await adminClient.patch(reference).set({ declinedEmailSent: true }).commit();
+            console.log(`Correo de orden declinada enviado para ${reference}`);
+          }
         }
       } catch (patchError) {
         console.error(`Error procesando orden en Sanity (${reference}):`, patchError);

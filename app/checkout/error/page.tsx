@@ -1,12 +1,47 @@
 import Link from 'next/link'
 import { XCircle } from 'lucide-react'
+import { adminClient } from '@/sanity/lib/adminClient'
+import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
+import { processOrderEmails } from '@/lib/emails'
 
 export default async function CheckoutErrorPage(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const searchParams = await props.searchParams
-  const status = searchParams.status || 'ERROR'
-  const reference = searchParams.ref || 'Desconocida'
+  const transactionId = (searchParams.id || searchParams.ref) as string | undefined
+  let status = (searchParams.status as string) || 'DECLINED'
+  let reference = transactionId || 'Desconocida'
+
+  if (transactionId) {
+    try {
+      const isTest = process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY?.startsWith('pub_test_')
+      const wompiUrl = isTest ? 'https://sandbox.wompi.co/v1' : 'https://production.wompi.co/v1'
+
+      const response = await fetch(`${wompiUrl}/transactions/${transactionId}`, { cache: 'no-store' })
+      if (response.ok) {
+        const result = await response.json()
+        const transaction = result.data
+        if (transaction && transaction.reference) {
+          status = transaction.status || status
+          reference = transaction.reference
+
+          const order = await adminClient.getDocument(transaction.reference)
+          if (order && !order.declinedEmailSent && !order.emailSent) {
+            await adminClient.patch(transaction.reference).set({
+              status: status,
+              wompiReference: transaction.id,
+              declinedEmailSent: true
+            }).commit()
+
+            const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY)
+            await processOrderEmails(order, settings, status)
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Error procesando error de transacción en CheckoutErrorPage:', e)
+    }
+  }
 
   return (
     <main className="min-h-screen pt-32 pb-24 bg-white flex items-center justify-center">

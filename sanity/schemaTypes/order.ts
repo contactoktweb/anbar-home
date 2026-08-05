@@ -58,6 +58,7 @@ export const order = defineType({
             { name: 'sku', type: 'string', title: 'SKU' },
             { name: 'quantity', type: 'number', title: 'Cantidad' },
             { name: 'price', type: 'number', title: 'Precio' },
+            { name: 'image', type: 'string', title: 'Imagen URL' },
           ]
         }
       ]

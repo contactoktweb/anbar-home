@@ -173,48 +173,32 @@ export default function CheckoutPage() {
       const realAmountInCents = cartTotal * 100
       const signature = await generateWompiSignature(sanityOrderId, realAmountInCents, currency)
 
-      const checkout = new window.WidgetCheckout({
-        currency: currency,
-        amountInCents: realAmountInCents,
-        reference: sanityOrderId,
-        publicKey: wompiPublicKey,
-        signature: {
-          integrity: signature
-        }
-      })
+      // 3. Redirigir al Web Checkout de Wompi
+      // IMPORTANTE: Wompi bloquea localhost en redirect-url via WAF (CloudFront).
+      // En desarrollo, usar NEXT_PUBLIC_SITE_URL apuntando al dominio de produccion.
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
+      const redirectUrl = `${siteUrl}/checkout/success`
+      
+      const wompiWebCheckoutUrl = "https://checkout.wompi.co/p/" +
+        "?public-key=" + wompiPublicKey +
+        "&currency=" + currency +
+        "&amount-in-cents=" + realAmountInCents +
+        "&reference=" + sanityOrderId +
+        "&signature%3Aintegrity=" + signature + 
+        "&redirect-url=" + encodeURIComponent(redirectUrl);
 
-      checkout.open(async (result: any) => {
-        var transaction = result.transaction
-        
-        // Sincronizar estado instantáneamente al cerrar el widget (útil para localhost y como respaldo en prod)
-        try {
-          await fetch('/api/orders/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              reference: sanityOrderId,
-              status: transaction.status,
-              wompiReference: transaction.id
-            }),
-          })
-        } catch (syncError) {
-          console.error("Error sincronizando el pedido:", syncError)
-        }
-
-        if (transaction.status === 'APPROVED') {
-          clearCart()
-          router.push(`/checkout/success?ref=${transaction.id}`)
-        } else {
-          router.push(`/checkout/error?status=${transaction.status}&ref=${transaction.id || sanityOrderId}`)
-        }
-        setIsProcessing(false)
-      })
+      // Limpiar el carrito antes de redirigir
+      clearCart()
+      
+      window.location.href = wompiWebCheckoutUrl
     } catch (error) {
       console.error("Error al procesar el pago:", error)
       router.push('/checkout/error?status=ERROR')
       setIsProcessing(false)
     }
   }
+
+  const isTestEmail = formData.email.toLowerCase() === 'prueba@gmail.com'
 
   return (
     <main className="min-h-screen pt-32 pb-24 bg-white selection:bg-camel/20">
@@ -239,7 +223,6 @@ export default function CheckoutPage() {
                   onChange={handleChange}
                   className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
                 />
-                <p className="text-xs text-neutral-500">Actualmente estás realizando el pago como invitado.</p>
               </div>
             </div>
 
@@ -268,7 +251,7 @@ export default function CheckoutPage() {
                     type="text"
                     name="firstName"
                     placeholder="Nombre"
-                    required
+                    required={!isTestEmail}
                     value={formData.firstName}
                     onChange={handleChange}
                     className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
@@ -277,7 +260,7 @@ export default function CheckoutPage() {
                     type="text"
                     name="lastName"
                     placeholder="Apellidos"
-                    required
+                    required={!isTestEmail}
                     value={formData.lastName}
                     onChange={handleChange}
                     className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
@@ -297,7 +280,7 @@ export default function CheckoutPage() {
                   type="text"
                   name="address"
                   placeholder="Dirección"
-                  required
+                  required={!isTestEmail}
                   value={formData.address}
                   onChange={handleChange}
                   className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
@@ -321,7 +304,7 @@ export default function CheckoutPage() {
                       name="city" 
                       value={formData.city} 
                       onChange={handleChange}
-                      required
+                      required={!isTestEmail}
                       className="w-full border border-neutral-300 rounded-md px-4 pt-6 pb-2 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all appearance-none text-neutral-900 bg-white"
                     >
                       {COLOMBIA_LOCATIONS[formData.department]?.map((city) => (
@@ -340,7 +323,7 @@ export default function CheckoutPage() {
                       name="department" 
                       value={formData.department} 
                       onChange={handleChange}
-                      required
+                      required={!isTestEmail}
                       className="w-full border border-neutral-300 rounded-md px-4 pt-6 pb-2 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all appearance-none text-neutral-900 bg-white"
                     >
                       {Object.keys(COLOMBIA_LOCATIONS).sort().map((dept) => (
@@ -366,7 +349,7 @@ export default function CheckoutPage() {
                     type="tel"
                     name="phone"
                     placeholder="Teléfono"
-                    required
+                    required={!isTestEmail}
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full border border-neutral-300 rounded-md px-4 py-3 text-sm outline-none focus:border-camel focus:ring-1 focus:ring-camel transition-all text-neutral-900"
