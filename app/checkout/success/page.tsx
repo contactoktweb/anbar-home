@@ -34,7 +34,9 @@ export default async function CheckoutSuccessPage(props: {
         const result = await response.json()
         const transaction = result.data
         if (transaction && transaction.status && transaction.reference) {
-          orderValue = transaction.amount_in_cents / 100
+          if (transaction.status === 'APPROVED') {
+            orderValue = transaction.amount_in_cents / 100
+          }
 
           // Obtener orden
           const order = await adminClient.getDocument(transaction.reference)
@@ -76,22 +78,44 @@ export default async function CheckoutSuccessPage(props: {
               }))
             }
 
-            if (!order.emailSent) {
-              // Actualizar Sanity
-              await adminClient.patch(transaction.reference).set({
+            let shouldSendEmail = false
+            let shouldUpdateSanity = true
+
+            // Determinar si debemos enviar correo basado en el estado final
+            if (transaction.status === 'APPROVED' || transaction.status === 'DECLINED' || transaction.status === 'ERROR') {
+              shouldSendEmail = !order.emailSent
+            }
+
+            if (shouldUpdateSanity) {
+              // Actualizar Sanity siempre con el estado más reciente
+              const updateData: any = {
                 status: transaction.status,
                 wompiReference: transaction.id,
-                emailSent: true
-              }).commit()
+              }
+              
+              if (shouldSendEmail) {
+                updateData.emailSent = true
+              }
 
-              // Obtener configuración global (logo y email admin)
-              const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY)
+              if (transaction.status === 'APPROVED' && order.status !== 'APPROVED') {
+                updateData.paidAt = new Date().toISOString()
+              }
 
-              // Procesar envío de correos
-              await processOrderEmails(order, settings, transaction.status)
+              await adminClient.patch(transaction.reference).set(updateData).commit()
+              console.log(`Orden ${transaction.reference} actualizada a ${transaction.status} en success page`)
+
+              if (shouldSendEmail) {
+                // Obtener configuración global (logo y email admin)
+                const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY)
+                // Procesar envío de correos
+                await processOrderEmails(order, settings, transaction.status)
+                console.log(`Correo enviado para la orden ${transaction.reference}`)
+              }
             }
           }
         }
+      } else {
+        console.error('Error fetching Wompi transaction:', await response.text())
       }
     } catch (e) {
       console.error('Error sincronizando la orden en la página de éxito:', e)
