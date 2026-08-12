@@ -1,7 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import Script from 'next/script'
 import type { Metadata, Viewport } from 'next'
-import { Playfair_Display, Inter } from 'next/font/google'
+import { Playfair_Display, Poppins } from 'next/font/google'
 import { StoreProvider } from '@/components/store-provider'
 import './globals.css'
 
@@ -10,10 +10,10 @@ const playfair = Playfair_Display({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
 })
-const inter = Inter({
-  variable: '--font-inter',
+const poppins = Poppins({
+  variable: '--font-poppins',
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
+  weight: ['300', '400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -82,7 +82,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${playfair.variable} ${inter.variable} bg-background`}
+      className={`${playfair.variable} ${poppins.variable} bg-background`}
     >
       <body className="font-sans antialiased overflow-x-hidden">
         <StoreProvider>

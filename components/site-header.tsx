@@ -82,16 +82,16 @@ export function SiteHeader() {
             height={66}
             priority
             fetchPriority="high"
-            className="h-9 w-auto object-contain md:h-12"
+            className="h-8 w-auto object-contain md:h-10"
           />
         </Link>
 
-        <nav className="hidden items-center gap-10 md:flex">
+        <nav className="hidden items-center gap-6 lg:gap-8 md:flex">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="group relative text-[17px] font-medium text-neutral-900 transition-colors duration-300 hover:text-camel-dark"
+              className="group relative text-[13.5px] lg:text-[14px] font-medium tracking-wide text-neutral-800 transition-colors duration-300 hover:text-camel-dark"
             >
               {link.label}
               <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#C19A6B] transition-all duration-300 group-hover:w-full"></span>
@@ -99,22 +99,22 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 md:gap-4">
-          <button onClick={() => setIsSearchOpen(true)} className="transition-colors hover:text-camel" aria-label="Buscar">
-            <Search className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
+        <div className="flex items-center gap-3 md:gap-4">
+          <button onClick={() => setIsSearchOpen(true)} className="transition-colors hover:text-camel p-1" aria-label="Buscar">
+            <Search className="h-5 w-5" strokeWidth={1.5} />
           </button>
           
-          <button onClick={() => setIsFavoritesOpen(true)} className="relative flex items-center transition-colors hover:text-camel" aria-label="Favoritos">
-            <Heart className="h-6 w-6 md:h-[26px] md:w-[26px]" strokeWidth={1.5} />
+          <button onClick={() => setIsFavoritesOpen(true)} className="relative flex items-center transition-colors hover:text-camel p-1" aria-label="Favoritos">
+            <Heart className="h-5 w-5" strokeWidth={1.5} />
             {favorites.length > 0 && (
-              <span className="absolute top-0 right-0 h-2.5 w-2.5 rounded-full bg-camel-dark border-[1.5px] border-ivory" />
+              <span className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-camel-dark border-[1.5px] border-ivory" />
             )}
           </button>
 
-          <button onClick={() => setIsCartOpen(true)} className="relative flex items-center transition-colors hover:text-camel" aria-label="Carrito">
-            <ShoppingBag className="h-6 w-6 md:h-[26px] md:w-[26px]" strokeWidth={1.5} />
+          <button onClick={() => setIsCartOpen(true)} className="relative flex items-center transition-colors hover:text-camel p-1" aria-label="Carrito">
+            <ShoppingBag className="h-5 w-5" strokeWidth={1.5} />
             {cart.length > 0 && (
-              <span className="absolute top-0 right-0 h-2.5 w-2.5 rounded-full bg-camel-dark border-[1.5px] border-ivory" />
+              <span className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-camel-dark border-[1.5px] border-ivory" />
             )}
           </button>
 
@@ -159,7 +159,7 @@ export function SiteHeader() {
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="border-b border-border/40 py-4 text-[15px] font-medium text-camel-dark last:border-b-0"
+              className="border-b border-border/40 py-3.5 text-[13.5px] font-medium text-camel-dark last:border-b-0"
             >
               {link.label}
             </Link>
