@@ -29,7 +29,15 @@ export function Hero({ data }: { data?: any }) {
     },
   ]
 
-  const images = data?.galleryImages?.length > 0 
+  const images = data?.heroBanners?.length > 0
+    ? data.heroBanners.map((banner: any) => ({
+        src: banner.src,
+        srcMobile: banner.srcMobile,
+        alt: banner.alt || 'Anbar Home',
+        label: banner.categoryTitle,
+        href: banner.categorySlug ? `/category/${banner.categorySlug}` : undefined,
+      }))
+    : data?.galleryImages?.length > 0 
     ? data.galleryImages.map((img: any, i: number) => ({
         src: img.imageUrl || defaultImages[i]?.src || '/Blogs-Anbar-1png.webp',
         srcMobile: img.mobileImageUrl || defaultImages[i]?.srcMobile,

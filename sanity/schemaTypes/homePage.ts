@@ -69,11 +69,26 @@ export const homePage = defineType({
               description: 'Descripción breve de la imagen',
               validation: (rule) => rule.required(),
             }),
+            defineField({
+              name: 'category',
+              title: 'Categoría a redireccionar',
+              type: 'reference',
+              to: [{ type: 'category' }],
+              description: 'Selecciona una categoría de las existentes para que al hacer clic en el banner se redireccione a ella.',
+            }),
           ],
           preview: {
             select: {
               title: 'alt',
+              categoryTitle: 'category.title',
               media: 'imageDesktop',
+            },
+            prepare({ title, categoryTitle, media }) {
+              return {
+                title: title || 'Banner sin título',
+                subtitle: categoryTitle ? `Categoría: ${categoryTitle}` : 'Sin categoría seleccionada',
+                media,
+              }
             },
           },
         },
