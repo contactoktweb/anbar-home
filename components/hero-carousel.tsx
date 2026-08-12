@@ -35,7 +35,7 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
   if (!images || images.length === 0) return null
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-neutral-100 group/carousel">
+    <div className="relative h-full w-full overflow-hidden bg-neutral-950 group/carousel">
       {images.map((img, index) => (
         <div
           key={index}
@@ -45,13 +45,32 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
         >
           {img.href ? (
             <Link href={img.href} className="group relative block h-full w-full">
+              {/* Background ambient blur layer to fill margins seamlessly */}
+              <Image
+                src={img.src}
+                alt=""
+                fill
+                className={`object-cover object-center blur-3xl opacity-40 scale-110 pointer-events-none ${img.srcMobile ? 'hidden md:block' : ''}`}
+                aria-hidden="true"
+              />
+              {img.srcMobile && (
+                <Image
+                  src={img.srcMobile}
+                  alt=""
+                  fill
+                  className="object-cover object-center blur-3xl opacity-40 scale-110 pointer-events-none md:hidden"
+                  aria-hidden="true"
+                />
+              )}
+
+              {/* Main crisp image with object-contain so it NEVER crops */}
               <Image
                 src={img.src}
                 alt={img.alt}
                 fill
-                className={`object-cover object-center transition-transform duration-[2000ms] ease-out group-hover:scale-105 ${img.srcMobile ? 'hidden md:block' : ''}`}
+                className={`object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.01] ${img.srcMobile ? 'hidden md:block' : ''}`}
                 priority={index === 0}
-                quality={80}
+                quality={90}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
                 sizes="100vw"
@@ -61,24 +80,27 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                   src={img.srcMobile}
                   alt={img.alt}
                   fill
-                  className="object-cover object-center transition-transform duration-[2000ms] ease-out group-hover:scale-105 md:hidden"
+                  className="object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.01] md:hidden"
                   priority={index === 0}
-                  quality={80}
+                  quality={90}
                   loading={index === 0 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "auto"}
                   sizes="100vw"
                 />
               )}
-              {/* Degradado inferior más sutil para no opacar la foto completa */}
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-100" />
+
+              {/* Subtle bottom gradient overlay for readability when label exists */}
               {img.label && (
-                <div className="absolute bottom-12 left-8 md:bottom-16 md:left-12">
-                  <h3 className="text-2xl font-light tracking-wider text-white drop-shadow-sm md:text-3xl">
+                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-90 pointer-events-none" />
+              )}
+              {img.label && (
+                <div className="absolute bottom-10 left-8 md:bottom-14 md:left-12 z-10">
+                  <h3 className="text-xl font-light tracking-wider text-white drop-shadow-md md:text-3xl">
                     {img.label}
                   </h3>
-                  <div className="mt-4 flex items-center gap-4">
-                    <div className="h-[1px] w-8 bg-camel transition-all duration-700 group-hover:w-14" />
-                    <span className="text-[0.65rem] uppercase tracking-[0.3em] text-white/80 transition-all duration-500 group-hover:text-white">
+                  <div className="mt-3 flex items-center gap-3">
+                    <div className="h-[1px] w-8 bg-camel transition-all duration-500 group-hover:w-12" />
+                    <span className="text-[0.65rem] uppercase tracking-[0.3em] text-white/90 transition-all duration-300 group-hover:text-white">
                       Explorar
                     </span>
                   </div>
@@ -87,13 +109,32 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
             </Link>
           ) : (
             <div className="relative h-full w-full">
+              {/* Background ambient blur layer */}
+              <Image
+                src={img.src}
+                alt=""
+                fill
+                className={`object-cover object-center blur-3xl opacity-40 scale-110 pointer-events-none ${img.srcMobile ? 'hidden md:block' : ''}`}
+                aria-hidden="true"
+              />
+              {img.srcMobile && (
+                <Image
+                  src={img.srcMobile}
+                  alt=""
+                  fill
+                  className="object-cover object-center blur-3xl opacity-40 scale-110 pointer-events-none md:hidden"
+                  aria-hidden="true"
+                />
+              )}
+
+              {/* Main crisp image */}
               <Image
                 src={img.src}
                 alt={img.alt}
                 fill
-                className={`object-cover object-center ${img.srcMobile ? 'hidden md:block' : ''}`}
+                className={`object-contain object-center ${img.srcMobile ? 'hidden md:block' : ''}`}
                 priority={index === 0}
-                quality={80}
+                quality={90}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
                 sizes="100vw"
@@ -103,23 +144,25 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                   src={img.srcMobile}
                   alt={img.alt}
                   fill
-                  className="object-cover object-center md:hidden"
+                  className="object-contain object-center md:hidden"
                   priority={index === 0}
-                  quality={80}
+                  quality={90}
                   loading={index === 0 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "auto"}
                   sizes="100vw"
                 />
               )}
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent opacity-70" />
               {img.label && (
-                <div className="absolute bottom-12 left-8 md:bottom-16 md:left-12">
-                  <h3 className="text-2xl font-light tracking-wider text-white drop-shadow-sm md:text-3xl">
+                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-60 pointer-events-none" />
+              )}
+              {img.label && (
+                <div className="absolute bottom-10 left-8 md:bottom-14 md:left-12 z-10">
+                  <h3 className="text-xl font-light tracking-wider text-white drop-shadow-md md:text-3xl">
                     {img.label}
                   </h3>
-                  <div className="mt-4 flex items-center gap-4">
+                  <div className="mt-3 flex items-center gap-3">
                     <div className="h-[1px] w-8 bg-camel" />
-                    <span className="text-[0.65rem] uppercase tracking-[0.3em] text-white/80">
+                    <span className="text-[0.65rem] uppercase tracking-[0.3em] text-white/90">
                       Explorar
                     </span>
                   </div>
