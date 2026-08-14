@@ -24,12 +24,16 @@ export async function generateMetadata(
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
 
-  if (slug === 'summer-sale' || slug === 'sale') {
+  if (slug === 'todos-los-productos' || slug === 'todos') {
+    categoryName = 'Todos los productos'
+  } else if (slug === 'summer-sale' || slug === 'sale') {
     categoryName = 'SALE'
   }
 
   const title = `${categoryName} | Colección Exclusiva`
-  const description = `Explora nuestra colección de ${categoryName.toLowerCase()} en Anbar Home. Piezas únicas y atemporales para la decoración de tu hogar en Colombia.`
+  const description = slug === 'todos-los-productos' || slug === 'todos'
+    ? 'Explora nuestro catálogo completo de piezas exclusivas y decoración para el hogar en Anbar Home Colombia.'
+    : `Explora nuestra colección de ${categoryName.toLowerCase()} en Anbar Home. Piezas únicas y atemporales para la decoración de tu hogar en Colombia.`
 
   return {
     title,
@@ -59,13 +63,15 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   // Find current category name
   const currentCategory = sanityCategories.find((c: any) => c.slug === slug)
   let categoryName = currentCategory ? currentCategory.title : 'Tienda'
-  if (slug === 'summer-sale' || slug === 'sale') {
+  if (slug === 'todos-los-productos' || slug === 'todos') {
+    categoryName = 'Todos los productos'
+  } else if (slug === 'summer-sale' || slug === 'sale') {
     categoryName = 'SALE'
   }
 
   // Format sidebar categories (guaranteeing a single SALE link)
   const sidebarCategories = [
-    { name: 'Todos los productos', href: '/search' },
+    { name: 'Todos los productos', href: '/category/todos-los-productos' },
     ...sanityCategories
       .filter((c: any) => {
         const titleUpper = (c.title || '').toUpperCase().replace(/\s+/g, '')
@@ -99,6 +105,11 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   let filteredProducts = allProducts.filter((product: any) =>
     (product.categorySlugs || []).includes(slug)
   )
+
+  // Override for all products: return all products in the store
+  if (slug === 'todos-los-productos' || slug === 'todos') {
+    filteredProducts = allProducts
+  }
 
   // Override for Summer Sale & SALE: show all products with discounts
   if (slug === 'summer-sale' || slug === 'sale') {

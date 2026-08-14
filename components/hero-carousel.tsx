@@ -13,9 +13,10 @@ interface HeroCarouselProps {
     label?: string
     href?: string
   }[]
+  showLabels?: boolean
 }
 
-export function HeroCarousel({ images }: HeroCarouselProps) {
+export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const goToNext = useCallback(() => {
@@ -90,10 +91,10 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
               )}
 
               {/* Subtle bottom gradient overlay for readability when label exists */}
-              {img.label && (
+              {showLabels && img.label && (
                 <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-90 pointer-events-none" />
               )}
-              {img.label && (
+              {showLabels && img.label && (
                 <div className="absolute bottom-10 left-8 md:bottom-14 md:left-12 z-10">
                   <h3 className="text-xl font-light tracking-wider text-white drop-shadow-md md:text-3xl">
                     {img.label}
@@ -152,10 +153,10 @@ export function HeroCarousel({ images }: HeroCarouselProps) {
                   sizes="100vw"
                 />
               )}
-              {img.label && (
+              {showLabels && img.label && (
                 <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-60 pointer-events-none" />
               )}
-              {img.label && (
+              {showLabels && img.label && (
                 <div className="absolute bottom-10 left-8 md:bottom-14 md:left-12 z-10">
                   <h3 className="text-xl font-light tracking-wider text-white drop-shadow-md md:text-3xl">
                     {img.label}

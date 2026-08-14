@@ -6,6 +6,8 @@ import { WhatsAppButton } from '@/components/whatsapp-button'
 import { client } from '@/sanity/lib/client'
 import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
 
+import { FounderBanner } from '@/components/founder-banner'
+
 export const metadata: Metadata = {
   title: 'Nosotros | Anbar Home',
   description: 'Conoce la historia de Anbar Home y nuestras tiendas físicas en Bogotá y Bucaramanga. Especialistas en decoración para el hogar y lujo silencioso.',
@@ -47,7 +49,7 @@ export default async function NosotrosPage() {
       <main className="min-h-screen bg-white selection:bg-camel/20">
         
         {/* Hero Section */}
-        <section className="relative h-[40vh] md:h-[60vh] w-full bg-neutral-950 flex items-center justify-center overflow-hidden">
+        <section className="relative h-[35vh] md:h-[45vh] w-full bg-neutral-950 flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 opacity-40">
             <div className="w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-800 via-neutral-950 to-neutral-950"></div>
           </div>
@@ -55,11 +57,14 @@ export default async function NosotrosPage() {
             <h1 className="font-serif text-4xl md:text-6xl text-white font-light tracking-wide mb-4">
               Nuestra Historia
             </h1>
-            <p className="text-neutral-300 font-light tracking-widest uppercase text-sm md:text-base">
+            <p className="text-neutral-300 font-light tracking-widest uppercase text-xs md:text-sm">
               El Arte de Vivir el Diseño
             </p>
           </div>
         </section>
+
+        {/* Andres Barrientos Section (Banner) */}
+        <FounderBanner />
 
         {/* Story Section */}
         <section className="py-16 md:py-24 px-6 md:px-10 lg:px-16 max-w-4xl mx-auto">
