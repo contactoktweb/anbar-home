@@ -5,7 +5,6 @@ import { HeroWow } from '@/components/hero-wow'
 import { CategoryGridSection } from '@/components/category-grid-section'
 import { FeaturedProducts } from '@/components/featured-products'
 import { NewArrivals } from '@/components/new-arrivals'
-import { LogoMeaning } from '@/components/logo-meaning'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 import { client } from '@/sanity/lib/client'
@@ -99,7 +98,6 @@ export default async function Page() {
         <CategoryGridSection data={data} />
         <FeaturedProducts products={featuredProducts} />
         <NewArrivals products={newArrivals} />
-        <LogoMeaning data={data} />
       </main>
       <SiteFooter />
       <WhatsAppButton />
