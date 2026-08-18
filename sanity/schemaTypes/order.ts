@@ -64,8 +64,26 @@ export const order = defineType({
       ]
     }),
     defineField({
+      name: 'subtotalAmount',
+      title: 'Subtotal (Antes de descuento)',
+      type: 'number',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'discountAmount',
+      title: 'Descuento Aplicado',
+      type: 'number',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'discountCode',
+      title: 'Código de Descuento Usado',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
       name: 'totalAmount',
-      title: 'Monto Total',
+      title: 'Monto Total Final',
       type: 'number',
       readOnly: true,
     }),

@@ -2,6 +2,7 @@ export const revalidate = 60
 
 import { SiteHeader } from '@/components/site-header'
 import { HeroWow } from '@/components/hero-wow'
+import { CategoryGridSection } from '@/components/category-grid-section'
 import { FeaturedProducts } from '@/components/featured-products'
 import { NewArrivals } from '@/components/new-arrivals'
 import { LogoMeaning } from '@/components/logo-meaning'
@@ -95,6 +96,7 @@ export default async function Page() {
       />
       <main>
         <HeroWow data={data} />
+        <CategoryGridSection data={data} />
         <FeaturedProducts products={featuredProducts} />
         <NewArrivals products={newArrivals} />
         <LogoMeaning data={data} />

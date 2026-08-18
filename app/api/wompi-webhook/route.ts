@@ -63,6 +63,32 @@ export async function POST(request: Request) {
 
         // Flujo de Éxito (Emails y Meta CAPI)
         if (status === 'APPROVED') {
+          // Marcar cupón de descuento como usado si aplica
+          if (order.discountCode) {
+            try {
+              const coupon = await adminClient.fetch(
+                `*[_type == "discountCoupon" && upper(code) == $code][0]`,
+                { code: order.discountCode.toUpperCase().trim() }
+              );
+              if (coupon?._id && !coupon.isUsed) {
+                await adminClient
+                  .patch(coupon._id)
+                  .set({
+                    isUsed: true,
+                    usedAt: new Date().toISOString(),
+                    orderReference: {
+                      _type: 'reference',
+                      _ref: reference,
+                    },
+                  })
+                  .commit();
+                console.log(`Cupón ${order.discountCode} marcado como utilizado para la orden ${reference}`);
+              }
+            } catch (couponErr) {
+              console.error('Error al actualizar estado del cupón en Sanity:', couponErr);
+            }
+          }
+
           // Emails
           if (!order.emailSent) {
             const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY);

@@ -4,7 +4,7 @@ import { adminClient } from '@/sanity/lib/adminClient'
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { formData, cart, cartTotal, meta } = body
+    const { formData, cart, cartTotal, subtotalAmount, discountAmount, discountCode, meta } = body
     
     // Extract IP and User-Agent
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1'
@@ -41,6 +41,9 @@ export async function POST(request: Request) {
         price: item.price,
         image: item.image,
       })),
+      subtotalAmount: subtotalAmount || cartTotal,
+      discountAmount: discountAmount || 0,
+      discountCode: discountCode || '',
       totalAmount: cartTotal,
       status: 'PENDING',
       meta: {

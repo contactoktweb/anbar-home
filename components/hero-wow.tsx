@@ -17,7 +17,7 @@ export function HeroWow({ data }: { data?: any }) {
   return (
     <section
       id="inicio"
-      className="relative w-full aspect-[9/16] sm:aspect-[3/4] md:aspect-[16/9] lg:aspect-[2.35/1] lg:max-h-[880px] overflow-hidden bg-neutral-100"
+      className="relative w-full aspect-[9/16] md:aspect-[16/9] md:max-h-[85vh] lg:max-h-[900px] overflow-hidden bg-neutral-900"
     >
       <HeroCarousel images={banners} />
     </section>

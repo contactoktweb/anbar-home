@@ -8,6 +8,7 @@ import { WhatsAppButton } from '@/components/whatsapp-button'
 import { FeaturedProducts } from '@/components/featured-products'
 import { ProductTabs } from '@/components/product-tabs'
 import { ProductReviews } from '@/components/product-reviews'
+import { ProductPurchaseBenefits } from '@/components/product-purchase-benefits'
 import { ProductTracker } from '@/components/ui/product-tracker'
 import { ShareButtons } from '@/components/share-buttons'
 import { client } from '@/sanity/lib/client'
@@ -193,6 +194,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
             </div>
           </div>
+
+          {/* Proceso de Compra y Beneficios de Confianza */}
+          <ProductPurchaseBenefits />
 
           {/* Product Tabs (Description & Info) */}
           <ProductTabs description={product.description} />

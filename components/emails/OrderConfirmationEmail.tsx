@@ -49,6 +49,10 @@ export const OrderConfirmationEmail = ({
       minimumFractionDigits: 0,
     }).format(amount);
 
+  const finalLogoUrl =
+    logoUrl ||
+    'https://cdn.sanity.io/images/7zsgx3as/production/a5515a08edb40329e834de44cbe25f56bccde56b-826x249.png';
+
   return (
     <Html>
       <Head />
@@ -56,11 +60,7 @@ export const OrderConfirmationEmail = ({
       <Body style={main}>
         <Container style={container}>
           <Section style={header}>
-            {logoUrl ? (
-              <Img src={logoUrl} width="160" height="auto" alt="Anbar Home Logo" style={logo} />
-            ) : (
-              <Heading style={brandText}>ANBAR HOME</Heading>
-            )}
+            <Img src={finalLogoUrl} width="190" height="auto" alt="Anbar Home Logo" style={logo} />
           </Section>
 
           <Section style={content}>

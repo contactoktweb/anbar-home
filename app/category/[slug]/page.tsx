@@ -4,13 +4,14 @@ import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
+import { CategoryHeroBanner } from '@/components/category-hero-banner'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 import { CategorySidebar } from '@/components/category-sidebar'
 import { CategoryProductGrid } from '@/components/category-product-grid'
 
 import { client } from '@/sanity/lib/client'
-import { PRODUCTS_QUERY, CATEGORIES_QUERY } from '@/sanity/lib/queries'
+import { PRODUCTS_QUERY, CATEGORIES_QUERY, HOME_PAGE_QUERY } from '@/sanity/lib/queries'
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
@@ -54,10 +55,11 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     redirect('/category/acentos-decorativos')
   }
 
-  // Fetch all products and categories from Sanity
-  const [sanityProducts, sanityCategories] = await Promise.all([
+  // Fetch all products, categories and homepage data from Sanity
+  const [sanityProducts, sanityCategories, homeData] = await Promise.all([
     client.fetch(PRODUCTS_QUERY).catch(() => []),
-    client.fetch(CATEGORIES_QUERY).catch(() => [])
+    client.fetch(CATEGORIES_QUERY).catch(() => []),
+    client.fetch(HOME_PAGE_QUERY).catch(() => null)
   ])
   
   // Find current category name
@@ -124,22 +126,27 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     }
   }
 
+  // Category banner from Sanity category document
+  const categoryBanner = currentCategory?.bannerDesktop
+    ? {
+        src: currentCategory.bannerDesktop,
+        srcMobile: currentCategory.bannerMobile,
+      }
+    : null
+
   return (
     <>
       <SiteHeader />
       <main className="min-h-screen pb-20">
-        
-        {/* Banner with dynamically fetched category name */}
-        <div className="w-full bg-[#C19A6B] py-12 text-center mb-16 shadow-inner">
-          <h1 className="text-3xl md:text-4xl font-serif text-white tracking-widest uppercase">
-            {categoryName}
-          </h1>
-          <p className="text-white/80 mt-2 font-light tracking-wide">
-            Encuentra la pieza perfecta para tu espacio
-          </p>
-        </div>
+        <h1 className="sr-only">{categoryName} - Anbar Home</h1>
+        <CategoryHeroBanner
+          data={homeData}
+          currentSlug={slug}
+          categoryName={categoryName}
+          categoryBanner={categoryBanner}
+        />
 
-        <div className="mx-auto max-w-7xl px-6 md:px-10">
+        <div className="mx-auto max-w-7xl px-6 md:px-10 mt-10 md:mt-14">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             
             <div className="hidden md:block md:col-span-1">

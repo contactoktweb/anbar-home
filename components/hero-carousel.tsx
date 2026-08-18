@@ -18,6 +18,8 @@ interface HeroCarouselProps {
 
 export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  const [touchEndX, setTouchEndX] = useState<number | null>(null)
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % images.length)
@@ -26,6 +28,27 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
   const goToPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
   }, [images.length])
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndX(null)
+    setTouchStartX(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return
+    const distance = touchStartX - touchEndX
+    const isLeftSwipe = distance > 50
+    const isRightSwipe = distance < -50
+    if (isLeftSwipe) {
+      goToNext()
+    } else if (isRightSwipe) {
+      goToPrev()
+    }
+  }
 
   useEffect(() => {
     if (!images || images.length <= 1) return
@@ -36,7 +59,12 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
   if (!images || images.length === 0) return null
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-neutral-950 group/carousel">
+    <div
+      className="relative h-full w-full overflow-hidden bg-neutral-950 group/carousel touch-pan-y"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {images.map((img, index) => (
         <div
           key={index}
@@ -46,30 +74,12 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
         >
           {img.href ? (
             <Link href={img.href} className="group relative block h-full w-full">
-              {/* Background ambient blur layer to fill margins seamlessly */}
-              <Image
-                src={img.src}
-                alt=""
-                fill
-                className={`object-cover object-center blur-3xl opacity-40 scale-110 pointer-events-none ${img.srcMobile ? 'hidden md:block' : ''}`}
-                aria-hidden="true"
-              />
-              {img.srcMobile && (
-                <Image
-                  src={img.srcMobile}
-                  alt=""
-                  fill
-                  className="object-cover object-center blur-3xl opacity-40 scale-110 pointer-events-none md:hidden"
-                  aria-hidden="true"
-                />
-              )}
-
-              {/* Main crisp image with object-contain so it NEVER crops */}
+              {/* Main crisp image filling full container */}
               <Image
                 src={img.src}
                 alt={img.alt}
                 fill
-                className={`object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.01] ${img.srcMobile ? 'hidden md:block' : ''}`}
+                className={`object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02] ${img.srcMobile ? 'hidden md:block' : ''}`}
                 priority={index === 0}
                 quality={90}
                 loading={index === 0 ? "eager" : "lazy"}
@@ -81,7 +91,7 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
                   src={img.srcMobile}
                   alt={img.alt}
                   fill
-                  className="object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.01] md:hidden"
+                  className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02] md:hidden"
                   priority={index === 0}
                   quality={90}
                   loading={index === 0 ? "eager" : "lazy"}
@@ -110,30 +120,12 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
             </Link>
           ) : (
             <div className="relative h-full w-full">
-              {/* Background ambient blur layer */}
-              <Image
-                src={img.src}
-                alt=""
-                fill
-                className={`object-cover object-center blur-3xl opacity-40 scale-110 pointer-events-none ${img.srcMobile ? 'hidden md:block' : ''}`}
-                aria-hidden="true"
-              />
-              {img.srcMobile && (
-                <Image
-                  src={img.srcMobile}
-                  alt=""
-                  fill
-                  className="object-cover object-center blur-3xl opacity-40 scale-110 pointer-events-none md:hidden"
-                  aria-hidden="true"
-                />
-              )}
-
               {/* Main crisp image */}
               <Image
                 src={img.src}
                 alt={img.alt}
                 fill
-                className={`object-contain object-center ${img.srcMobile ? 'hidden md:block' : ''}`}
+                className={`object-cover object-center ${img.srcMobile ? 'hidden md:block' : ''}`}
                 priority={index === 0}
                 quality={90}
                 loading={index === 0 ? "eager" : "lazy"}
@@ -145,7 +137,7 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
                   src={img.srcMobile}
                   alt={img.alt}
                   fill
-                  className="object-contain object-center md:hidden"
+                  className="object-cover object-center md:hidden"
                   priority={index === 0}
                   quality={90}
                   loading={index === 0 ? "eager" : "lazy"}

@@ -8,6 +8,7 @@ export const homePage = defineType({
   icon: HomeIcon,
   groups: [
     { name: 'hero', title: 'Hero (Principal)' },
+    { name: 'categoriesGroup', title: 'Categorías (Cuadros)' },
     { name: 'concept', title: 'Concepto' },
     { name: 'collections', title: 'Colecciones' },
     { name: 'featured', title: 'Productos Destacados' },
@@ -87,6 +88,76 @@ export const homePage = defineType({
               return {
                 title: title || 'Banner sin título',
                 subtitle: categoryTitle ? `Categoría: ${categoryTitle}` : 'Sin categoría seleccionada',
+                media,
+              }
+            },
+          },
+        },
+      ],
+    }),
+
+    // --- CATEGORIES GRID SECTION ---
+    defineField({
+      name: 'categoriesSectionTitle',
+      title: 'Título de la Sección de Categorías',
+      type: 'string',
+      group: 'categoriesGroup',
+      initialValue: 'Explora Nuestras Categorías',
+    }),
+    defineField({
+      name: 'categoriesSectionSubtitle',
+      title: 'Subtítulo de Categorías',
+      type: 'string',
+      group: 'categoriesGroup',
+      initialValue: 'Piezas exclusivas seleccionadas para cada espacio',
+    }),
+    defineField({
+      name: 'homeCategories',
+      title: 'Cuadros de Categorías',
+      type: 'array',
+      group: 'categoriesGroup',
+      description: 'Cuadros de categorías con imagen y nombre que aparecen justo después del banner principal.',
+      of: [
+        {
+          type: 'object',
+          icon: ImageIcon,
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Nombre de la Categoría',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'image',
+              title: 'Imagen de la Categoría',
+              type: 'image',
+              options: { hotspot: true },
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'category',
+              title: 'Categoría vinculada',
+              type: 'reference',
+              to: [{ type: 'category' }],
+            }),
+            defineField({
+              name: 'customSlug',
+              title: 'Slug personalizado (opcional)',
+              type: 'string',
+              description: 'Opcional si no se vincula una categoría directamente (ej. sale)',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'title',
+              categoryTitle: 'category.title',
+              media: 'image',
+            },
+            prepare({ title, categoryTitle, media }) {
+              return {
+                title: title || 'Categoría sin nombre',
+                subtitle: categoryTitle ? `Vinculado a: ${categoryTitle}` : 'Sin vínculo',
                 media,
               }
             },

@@ -60,16 +60,30 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   
+  // Estados para cupón de descuento
+  const [couponInput, setCouponInput] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string
+    discountPercentage: number
+  } | null>(null)
+  const [couponError, setCouponError] = useState<string | null>(null)
+  const [couponSuccess, setCouponSuccess] = useState<string | null>(null)
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false)
+
   const { cart, clearCart, updateQuantity, removeFromCart } = useStore()
 
   const checkoutTracked = React.useRef(false)
+
+  const cartSubtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
+  const discountAmount = appliedCoupon ? Math.round(cartSubtotal * (appliedCoupon.discountPercentage / 100)) : 0
+  const cartTotal = Math.max(0, cartSubtotal - discountAmount)
 
   useEffect(() => {
     setIsMounted(true)
     if (cart.length > 0 && !checkoutTracked.current) {
       trackEvent('InitiateCheckout', {
         currency: 'COP',
-        value: cart.reduce((total, item) => total + item.price * item.quantity, 0),
+        value: cartTotal,
         num_items: cart.reduce((total, item) => total + item.quantity, 0),
         content_ids: cart.map(item => item.sku || item.id),
         contents: cart.map(item => ({
@@ -80,16 +94,65 @@ export default function CheckoutPage() {
       })
       checkoutTracked.current = true
     }
-  }, [cart])
+  }, [cart, cartTotal])
 
-  const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
-  
   const formatCOP = (amount: number) =>
     new Intl.NumberFormat('es-CO', {
       style: 'currency',
       currency: 'COP',
       minimumFractionDigits: 0,
     }).format(amount)
+
+  const handleApplyCoupon = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (!couponInput.trim()) {
+      setCouponError('Por favor ingresa un código de descuento.')
+      return
+    }
+    if (!formData.email || !formData.email.includes('@')) {
+      setCouponError('Por favor ingresa tu correo en la información de contacto antes de aplicar el cupón.')
+      return
+    }
+
+    setIsValidatingCoupon(true)
+    setCouponError(null)
+    setCouponSuccess(null)
+
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: couponInput.trim(),
+          email: formData.email.trim(),
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok || !data.valid) {
+        throw new Error(data.error || 'Código no válido.')
+      }
+
+      setAppliedCoupon({
+        code: data.code,
+        discountPercentage: data.discountPercentage,
+      })
+      setCouponSuccess(data.message || `¡Descuento del ${data.discountPercentage}% aplicado!`)
+    } catch (err: any) {
+      setAppliedCoupon(null)
+      setCouponError(err.message || 'Código de descuento no válido.')
+    } finally {
+      setIsValidatingCoupon(false)
+    }
+  }
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null)
+    setCouponInput('')
+    setCouponSuccess(null)
+    setCouponError(null)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -158,6 +221,9 @@ export default function CheckoutPage() {
           formData, 
           cart, 
           cartTotal,
+          subtotalAmount: cartSubtotal,
+          discountAmount: discountAmount,
+          discountCode: appliedCoupon?.code || '',
           meta: { fbp, fbc, eventSourceUrl }
         }),
       })
@@ -442,13 +508,78 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <div className="border-t border-neutral-200 mt-6 pt-6 space-y-4">
+              {/* Cupón de descuento */}
+              <div className="border-t border-neutral-200 mt-6 pt-6">
+                <label className="block text-xs uppercase tracking-wider text-neutral-600 font-medium mb-2">
+                  ¿Tienes un código de descuento?
+                </label>
+                
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-md text-sm text-emerald-800">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold tracking-wide">{appliedCoupon.code}</span>
+                      <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-medium">
+                        -{appliedCoupon.discountPercentage}% OFF
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveCoupon}
+                      className="text-xs text-red-600 hover:text-red-800 font-medium underline transition-colors"
+                    >
+                      Quitar
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Ingresa tu código (ej. ANBAR10-...)"
+                        value={couponInput}
+                        onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                        disabled={isValidatingCoupon}
+                        className="flex-1 border border-neutral-300 rounded-md px-3 py-2 text-sm uppercase tracking-wide outline-none focus:border-camel focus:ring-1 focus:ring-camel text-neutral-900 placeholder:normal-case placeholder:text-neutral-400 bg-white"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleApplyCoupon}
+                        disabled={isValidatingCoupon || !couponInput.trim()}
+                        className="px-4 py-2 bg-neutral-900 hover:bg-camel-dark text-white rounded-md text-xs font-medium uppercase tracking-wider transition-colors disabled:opacity-50"
+                      >
+                        {isValidatingCoupon ? 'Validando...' : 'Aplicar'}
+                      </button>
+                    </div>
+
+                    {couponError && (
+                      <p className="text-xs text-red-600 font-medium mt-1">
+                        {couponError}
+                      </p>
+                    )}
+
+                    {couponSuccess && (
+                      <p className="text-xs text-emerald-600 font-medium mt-1">
+                        {couponSuccess}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="border-t border-neutral-200 mt-6 pt-6 space-y-3">
                 <div className="flex justify-between text-sm text-neutral-600">
                   <span>Subtotal</span>
-                  <span className="font-medium text-neutral-900">{formatCOP(cartTotal)}</span>
+                  <span className="font-medium text-neutral-900">{formatCOP(cartSubtotal)}</span>
                 </div>
 
-                <div className="flex justify-between items-center text-lg md:text-xl font-medium text-neutral-900 border-t border-neutral-200 pt-4 mt-4">
+                {appliedCoupon && (
+                  <div className="flex justify-between text-sm text-emerald-700 font-medium">
+                    <span>Descuento ({appliedCoupon.discountPercentage}%)</span>
+                    <span>-{formatCOP(discountAmount)}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center text-lg md:text-xl font-medium text-neutral-900 border-t border-neutral-200 pt-4 mt-2">
                   <span>Total</span>
                   <span className="font-serif text-camel-dark">{formatCOP(cartTotal)}</span>
                 </div>

@@ -19,9 +19,9 @@ export function FounderBanner() {
             </div>
 
             {/* Content Column */}
-            <div className="flex flex-col items-center justify-center text-center p-8 sm:p-12 md:p-10 lg:p-14 xl:p-20 bg-white">
-              <div className="max-w-xl mx-auto space-y-6">
-                <h2 className="font-serif text-2xl sm:text-3xl md:text-3xl lg:text-[36px] xl:text-[40px] font-semibold text-neutral-900 tracking-tight leading-snug lg:whitespace-nowrap">
+            <div className="flex flex-col items-center justify-center text-center p-6 sm:p-10 md:p-10 lg:p-14 xl:p-20 bg-white">
+              <div className="w-full max-w-xl mx-auto space-y-6">
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-3xl lg:text-[36px] xl:text-[40px] font-semibold text-neutral-900 tracking-tight leading-snug whitespace-nowrap">
                   Andres Barrientos | Anbar Home
                 </h2>
                 

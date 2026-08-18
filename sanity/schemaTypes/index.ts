@@ -7,7 +7,8 @@ import { legalPage } from './legalPage'
 import { reviewType } from './reviewType'
 import { faqType } from './faqType'
 import { order } from './order'
+import { discountCoupon } from './discountCoupon'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [globalSettings, homePage, categoryType, product, legalPage, reviewType, faqType, order],
+  types: [globalSettings, homePage, categoryType, product, legalPage, reviewType, faqType, order, discountCoupon],
 }

@@ -2,6 +2,35 @@ import { resend } from './resend';
 import { OrderConfirmationEmail } from '@/components/emails/OrderConfirmationEmail';
 import { NewOrderAdminEmail } from '@/components/emails/NewOrderAdminEmail';
 import { OrderDeclinedEmail } from '@/components/emails/OrderDeclinedEmail';
+import { DiscountCouponEmail } from '@/components/emails/DiscountCouponEmail';
+
+export async function sendDiscountCouponEmail({
+  email,
+  couponCode,
+  logoUrl,
+}: {
+  email: string;
+  couponCode: string;
+  logoUrl?: string;
+}) {
+  try {
+    const result = await resend.emails.send({
+      from: 'Anbar Home <ventas@anbarhome.com>',
+      to: email,
+      subject: '✨ Tu 10% de descuento en Anbar Home',
+      react: DiscountCouponEmail({
+        couponCode,
+        customerEmail: email,
+        logoUrl,
+      }),
+    });
+    console.log(`Correo de cupón enviado a ${email}`, result);
+    return true;
+  } catch (error) {
+    console.error('Error al enviar correo de cupón de descuento:', error);
+    return false;
+  }
+}
 
 export async function processOrderEmails(order: any, settings: any, transactionStatus: string) {
   const customerEmail = order.customerEmail;

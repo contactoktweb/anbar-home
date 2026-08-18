@@ -3,6 +3,7 @@ import Script from 'next/script'
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Poppins } from 'next/font/google'
 import { StoreProvider } from '@/components/store-provider'
+import { DiscountModal } from '@/components/discount-modal'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -87,6 +88,7 @@ export default function RootLayout({
       <body className="font-sans antialiased overflow-x-hidden">
         <StoreProvider>
           {children}
+          <DiscountModal />
           {process.env.NODE_ENV === 'production' && <Analytics />}
           <Script src="https://checkout.wompi.co/widget.js" strategy="beforeInteractive" />
 

@@ -26,6 +26,15 @@ export const HOME_PAGE_QUERY = groq`
       "categoryTitle": category->title,
       "categorySlug": category->slug.current
     },
+    categoriesSectionTitle,
+    categoriesSectionSubtitle,
+    homeCategories[]{
+      _key,
+      title,
+      "imageUrl": image.asset->url,
+      "categoryTitle": category->title,
+      "categorySlug": coalesce(category->slug.current, customSlug),
+    },
     conceptTitle,
     conceptSubtitle,
     conceptPillars[]{
@@ -100,7 +109,10 @@ export const CATEGORIES_QUERY = groq`
   *[_type == "category"] | order(title asc) {
     _id,
     title,
-    "slug": slug.current
+    "slug": slug.current,
+    "bannerDesktop": coalesce(imageDesktop.asset->url, image.asset->url),
+    "bannerMobile": imageMobile.asset->url,
+    description
   }
 `
 

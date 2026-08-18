@@ -71,13 +71,13 @@ export default async function NosotrosPage() {
           <div className="space-y-16">
             
             <div className="space-y-6">
-              <h2 className="font-serif text-3xl md:text-4xl text-neutral-900 font-light">
+              <h2 className="font-serif text-3xl md:text-4xl text-neutral-900 font-semibold tracking-tight">
                 Anbar Home
               </h2>
-              <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed text-justify">
+              <p className="font-serif text-neutral-800 text-[15px] sm:text-base md:text-[17px] lg:text-[18.5px] leading-relaxed md:leading-[1.8] font-normal">
                 En Anbar Home, creemos que la belleza está en los detalles, y que cada espacio puede convertirse en un reflejo auténtico de quien lo habita. Somos una tienda especializada en decoración para el hogar y la temporada navideña, con una propuesta basada en el lujo, la elegancia, el diseño y el confort.
               </p>
-              <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed text-justify">
+              <p className="font-serif text-neutral-800 text-[15px] sm:text-base md:text-[17px] lg:text-[18.5px] leading-relaxed md:leading-[1.8] font-normal">
                 Nuestra historia comienza de la mano de Andrés Barrientos, decorador de Bucaramanga con más de 15 años de experiencia en el diseño de eventos. Impulsado por su pasión por la estética, fundó Anbar Home para traer a los hogares colombianos piezas exclusivas de los mejores destinos de diseño del mundo.
               </p>
             </div>
@@ -85,10 +85,10 @@ export default async function NosotrosPage() {
             <div className="h-px w-full bg-neutral-200" />
 
             <div className="space-y-6">
-              <h2 className="font-serif text-3xl md:text-4xl text-neutral-900 font-light">
+              <h2 className="font-serif text-3xl md:text-4xl text-neutral-900 font-semibold tracking-tight">
                 Nuestra Visión
               </h2>
-              <p className="text-base md:text-lg text-neutral-600 font-light leading-relaxed text-justify">
+              <p className="font-serif text-neutral-800 text-[15px] sm:text-base md:text-[17px] lg:text-[18.5px] leading-relaxed md:leading-[1.8] font-normal">
                 Proyectamos un crecimiento constante y sostenible guiado por la excelencia. En los próximos 5 años, consolidaremos nuestro liderazgo a través del crecimiento del portafolio premium, showrooms sensoriales y la expansión internacional hacia Miami.
               </p>
             </div>
@@ -100,10 +100,10 @@ export default async function NosotrosPage() {
         <section className="bg-neutral-50 py-20 px-6 md:px-10 lg:px-16 border-t border-b border-neutral-200">
           <div className="max-w-6xl mx-auto">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="font-serif text-3xl md:text-4xl text-neutral-900 font-light mb-4">
+              <h2 className="font-serif text-3xl md:text-4xl text-neutral-900 font-semibold tracking-tight mb-4">
                 Nuestras Tiendas Físicas
               </h2>
-              <p className="text-neutral-600 font-light text-base md:text-lg">
+              <p className="font-serif text-neutral-800 text-[15px] sm:text-base md:text-[17px] lg:text-[18.5px] leading-relaxed font-normal">
                 Visítanos en nuestras sedes y vive la experiencia Anbar Home en persona. Piezas exclusivas y asesoría personalizada de interiorismo.
               </p>
             </div>
@@ -121,7 +121,7 @@ export default async function NosotrosPage() {
                     <h3 className="font-serif text-2xl text-neutral-900 font-medium mb-3">
                       {store.city}
                     </h3>
-                    <p className="text-neutral-600 font-light text-sm md:text-base leading-relaxed mb-6">
+                    <p className="font-serif text-neutral-700 text-sm md:text-base leading-relaxed mb-6 font-normal">
                       {store.address}
                     </p>
                   </div>
