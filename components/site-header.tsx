@@ -230,7 +230,7 @@ export function SiteHeader() {
                         <Image src={product.image} alt={product.name} fill className="object-cover object-center mix-blend-multiply" />
                       </div>
                       <div className="flex flex-1 flex-col justify-center">
-                        <h3 className="text-sm font-medium text-neutral-900">{product.name}</h3>
+                        <h3 className="font-sans text-sm font-medium text-neutral-900">{product.name}</h3>
                         <p className="text-sm font-serif text-camel-dark">{formatCOP(product.price)}</p>
                       </div>
                       <button onClick={() => toggleFavorite(product)} className="text-neutral-400 hover:text-red-500">
@@ -278,7 +278,7 @@ export function SiteHeader() {
                           <Image src={item.image} alt={item.name} fill className="object-cover object-center mix-blend-multiply" />
                         </div>
                         <div className="flex flex-1 flex-col justify-center">
-                          <h3 className="text-sm font-medium text-neutral-900">{item.name}</h3>
+                          <h3 className="font-sans text-sm font-medium text-neutral-900">{item.name}</h3>
                           <div className="flex justify-between items-center mt-2">
                             <p className="text-sm font-serif text-camel-dark">{formatCOP(item.price)}</p>
                             <div className="flex items-center gap-2 rounded border border-neutral-200 px-2 py-1 bg-neutral-50/50">

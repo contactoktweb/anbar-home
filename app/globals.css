@@ -8,6 +8,7 @@
   --font-heading: var(--font-playfair), serif;
   --font-serif: var(--font-playfair), serif;
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
   --color-camel: var(--camel);
   --color-camel-dark: var(--camel-dark);

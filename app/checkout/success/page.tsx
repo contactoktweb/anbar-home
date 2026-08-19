@@ -198,7 +198,7 @@ export default async function CheckoutSuccessPage(props: {
                       </div>
                     )}
                     <div className="flex-1 min-w-0 pr-2">
-                      <p className="text-neutral-900 font-medium line-clamp-2">{item.name}</p>
+                      <p className="font-sans text-neutral-900 font-medium line-clamp-2">{item.name}</p>
                       <p className="text-neutral-500 mt-0.5 text-xs">Cant: {item.quantity} x {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(item.price)}</p>
                     </div>
                     <p className="text-neutral-900 font-medium whitespace-nowrap">

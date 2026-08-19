@@ -166,7 +166,7 @@ export function ProductCard({ product }: ProductCardProps) {
           })}
         </div>
         
-        <h3 className="text-[15px] font-medium leading-snug text-neutral-800 transition-colors group-hover:text-camel line-clamp-2">
+        <h3 className="font-sans text-[15px] font-medium leading-snug text-neutral-800 transition-colors group-hover:text-camel line-clamp-2">
           {product.name || '\u00A0'}
         </h3>
         

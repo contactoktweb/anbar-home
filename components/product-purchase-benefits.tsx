@@ -36,7 +36,7 @@ export function ProductPurchaseBenefits() {
       highlight: '10% de descuento',
     },
     {
-      id: 'warranty',
+      id: 'secure-payment',
       icon: (
         <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 md:w-9 md:h-9 text-neutral-800">
           <path d="M24 7l14 5v11c0 9.5-6 16.5-14 19-8-2.5-14-9.5-14-19V12l14-5z" strokeLinecap="round" strokeLinejoin="round" />
@@ -44,8 +44,8 @@ export function ProductPurchaseBenefits() {
           <path d="M21.5 22l2 2 3-3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.6" />
         </svg>
       ),
-      text: 'Garantía por 1 año',
-      subtext: 'Calidad artesanal asegurada',
+      text: 'Pago 100% Seguro',
+      subtext: 'Transacciones protegidas',
     },
     {
       id: 'returns',

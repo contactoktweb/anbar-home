@@ -463,7 +463,7 @@ export default function CheckoutPage() {
                         />
                       </div>
                       <div className="flex flex-1 flex-col justify-center">
-                        <h3 className="text-[14px] font-medium text-neutral-900 line-clamp-2 leading-snug">
+                        <h3 className="font-sans text-[14px] font-medium text-neutral-900 line-clamp-2 leading-snug">
                           {item.name}
                         </h3>
                         <p className="text-[12px] text-neutral-500 mt-0.5">{item.category}</p>
