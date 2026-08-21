@@ -28,21 +28,41 @@ export default async function CheckoutSuccessPage(props: {
       // Validar la transacción con Wompi para mayor seguridad y obtener la referencia de Sanity
       const isTest = process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY?.startsWith('pub_test_')
       const wompiUrl = isTest ? 'https://sandbox.wompi.co/v1' : 'https://production.wompi.co/v1'
+      const wompiKey = process.env.WOMPI_PRIVATE_KEY || process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY
 
-      const response = await fetch(`${wompiUrl}/transactions/${transactionId}`, { cache: 'no-store' })
+      const headers: Record<string, string> = {}
+      if (wompiKey) {
+        headers['Authorization'] = `Bearer ${wompiKey.trim()}`
+      }
+
+      const response = await fetch(`${wompiUrl}/transactions/${transactionId}`, { 
+        cache: 'no-store',
+        headers
+      })
+
       if (response.ok) {
         const result = await response.json()
         const transaction = result.data
         if (transaction && transaction.status && transaction.reference) {
           if (transaction.status === 'APPROVED') {
-            orderValue = transaction.amount_in_cents / 100
+            orderValue = transaction.amount_in_cents ? transaction.amount_in_cents / 100 : 0
           }
 
-          // Obtener orden
-          const order = await adminClient.getDocument(transaction.reference)
+          // Obtener orden desde Sanity
+          let order = await adminClient.getDocument(transaction.reference)
+          if (!order) {
+            // Fallback: si por alguna razón no se encontró por ID directo, buscar por reference
+            order = await adminClient.fetch(
+              `*[_type == "order" && (_id == $ref || wompiReference == $txId || wompiTransactionId == $txId)][0]`,
+              { ref: transaction.reference, txId: transactionId }
+            )
+          }
 
           if (order) {
             orderId = order._id
+            if (!orderValue && order.totalAmount) {
+              orderValue = order.totalAmount
+            }
 
             if (order.meta && order.meta.purchaseEventId) {
               purchaseEventId = order.meta.purchaseEventId
@@ -79,43 +99,77 @@ export default async function CheckoutSuccessPage(props: {
             }
 
             let shouldSendEmail = false
-            let shouldUpdateSanity = true
 
             // Determinar si debemos enviar correo basado en el estado final
             if (transaction.status === 'APPROVED' || transaction.status === 'DECLINED' || transaction.status === 'ERROR') {
               shouldSendEmail = !order.emailSent
             }
 
-            if (shouldUpdateSanity) {
-              // Actualizar Sanity siempre con el estado más reciente
-              const updateData: any = {
-                status: transaction.status,
-                wompiReference: transaction.id,
-              }
-              
-              if (shouldSendEmail) {
-                updateData.emailSent = true
-              }
+            // Actualizar Sanity con el estado más reciente
+            const updateData: any = {
+              status: transaction.status,
+              wompiReference: transaction.id,
+              wompiTransactionId: transaction.id,
+              wompiRawStatus: transaction.status,
+              wompiPaymentMethodType: transaction.payment_method_type,
+            }
+            
+            if (shouldSendEmail && transaction.status === 'APPROVED') {
+              updateData.emailSent = true
+            }
 
-              if (transaction.status === 'APPROVED' && order.status !== 'APPROVED') {
-                updateData.paidAt = new Date().toISOString()
-              }
+            if (transaction.status === 'APPROVED' && order.status !== 'APPROVED') {
+              updateData.paidAt = new Date().toISOString()
+            }
 
-              await adminClient.patch(transaction.reference).set(updateData).commit()
-              console.log(`Orden ${transaction.reference} actualizada a ${transaction.status} en success page`)
+            await adminClient.patch(order._id).set(updateData).commit()
+            console.log(`Orden ${order._id} actualizada a ${transaction.status} en success page`)
 
-              if (shouldSendEmail) {
-                // Obtener configuración global (logo y email admin)
-                const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY)
-                // Procesar envío de correos
-                await processOrderEmails(order, settings, transaction.status)
-                console.log(`Correo enviado para la orden ${transaction.reference}`)
-              }
+            if (shouldSendEmail) {
+              // Obtener configuración global (logo y email admin)
+              const settings = await adminClient.fetch(GLOBAL_SETTINGS_QUERY)
+              // Procesar envío de correos
+              await processOrderEmails(order, settings, transaction.status)
+              console.log(`Correo enviado para la orden ${order._id}`)
             }
           }
         }
       } else {
-        console.error('Error fetching Wompi transaction:', await response.text())
+        console.error('Error fetching Wompi transaction:', response.status, await response.text())
+        // Fallback en caso de que la API de Wompi falle temporalmente pero el ID sea una referencia de Sanity
+        const order = await adminClient.fetch(
+          `*[_type == "order" && (_id == $id || wompiReference == $id || wompiTransactionId == $id)][0]`,
+          { id: transactionId }
+        )
+        if (order) {
+          orderId = order._id
+          orderValue = order.totalAmount || 0
+          purchaseEventId = order.meta?.purchaseEventId || `purchase_${order._id}`
+          userData = {
+            em: order.customerEmail,
+            ph: order.customerPhone,
+            fn: order.customerFirstName,
+            ln: order.customerLastName,
+            ct: order.shippingAddress?.city,
+            st: order.shippingAddress?.department,
+            country: 'co'
+          }
+          customerInfo = {
+            name: `${order.customerFirstName || ''} ${order.customerLastName || ''}`.trim(),
+            email: order.customerEmail,
+            phone: order.customerPhone
+          }
+          shippingInfo = order.shippingAddress
+          if (order.items) {
+            purchasedItems = order.items
+            orderContentIds = (order.items as any[]).map((item: any) => item.sku || item._key)
+            orderContents = (order.items as any[]).map((item: any) => ({
+              id: item.sku || item._key,
+              quantity: item.quantity,
+              item_price: item.price
+            }))
+          }
+        }
       }
     } catch (e) {
       console.error('Error sincronizando la orden en la página de éxito:', e)

@@ -241,8 +241,15 @@ export default function CheckoutPage() {
 
       // 3. Redirigir al Web Checkout de Wompi
       // IMPORTANTE: Wompi bloquea localhost en redirect-url via WAF (CloudFront).
-      // En desarrollo, usar NEXT_PUBLIC_SITE_URL apuntando al dominio de produccion.
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
+      // En localhost usamos NEXT_PUBLIC_SITE_URL como fallback; en producción usamos el origen activo.
+      const isLocalhost = typeof window !== 'undefined' && (
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname.endsWith('.local')
+      )
+      const siteUrl = isLocalhost
+        ? (process.env.NEXT_PUBLIC_SITE_URL || window.location.origin)
+        : (window.location.origin || process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.co')
       const redirectUrl = `${siteUrl}/checkout/success`
       
       const wompiWebCheckoutUrl = "https://checkout.wompi.co/p/" +

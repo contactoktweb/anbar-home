@@ -16,8 +16,18 @@ export default async function CheckoutErrorPage(props: {
     try {
       const isTest = process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY?.startsWith('pub_test_')
       const wompiUrl = isTest ? 'https://sandbox.wompi.co/v1' : 'https://production.wompi.co/v1'
+      const wompiKey = process.env.WOMPI_PRIVATE_KEY || process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY
 
-      const response = await fetch(`${wompiUrl}/transactions/${transactionId}`, { cache: 'no-store' })
+      const headers: Record<string, string> = {}
+      if (wompiKey) {
+        headers['Authorization'] = `Bearer ${wompiKey.trim()}`
+      }
+
+      const response = await fetch(`${wompiUrl}/transactions/${transactionId}`, { 
+        cache: 'no-store',
+        headers
+      })
+
       if (response.ok) {
         const result = await response.json()
         const transaction = result.data
@@ -25,11 +35,20 @@ export default async function CheckoutErrorPage(props: {
           status = transaction.status || status
           reference = transaction.reference
 
-          const order = await adminClient.getDocument(transaction.reference)
+          let order = await adminClient.getDocument(transaction.reference)
+          if (!order) {
+            order = await adminClient.fetch(
+              `*[_type == "order" && (_id == $ref || wompiReference == $txId || wompiTransactionId == $txId)][0]`,
+              { ref: transaction.reference, txId: transactionId }
+            )
+          }
+
           if (order && !order.declinedEmailSent && !order.emailSent) {
-            await adminClient.patch(transaction.reference).set({
+            await adminClient.patch(order._id).set({
               status: status,
               wompiReference: transaction.id,
+              wompiTransactionId: transaction.id,
+              wompiRawStatus: status,
               declinedEmailSent: true
             }).commit()
 
