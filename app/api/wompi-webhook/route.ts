@@ -4,6 +4,7 @@ import { adminClient } from '@/sanity/lib/adminClient';
 import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries';
 import { processOrderEmails } from '@/lib/emails';
 import { sendServerEvent } from '@/lib/fb-server-tracking';
+import { trackServerPlacedOrder, trackServerOrderedProducts } from '@/lib/klaviyo/server';
 
 function extractPropertyValue(body: any, prop: string): string {
   const parts = prop.split('.');
@@ -196,6 +197,25 @@ export async function POST(request: Request) {
               console.log(`Evento Purchase enviado a Meta para la orden ${targetOrderId}`);
             } else {
               console.error(`Error enviando Purchase a Meta para orden ${targetOrderId}:`, capiResponse.error);
+            }
+          }
+
+          // Klaviyo Placed Order & Ordered Product (Idempotent Server-Side Tracking)
+          const isKlaviyoSent = order.meta?.klaviyoPlacedOrderSent === true;
+          if (!isKlaviyoSent) {
+            try {
+              const klaviyoPlacedRes = await trackServerPlacedOrder(order);
+              await trackServerOrderedProducts(order);
+
+              if (klaviyoPlacedRes.success) {
+                await adminClient.patch(targetOrderId).set({
+                  'meta.klaviyoPlacedOrderSent': true,
+                  'meta.klaviyoPlacedOrderSentAt': new Date().toISOString(),
+                }).commit();
+                console.log(`Evento Placed Order enviado a Klaviyo para la orden ${targetOrderId}`);
+              }
+            } catch (klaviyoOrderErr) {
+              console.error(`Error enviando orden a Klaviyo (${targetOrderId}):`, klaviyoOrderErr);
             }
           }
         } else if (status === 'DECLINED' || status === 'ERROR' || status === 'VOIDED') {

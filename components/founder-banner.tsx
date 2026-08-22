@@ -12,8 +12,8 @@ export function FounderBanner() {
                 src="/andres.jpeg"
                 alt="Andres Barrientos | Anbar Home"
                 fill
-                priority
                 sizes="(max-width: 768px) 100vw, 50vw"
+                quality={75}
                 className="object-cover object-top md:object-center grayscale hover:grayscale-0 transition-all duration-700 ease-out"
               />
             </div>

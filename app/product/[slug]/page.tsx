@@ -1,3 +1,5 @@
+export const revalidate = 60
+
 import type { Metadata, ResolvingMetadata } from 'next'
 import { ProductImageZoom } from '@/components/product-image-zoom'
 import { notFound } from 'next/navigation'
@@ -13,13 +15,26 @@ import { ProductTracker } from '@/components/ui/product-tracker'
 import { ShareButtons } from '@/components/share-buttons'
 import { client } from '@/sanity/lib/client'
 import { PRODUCT_BY_SLUG_QUERY, LATEST_PRODUCTS_QUERY, REVIEWS_BY_PRODUCT_QUERY } from '@/sanity/lib/queries'
+import { slugify } from '@/sanity/lib/slugify'
+
+function getSlugVariations(rawSlug: string) {
+  let decoded = rawSlug || ''
+  try {
+    decoded = decodeURIComponent(rawSlug)
+  } catch {}
+  return {
+    slug: rawSlug,
+    cleanSlug: slugify(decoded),
+  }
+}
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const resolvedParams = await params
-  const sanityProduct = await client.fetch(PRODUCT_BY_SLUG_QUERY, { slug: resolvedParams.slug }).catch(() => null)
+  const { slug, cleanSlug } = getSlugVariations(resolvedParams.slug)
+  const sanityProduct = await client.fetch(PRODUCT_BY_SLUG_QUERY, { slug, cleanSlug }).catch(() => null)
   
   if (!sanityProduct) {
     return {
@@ -61,8 +76,9 @@ export async function generateMetadata(
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params
+  const { slug, cleanSlug } = getSlugVariations(resolvedParams.slug)
   
-  const sanityProduct = await client.fetch(PRODUCT_BY_SLUG_QUERY, { slug: resolvedParams.slug })
+  const sanityProduct = await client.fetch(PRODUCT_BY_SLUG_QUERY, { slug, cleanSlug })
 
   if (!sanityProduct) {
     notFound()

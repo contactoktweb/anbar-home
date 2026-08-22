@@ -7,6 +7,8 @@ import { useStore } from '@/components/store-provider'
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import { generateWompiSignature } from './actions'
 import { trackEvent, getCookie } from '@/lib/fb-tracking'
+import { trackStartedCheckout, identifyUser } from '@/lib/klaviyo/client'
+import { optimizeImageUrl } from '@/lib/utils'
 import React from 'react'
 
 declare global {
@@ -81,6 +83,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     setIsMounted(true)
     if (cart.length > 0 && !checkoutTracked.current) {
+      // 1. Meta InitiateCheckout
       trackEvent('InitiateCheckout', {
         currency: 'COP',
         value: cartTotal,
@@ -92,9 +95,13 @@ export default function CheckoutPage() {
           item_price: item.price
         }))
       })
+
+      // 2. Klaviyo Started Checkout
+      trackStartedCheckout(cart, cartTotal, formData.email, formData.phone)
+
       checkoutTracked.current = true
     }
-  }, [cart, cartTotal])
+  }, [cart, cartTotal, formData.email, formData.phone])
 
   const formatCOP = (amount: number) =>
     new Intl.NumberFormat('es-CO', {
@@ -207,6 +214,19 @@ export default function CheckoutPage() {
         st: formData.department,
         country: 'co' // FB ISO format usually 2 letters
       })
+
+      // Klaviyo Identify
+      if (formData.email) {
+        identifyUser({
+          email: formData.email,
+          phone_number: formData.phone,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          city: formData.city,
+          region: formData.department,
+          country: formData.country,
+        })
+      }
 
       // Extraer meta fields
       const fbp = getCookie('_fbp')
@@ -463,9 +483,11 @@ export default function CheckoutPage() {
                     <div key={item.id} className="flex gap-4">
                       <div className="relative h-16 w-16 flex-shrink-0 bg-white border border-neutral-200 rounded-md overflow-visible">
                         <Image 
-                          src={item.image} 
+                          src={optimizeImageUrl(item.image, 160, 75)} 
                           alt={item.name} 
                           fill 
+                          sizes="64px"
+                          quality={75}
                           className="object-cover object-center mix-blend-multiply p-1 rounded-md" 
                         />
                       </div>

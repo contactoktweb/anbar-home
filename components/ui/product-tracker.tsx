@@ -1,22 +1,36 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { Product } from '@/types'
 import { trackEvent } from '@/lib/fb-tracking'
+import { trackViewedProduct } from '@/lib/klaviyo/client'
 
 interface ProductTrackerProps {
-  product: {
+  product: Product | {
     id: string
     sku?: string
+    slug?: string
     name: string
     price: number
+    originalPrice?: number
+    category?: string
+    categories?: string[]
+    image?: string
+    images?: string[]
+    description?: string
+    rating?: number
+    ratingCount?: number
   }
 }
 
 export function ProductTracker({ product }: ProductTrackerProps) {
-  const tracked = useRef(false)
+  const lastTrackedId = useRef<string | null>(null)
 
   useEffect(() => {
-    if (!tracked.current) {
+    if (product && product.id && lastTrackedId.current !== product.id) {
+      lastTrackedId.current = product.id
+
+      // 1. Meta Pixel & CAPI ViewContent
       trackEvent('ViewContent', {
         content_name: product.name,
         content_ids: [product.sku || product.id],
@@ -31,9 +45,12 @@ export function ProductTracker({ product }: ProductTrackerProps) {
           }
         ]
       })
-      tracked.current = true
+
+      // 2. Klaviyo Viewed Product
+      trackViewedProduct(product as Product)
     }
   }, [product])
 
   return null
 }
+

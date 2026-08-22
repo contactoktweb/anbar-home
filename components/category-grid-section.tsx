@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
+import { optimizeImageUrl } from '@/lib/utils'
 
 interface CategoryItem {
   _key?: string
@@ -63,12 +64,12 @@ export function CategoryGridSection({ data }: CategoryGridSectionProps) {
                   {/* Square Image Container */}
                   <div className="relative aspect-square w-full overflow-hidden bg-neutral-100">
                     <Image
-                      src={cat.imageUrl}
+                      src={optimizeImageUrl(cat.imageUrl, 500, 75)}
                       alt={cat.title}
                       fill
                       sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 20vw"
                       className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                      quality={90}
+                      quality={75}
                     />
                     
                     {/* Subtle Overlay gradient on hover/tap */}

@@ -1,5 +1,6 @@
 import {UserIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {slugify} from '../lib/slugify'
 
 export const authorType = defineType({
   name: 'author',
@@ -16,6 +17,8 @@ export const authorType = defineType({
       type: 'slug',
       options: {
         source: 'name',
+        maxLength: 96,
+        slugify: (input) => slugify(input),
       },
     }),
     defineField({

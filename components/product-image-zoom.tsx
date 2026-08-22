@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { optimizeImageUrl } from '@/lib/utils'
 
 export function ProductImageZoom({ src, images = [], alt }: { src: string, images?: string[], alt: string }) {
   const [position, setPosition] = useState({ x: 50, y: 50 })
@@ -79,7 +80,7 @@ export function ProductImageZoom({ src, images = [], alt }: { src: string, image
           onMouseMove={handleMouseMove}
         >
           <Image
-            src={activeImage}
+            src={optimizeImageUrl(activeImage, 1200, 80)}
             alt={alt}
             fill
             className="object-contain object-center mix-blend-multiply transition-transform duration-[400ms] ease-out"
@@ -89,6 +90,7 @@ export function ProductImageZoom({ src, images = [], alt }: { src: string, image
               transform: isZoomed ? 'scale(2.2)' : 'scale(1)',
             }}
             sizes="(max-width: 1024px) 100vw, 50vw"
+            quality={80}
             priority
             draggable={false}
           />
@@ -115,11 +117,12 @@ export function ProductImageZoom({ src, images = [], alt }: { src: string, image
                 } bg-[#F8F6F2]`}
               >
                 <Image
-                  src={img}
+                  src={optimizeImageUrl(img, 160, 75)}
                   alt={`${alt} - vista ${idx + 1}`}
                   fill
                   className="object-cover object-center mix-blend-multiply"
                   sizes="80px"
+                  quality={75}
                 />
               </button>
             ))}
@@ -155,11 +158,12 @@ export function ProductImageZoom({ src, images = [], alt }: { src: string, image
             onClick={(e) => e.stopPropagation()}
           >
             <Image
-              src={allImages[lightboxIndex]}
+              src={optimizeImageUrl(allImages[lightboxIndex], 1440, 80)}
               alt={`${alt} - vista ${lightboxIndex + 1}`}
               fill
               className="object-contain"
               sizes="90vw"
+              quality={80}
               priority
             />
           </div>

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
+import { cn, optimizeImageUrl } from '@/lib/utils'
 import { Search, Heart, ShoppingBag, X, Trash2, Plus, Minus } from 'lucide-react'
 import { useStore } from '@/components/store-provider'
 
@@ -227,7 +227,14 @@ export function SiteHeader() {
                   {favorites.map((product) => (
                     <div key={product.id} className="flex gap-4 border-b border-border/50 pb-4 last:border-0">
                       <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden bg-white">
-                        <Image src={product.image} alt={product.name} fill className="object-cover object-center mix-blend-multiply" />
+                        <Image
+                          src={optimizeImageUrl(product.image, 160, 75)}
+                          alt={product.name}
+                          fill
+                          sizes="80px"
+                          quality={75}
+                          className="object-cover object-center mix-blend-multiply"
+                        />
                       </div>
                       <div className="flex flex-1 flex-col justify-center">
                         <h3 className="font-sans text-sm font-medium text-neutral-900">{product.name}</h3>
@@ -275,7 +282,14 @@ export function SiteHeader() {
                     {cart.map((item) => (
                       <div key={item.id} className="flex gap-4 border-b border-border/50 pb-4 last:border-0">
                         <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden bg-white">
-                          <Image src={item.image} alt={item.name} fill className="object-cover object-center mix-blend-multiply" />
+                          <Image
+                            src={optimizeImageUrl(item.image, 160, 75)}
+                            alt={item.name}
+                            fill
+                            sizes="80px"
+                            quality={75}
+                            className="object-cover object-center mix-blend-multiply"
+                          />
                         </div>
                         <div className="flex flex-1 flex-col justify-center">
                           <h3 className="font-sans text-sm font-medium text-neutral-900">{item.name}</h3>

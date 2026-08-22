@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { adminClient } from '@/sanity/lib/adminClient'
 import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
 import { sendDiscountCouponEmail } from '@/lib/emails'
+import { subscribeProfileToKlaviyo } from '@/lib/klaviyo/server'
 import crypto from 'crypto'
 
 export async function POST(request: Request) {
@@ -56,6 +57,19 @@ export async function POST(request: Request) {
       couponCode,
       logoUrl,
     })
+
+    // 4. Suscribir y registrar consentimiento de marketing en Klaviyo
+    try {
+      await subscribeProfileToKlaviyo({
+        email: normalizedEmail,
+        customProperties: {
+          signup_source: 'discount_modal_10_percent',
+          discount_coupon: couponCode,
+        },
+      })
+    } catch (klaviyoErr) {
+      console.error('Aviso: Error no crítico al suscribir en Klaviyo:', klaviyoErr)
+    }
 
     return NextResponse.json({
       success: true,

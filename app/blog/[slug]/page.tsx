@@ -4,6 +4,8 @@ import { WhatsAppButton } from '@/components/whatsapp-button'
 import { client } from '@/sanity/lib/client'
 import { POST_BY_SLUG_QUERY } from '@/sanity/lib/queries'
 import { urlFor } from '@/sanity/lib/image'
+import { slugify } from '@/sanity/lib/slugify'
+import { optimizeImageUrl } from '@/lib/utils'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
@@ -11,9 +13,21 @@ import { Metadata } from 'next'
 
 export const revalidate = 60
 
+function getSlugVariations(rawSlug: string) {
+  let decoded = rawSlug || ''
+  try {
+    decoded = decodeURIComponent(rawSlug)
+  } catch {}
+  return {
+    slug: rawSlug,
+    cleanSlug: slugify(decoded),
+  }
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params
-  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug: resolvedParams.slug })
+  const { slug, cleanSlug } = getSlugVariations(resolvedParams.slug)
+  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug, cleanSlug })
   
   if (!post) {
     return {
@@ -36,9 +50,11 @@ const portableTextComponents = {
       return (
         <div className="relative aspect-[16/9] w-full my-12 overflow-hidden rounded-sm bg-neutral-100">
           <Image
-            src={urlFor(value).url()}
+            src={optimizeImageUrl(urlFor(value).url(), 1200, 75)}
             alt={value.alt || 'Imagen del blog'}
             fill
+            sizes="(max-width: 768px) 100vw, 800px"
+            quality={75}
             className="object-cover"
           />
         </div>
@@ -49,9 +65,9 @@ const portableTextComponents = {
     h1: ({ children }: any) => <h1 className="font-serif text-3xl md:text-5xl lg:text-[3.25rem] font-light text-neutral-950 leading-[1.15] mb-8 mt-12">{children}</h1>,
     h2: ({ children }: any) => <h2 className="font-serif text-2xl md:text-[1.75rem] font-light text-neutral-950 mt-16 mb-6">{children}</h2>,
     h3: ({ children }: any) => <h3 className="font-serif text-xl md:text-2xl font-light text-neutral-950 mt-12 mb-4">{children}</h3>,
-    normal: ({ children }: any) => <p className="text-[0.95rem] md:text-[1rem] leading-[2] text-neutral-600 font-light text-justify mb-6">{children}</p>,
+    normal: ({ children }: any) => <p className="text-[0.95rem] md:text-[1.05rem] leading-[2.1] text-neutral-600 font-light mb-8">{children}</p>,
     blockquote: ({ children }: any) => (
-      <blockquote className="border-l-2 border-camel-dark pl-6 my-12">
+      <blockquote className="border-l-[1.5px] border-camel pl-6 sm:pl-8 my-10 py-2 italic bg-neutral-50/50 rounded-r-sm">
         <p className="font-serif text-2xl md:text-3xl font-light text-neutral-950 leading-snug mb-2">{children}</p>
       </blockquote>
     ),
@@ -83,7 +99,8 @@ const portableTextComponents = {
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params
-  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug: resolvedParams.slug })
+  const { slug, cleanSlug } = getSlugVariations(resolvedParams.slug)
+  const post = await client.fetch(POST_BY_SLUG_QUERY, { slug, cleanSlug })
 
   if (!post) {
     notFound()
@@ -126,9 +143,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <div className="mx-auto max-w-6xl px-4 md:px-8 mb-16 md:mb-24">
               <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100">
                 <Image
-                  src={post.imageUrl}
+                  src={optimizeImageUrl(post.imageUrl, 1440, 75)}
                   alt={post.imageAlt || post.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                  quality={75}
                   className="object-cover object-center"
                   priority
                 />

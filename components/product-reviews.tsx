@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { cn } from '@/lib/utils'
+import { cn, optimizeImageUrl } from '@/lib/utils'
 import { Star, Upload, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -261,9 +261,11 @@ export function ProductReviews({ productId, reviews, initialRating, ratingCount 
                   {review.imageUrl && (
                     <div className="sm:w-32 sm:h-32 w-full aspect-square relative rounded-sm overflow-hidden bg-neutral-100 shrink-0">
                       <Image 
-                        src={review.imageUrl} 
+                        src={optimizeImageUrl(review.imageUrl, 250, 75)} 
                         alt={`Reseña de ${review.userName}`} 
                         fill 
+                        sizes="128px"
+                        quality={75}
                         className="object-cover"
                       />
                     </div>

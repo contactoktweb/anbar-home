@@ -6,7 +6,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-    qualities: [75, 80, 90],
+    qualities: [75, 80, 90, 95],
   },
   experimental: {
     serverActions: {

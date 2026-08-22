@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { optimizeImageUrl } from '@/lib/utils'
 
 interface CategoryHeroBannerProps {
   data?: any
@@ -24,11 +25,14 @@ export function CategoryHeroBanner({
   const fallbackBanner =
     allBanners.find((b: any) => b.categorySlug === currentSlug) || allBanners[0]
 
-  const src = categoryBanner?.src || fallbackBanner?.src
-  const srcMobile = categoryBanner?.srcMobile || fallbackBanner?.srcMobile
+  const rawSrc = categoryBanner?.src || fallbackBanner?.src
+  const rawSrcMobile = categoryBanner?.srcMobile || fallbackBanner?.srcMobile
   const alt = categoryName || fallbackBanner?.alt || 'Anbar Home'
 
-  if (!src) return null
+  if (!rawSrc) return null
+
+  const src = optimizeImageUrl(rawSrc, 1440, 75)
+  const srcMobile = rawSrcMobile ? optimizeImageUrl(rawSrcMobile, 800, 75) : null
 
   return (
     <section className="w-full">
@@ -36,11 +40,11 @@ export function CategoryHeroBanner({
       <Image
         src={src}
         alt={alt}
-        width={2880}
-        height={1620}
+        width={1440}
+        height={810}
         className={`w-full h-auto block object-contain ${srcMobile ? 'hidden md:block' : ''}`}
         priority
-        quality={95}
+        quality={75}
         sizes="100vw"
       />
       {/* Mobile Image: 100% full width and 100% natural uncropped height */}
@@ -48,11 +52,11 @@ export function CategoryHeroBanner({
         <Image
           src={srcMobile}
           alt={alt}
-          width={1890}
-          height={3360}
+          width={800}
+          height={1400}
           className="w-full h-auto block object-contain md:hidden"
           priority
-          quality={95}
+          quality={75}
           sizes="100vw"
         />
       )}

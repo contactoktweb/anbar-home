@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { HeroCarousel } from '@/components/hero-carousel'
+import { optimizeImageUrl } from '@/lib/utils'
 
 export function Hero({ data }: { data?: any }) {
   const subtitle = data?.heroSubtitle || ''
@@ -31,16 +32,16 @@ export function Hero({ data }: { data?: any }) {
 
   const images = data?.heroBanners?.length > 0
     ? data.heroBanners.map((banner: any) => ({
-        src: banner.src,
-        srcMobile: banner.srcMobile,
+        src: optimizeImageUrl(banner.src, 1440, 75),
+        srcMobile: optimizeImageUrl(banner.srcMobile || banner.src, 800, 75),
         alt: banner.alt || 'Anbar Home',
         label: banner.categoryTitle,
         href: banner.categorySlug ? `/category/${banner.categorySlug}` : undefined,
       }))
     : data?.galleryImages?.length > 0 
     ? data.galleryImages.map((img: any, i: number) => ({
-        src: img.imageUrl || defaultImages[i]?.src || '/Blogs-Anbar-1png.webp',
-        srcMobile: img.mobileImageUrl || defaultImages[i]?.srcMobile,
+        src: optimizeImageUrl(img.imageUrl, 1440, 75) || defaultImages[i]?.src || '/Blogs-Anbar-1png.webp',
+        srcMobile: optimizeImageUrl(img.mobileImageUrl, 800, 75) || defaultImages[i]?.srcMobile,
         alt: img.alt || defaultImages[i]?.alt || `Galería ${i + 1}`,
         label: img.label || defaultImages[i]?.label || 'Colección',
         href: img.href || defaultImages[i]?.href || '#'

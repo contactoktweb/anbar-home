@@ -1,10 +1,11 @@
 import { HeroCarousel } from '@/components/hero-carousel'
+import { optimizeImageUrl } from '@/lib/utils'
 
 export function HeroWow({ data }: { data?: any }) {
   const banners = data?.heroBanners?.length > 0
     ? data.heroBanners.map((banner: any) => ({
-        src: banner.src,
-        srcMobile: banner.srcMobile,
+        src: optimizeImageUrl(banner.src, 1440, 75),
+        srcMobile: optimizeImageUrl(banner.srcMobile || banner.src, 800, 75),
         alt: banner.alt || 'Anbar Home',
         label: banner.categoryTitle,
         href: banner.categorySlug ? `/category/${banner.categorySlug}` : undefined,

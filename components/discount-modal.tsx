@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { X, CheckCircle, ArrowRight, Loader2 } from 'lucide-react'
+import { identifyUser } from '@/lib/klaviyo/client'
 
 export function DiscountModal() {
   const [isOpen, setIsOpen] = useState(false)
@@ -50,6 +51,9 @@ export function DiscountModal() {
         throw new Error(data.error || 'Error al procesar la solicitud.')
       }
 
+      // Identify user in Klaviyo
+      identifyUser({ email: email.trim().toLowerCase() })
+
       setIsSubmitted(true)
       localStorage.setItem('anbar_discount_modal_seen', 'true')
     } catch (err: any) {
@@ -86,7 +90,7 @@ export function DiscountModal() {
             fill
             className="object-cover object-center hidden md:block"
             priority
-            quality={95}
+            quality={90}
           />
           {/* Versión Móvil */}
           <Image
@@ -95,7 +99,7 @@ export function DiscountModal() {
             fill
             className="object-cover object-center md:hidden"
             priority
-            quality={95}
+            quality={90}
           />
 
           {/* Formulario / Mensaje de Éxito posicionado más arriba y centrado en móvil */}

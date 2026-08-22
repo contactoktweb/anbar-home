@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity'
 import { DocumentIcon } from '@sanity/icons'
+import { slugify } from '../lib/slugify'
 
 export const legalPage = defineType({
   name: 'legalPage',
@@ -21,6 +22,7 @@ export const legalPage = defineType({
       options: {
         source: 'title',
         maxLength: 96,
+        slugify: (input) => slugify(input),
       },
       validation: (rule) => rule.required(),
     }),

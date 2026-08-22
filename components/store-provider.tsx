@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { Product, CartItem } from '@/types'
+import { trackAddedToCart, trackRemovedFromCart } from '@/lib/klaviyo/client'
 
 interface StoreContextType {
   cart: CartItem[]
@@ -42,17 +43,33 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const addToCart = (product: Product, quantityToAdd: number = 1) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id)
+      let nextCart: CartItem[]
       if (existing) {
-        return prev.map((item) =>
+        nextCart = prev.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + quantityToAdd } : item
         )
+      } else {
+        nextCart = [...prev, { ...product, quantity: quantityToAdd }]
       }
-      return [...prev, { ...product, quantity: quantityToAdd }]
+
+      // Track Added to Cart in Klaviyo
+      trackAddedToCart(product, quantityToAdd, nextCart)
+
+      return nextCart
     })
   }
 
   const removeFromCart = (productId: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== productId))
+    setCart((prev) => {
+      const itemToRemove = prev.find((item) => item.id === productId)
+      const nextCart = prev.filter((item) => item.id !== productId)
+
+      if (itemToRemove) {
+        trackRemovedFromCart(itemToRemove, itemToRemove.quantity, nextCart)
+      }
+
+      return nextCart
+    })
   }
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -60,11 +77,23 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       removeFromCart(productId)
       return
     }
-    setCart((prev) =>
-      prev.map((item) =>
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === productId)
+      const nextCart = prev.map((item) =>
         item.id === productId ? { ...item, quantity } : item
       )
-    )
+
+      if (existing) {
+        const delta = quantity - existing.quantity
+        if (delta > 0) {
+          trackAddedToCart(existing, delta, nextCart)
+        } else if (delta < 0) {
+          trackRemovedFromCart(existing, Math.abs(delta), nextCart)
+        }
+      }
+
+      return nextCart
+    })
   }
 
   const clearCart = () => {

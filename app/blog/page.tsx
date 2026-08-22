@@ -4,6 +4,7 @@ import { WhatsAppButton } from '@/components/whatsapp-button'
 import { Concept } from '@/components/concept'
 import { client } from '@/sanity/lib/client'
 import { POSTS_QUERY } from '@/sanity/lib/queries'
+import { optimizeImageUrl } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -41,9 +42,11 @@ export default async function BlogPage() {
                     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm bg-neutral-100">
                       {post.imageUrl ? (
                         <Image
-                          src={post.imageUrl}
+                          src={optimizeImageUrl(post.imageUrl, 700, 75)}
                           alt={post.imageAlt || post.title}
                           fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          quality={75}
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                       ) : (

@@ -4,6 +4,8 @@ import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Poppins } from 'next/font/google'
 import { StoreProvider } from '@/components/store-provider'
 import { DiscountModal } from '@/components/discount-modal'
+import { KlaviyoScript } from '@/components/klaviyo-script'
+import { KlaviyoRouteTracker } from '@/components/klaviyo-route-tracker'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -83,10 +85,13 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      data-scroll-behavior="smooth"
       className={`${playfair.variable} ${poppins.variable} bg-background`}
     >
       <body className="font-sans antialiased overflow-x-hidden">
         <StoreProvider>
+          <KlaviyoScript />
+          <KlaviyoRouteTracker />
           {children}
           <DiscountModal />
           {process.env.NODE_ENV === 'production' && <Analytics />}

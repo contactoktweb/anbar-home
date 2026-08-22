@@ -134,7 +134,7 @@ export const LATEST_PRODUCTS_QUERY = groq`
 `
 
 export const PRODUCT_BY_SLUG_QUERY = groq`
-  *[_type == "product" && slug.current == $slug && isActive != false][0] {
+  *[_type == "product" && (slug.current == $slug || slug.current == $cleanSlug) && isActive != false][0] {
     _id,
     name,
     "slug": slug.current,
@@ -167,7 +167,7 @@ export const POSTS_QUERY = groq`
 `
 
 export const POST_BY_SLUG_QUERY = groq`
-  *[_type == "post" && slug.current == $slug][0] {
+  *[_type == "post" && (slug.current == $slug || slug.current == $cleanSlug)][0] {
     _id,
     title,
     "slug": slug.current,

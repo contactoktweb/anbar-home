@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Product } from '@/types'
-import { cn } from '@/lib/utils'
+import { cn, optimizeImageUrl } from '@/lib/utils'
 import { ShoppingBag, Heart, Check, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useStore } from '@/components/store-provider'
 
@@ -77,9 +77,11 @@ export function ProductCard({ product }: ProductCardProps) {
           allImages.map((img, idx) => (
             <Image
               key={`${img}-${idx}`}
-              src={img}
+              src={optimizeImageUrl(img, 600, 75)}
               alt={`${product.name} - Imagen ${idx + 1}`}
               fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              quality={75}
               className={cn(
                 "object-cover object-center mix-blend-multiply transition-all duration-700",
                 currentImageIndex === idx ? "opacity-100 group-hover:scale-105" : "opacity-0 scale-100"
@@ -89,9 +91,11 @@ export function ProductCard({ product }: ProductCardProps) {
         ) : (
           product.image && (
             <Image
-              src={product.image}
+              src={optimizeImageUrl(product.image, 600, 75)}
               alt={product.name}
               fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              quality={75}
               className="object-cover object-center mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
             />
           )

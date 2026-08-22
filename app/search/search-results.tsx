@@ -5,6 +5,7 @@ import { CategoryProductGrid } from '@/components/category-product-grid'
 import { Search } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { trackEvent } from '@/lib/fb-tracking'
+import { trackSearch } from '@/lib/klaviyo/client'
 
 export default function SearchResults({ products = [] }: { products?: any[] }) {
   const searchParams = useSearchParams()
@@ -13,15 +14,6 @@ export default function SearchResults({ products = [] }: { products?: any[] }) {
   const maxPrice = maxPriceParam ? parseInt(maxPriceParam, 10) : null
   
   const searchTracked = useRef('')
-
-  useEffect(() => {
-    if (query && searchTracked.current !== query) {
-      trackEvent('Search', {
-        search_string: query
-      })
-      searchTracked.current = query
-    }
-  }, [query])
 
   const normalizedQuery = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
   
@@ -39,6 +31,20 @@ export default function SearchResults({ products = [] }: { products?: any[] }) {
 
     return match
   })
+
+  useEffect(() => {
+    if (query && searchTracked.current !== query) {
+      // 1. Meta Search Event
+      trackEvent('Search', {
+        search_string: query
+      })
+
+      // 2. Klaviyo Search Event
+      trackSearch(query, filteredProducts.length)
+
+      searchTracked.current = query
+    }
+  }, [query, filteredProducts.length])
 
   return (
     <div>

@@ -5,6 +5,8 @@ import { adminClient } from '@/sanity/lib/adminClient'
 import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
 import { processOrderEmails } from '@/lib/emails'
 import { PurchaseTracker } from '@/components/ui/purchase-tracker'
+import { trackServerPlacedOrder, trackServerOrderedProducts } from '@/lib/klaviyo/server'
+import { optimizeImageUrl } from '@/lib/utils'
 // Restaurado PurchaseTracker con eventId para deduplicación con el webhook
 
 export default async function CheckoutSuccessPage(props: {
@@ -132,6 +134,22 @@ export default async function CheckoutSuccessPage(props: {
               await processOrderEmails(order, settings, transaction.status)
               console.log(`Correo enviado para la orden ${order._id}`)
             }
+
+            // Klaviyo Placed Order (Fallback en caso de que el webhook tarde en llegar)
+            if (transaction.status === 'APPROVED' && !order.meta?.klaviyoPlacedOrderSent) {
+              try {
+                const klaviyoRes = await trackServerPlacedOrder(order)
+                await trackServerOrderedProducts(order)
+                if (klaviyoRes.success) {
+                  await adminClient.patch(order._id).set({
+                    'meta.klaviyoPlacedOrderSent': true,
+                    'meta.klaviyoPlacedOrderSentAt': new Date().toISOString(),
+                  }).commit()
+                }
+              } catch (klaviyoErr) {
+                console.error(`Error enviando orden ${order._id} a Klaviyo en success page:`, klaviyoErr)
+              }
+            }
           }
         }
       } else {
@@ -244,9 +262,11 @@ export default async function CheckoutSuccessPage(props: {
                     {item.image && (
                       <div className="relative h-14 w-14 flex-shrink-0 bg-white border border-neutral-200 rounded-md overflow-hidden">
                         <Image
-                          src={item.image}
+                          src={optimizeImageUrl(item.image, 140, 75)}
                           alt={item.name || 'Producto'}
                           fill
+                          sizes="56px"
+                          quality={75}
                           className="object-cover object-center p-1 mix-blend-multiply"
                         />
                       </div>

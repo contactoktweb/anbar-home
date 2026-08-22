@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { Reveal } from '@/components/reveal'
 import { GridViewToggle } from '@/components/grid-view-toggle'
+import { optimizeImageUrl } from '@/lib/utils'
 
 export function Gallery({ data }: { data?: any }) {
   const subtitle = data?.gallerySubtitle || 'Galería'
@@ -26,7 +27,7 @@ export function Gallery({ data }: { data?: any }) {
 
   const images = data?.galleryImages?.length > 0 
     ? data.galleryImages.map((img: any, i: number) => ({
-        src: img.imageUrl || defaultImages[i]?.src || '/Blogs-Anbar-1png.webp',
+        src: optimizeImageUrl(img.imageUrl, 1200, 75) || defaultImages[i]?.src || '/Blogs-Anbar-1png.webp',
         alt: img.alt || `Galería ${i + 1}`
       }))
     : defaultImages
@@ -52,6 +53,8 @@ export function Gallery({ data }: { data?: any }) {
                   src={images[0].src}
                   alt={images[0].alt}
                   fill
+                  sizes="(max-width: 768px) 100vw, 66vw"
+                  quality={75}
                   className="object-cover object-top transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                 />
               </figure>
@@ -65,6 +68,8 @@ export function Gallery({ data }: { data?: any }) {
                   src={images[1].src}
                   alt={images[1].alt}
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  quality={75}
                   className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                 />
               </figure>
@@ -78,6 +83,8 @@ export function Gallery({ data }: { data?: any }) {
                   src={images[2].src}
                   alt={images[2].alt}
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  quality={75}
                   className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                 />
               </figure>
@@ -91,6 +98,8 @@ export function Gallery({ data }: { data?: any }) {
                   src={images[3].src}
                   alt={images[3].alt}
                   fill
+                  sizes="(max-width: 768px) 100vw, 66vw"
+                  quality={75}
                   className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                 />
               </figure>

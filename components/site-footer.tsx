@@ -95,6 +95,7 @@ export async function SiteFooter() {
               alt="Anbar Home"
               width={280}
               height={112}
+              quality={75}
               className="h-14 w-auto object-contain brightness-0 invert md:h-16"
             />
           </div>

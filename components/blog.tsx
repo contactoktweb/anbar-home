@@ -33,6 +33,8 @@ export function Blog() {
             src="/jarrones.webp"
             alt="Espacios sensoriales - Jarrones blancos texturizados"
             fill
+            sizes="(max-width: 768px) 100vw, 1200px"
+            quality={75}
             className="object-cover object-center"
             priority
           />
@@ -88,6 +90,8 @@ export function Blog() {
             src="/collage.png"
             alt="Collage de espacios interiores emocionales"
             fill
+            sizes="(max-width: 768px) 100vw, 1000px"
+            quality={75}
             className="object-cover"
           />
         </div>
