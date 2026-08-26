@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 import { client } from '@/sanity/lib/client';
 import { sanityToMetaProduct } from '@/lib/product-meta-mapper';
+import { HIDDEN_CATEGORY_SLUGS } from '@/sanity/lib/queries';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const query = `*[_type == "product"] {
+    const hiddenFilter = HIDDEN_CATEGORY_SLUGS.length > 0
+      ? `&& !defined((categories[]->slug.current)[@ in ${JSON.stringify(HIDDEN_CATEGORY_SLUGS)}][0]) && !(category->slug.current in ${JSON.stringify(HIDDEN_CATEGORY_SLUGS)})`
+      : '';
+
+    const query = `*[_type == "product" && isActive != false ${hiddenFilter}] {
       _id,
       name,
       sku,

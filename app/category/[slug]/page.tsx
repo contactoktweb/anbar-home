@@ -11,7 +11,7 @@ import { CategorySidebar } from '@/components/category-sidebar'
 import { CategoryProductGrid } from '@/components/category-product-grid'
 
 import { client } from '@/sanity/lib/client'
-import { PRODUCTS_QUERY, CATEGORIES_QUERY, HOME_PAGE_QUERY } from '@/sanity/lib/queries'
+import { PRODUCTS_QUERY, CATEGORIES_QUERY, HOME_PAGE_QUERY, HIDDEN_CATEGORY_SLUGS } from '@/sanity/lib/queries'
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> },
@@ -19,6 +19,13 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const resolvedParams = await params
   const slug = resolvedParams.slug === 'accesorios-decorativos' || resolvedParams.slug === 'accesorios' ? 'acentos-decorativos' : resolvedParams.slug
+
+  if (HIDDEN_CATEGORY_SLUGS.includes(slug)) {
+    return {
+      title: 'Colección Exclusiva | Anbar Home',
+      robots: { index: false, follow: false },
+    }
+  }
 
   let categoryName = slug
     .split('-')
@@ -53,6 +60,10 @@ export default async function CategoryPage({ params, searchParams }: { params: P
 
   if (slug === 'accesorios-decorativos' || slug === 'accesorios') {
     redirect('/category/acentos-decorativos')
+  }
+
+  if (HIDDEN_CATEGORY_SLUGS.includes(slug)) {
+    redirect('/category/todos-los-productos')
   }
 
   // Fetch all products, categories and homepage data from Sanity

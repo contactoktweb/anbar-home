@@ -1,5 +1,26 @@
 import { groq } from 'next-sanity'
 
+/**
+ * Categorías temporalmente ocultas de la tienda pública (ej. colecciones navideñas de temporada).
+ * Para volver a mostrarlas más adelante, simplemente vacía este arreglo: []
+ */
+export const HIDDEN_CATEGORY_SLUGS: string[] = [
+  'navidad-premium',
+  'arboles-de-navidad',
+]
+
+const hiddenSlugsFilter = HIDDEN_CATEGORY_SLUGS.length > 0
+  ? `&& !defined((categories[]->slug.current)[@ in ${JSON.stringify(HIDDEN_CATEGORY_SLUGS)}][0]) && !(category->slug.current in ${JSON.stringify(HIDDEN_CATEGORY_SLUGS)})`
+  : ''
+
+const hiddenCategoryDocsFilter = HIDDEN_CATEGORY_SLUGS.length > 0
+  ? `&& !(slug.current in ${JSON.stringify(HIDDEN_CATEGORY_SLUGS)})`
+  : ''
+
+const hiddenHomeProductsFilter = HIDDEN_CATEGORY_SLUGS.length > 0
+  ? `&& !defined((@->categories[]->slug.current)[@ in ${JSON.stringify(HIDDEN_CATEGORY_SLUGS)}][0]) && !(@->category->slug.current in ${JSON.stringify(HIDDEN_CATEGORY_SLUGS)})`
+  : ''
+
 export const GLOBAL_SETTINGS_QUERY = groq`
   *[_type == "globalSettings"][0]{
     "logoUrl": logo.asset->url,
@@ -56,7 +77,7 @@ export const HOME_PAGE_QUERY = groq`
       "imageUrl": asset->url,
       alt
     },
-    featuredProducts[@->isActive != false]->{
+    featuredProducts[@->isActive != false ${hiddenHomeProductsFilter}]->{
       _id,
       name,
       "slug": slug.current,
@@ -70,7 +91,7 @@ export const HOME_PAGE_QUERY = groq`
       "images": gallery[].asset->url,
       rating
     },
-    newArrivalsProducts[@->isActive != false]->{
+    newArrivalsProducts[@->isActive != false ${hiddenHomeProductsFilter}]->{
       _id,
       name,
       "slug": slug.current,
@@ -88,7 +109,7 @@ export const HOME_PAGE_QUERY = groq`
 `
 
 export const PRODUCTS_QUERY = groq`
-  *[_type == "product" && isActive != false] | order(_createdAt desc) {
+  *[_type == "product" && isActive != false ${hiddenSlugsFilter}] | order(_createdAt desc) {
     _id,
     name,
     "slug": slug.current,
@@ -106,7 +127,7 @@ export const PRODUCTS_QUERY = groq`
 `
 
 export const CATEGORIES_QUERY = groq`
-  *[_type == "category"] | order(title asc) {
+  *[_type == "category" ${hiddenCategoryDocsFilter}] | order(title asc) {
     _id,
     title,
     "slug": slug.current,
@@ -117,7 +138,7 @@ export const CATEGORIES_QUERY = groq`
 `
 
 export const LATEST_PRODUCTS_QUERY = groq`
-  *[_type == "product" && isActive != false] | order(_createdAt desc)[0...16] {
+  *[_type == "product" && isActive != false ${hiddenSlugsFilter}] | order(_createdAt desc)[0...16] {
     _id,
     name,
     "slug": slug.current,
@@ -134,7 +155,7 @@ export const LATEST_PRODUCTS_QUERY = groq`
 `
 
 export const PRODUCT_BY_SLUG_QUERY = groq`
-  *[_type == "product" && (slug.current == $slug || slug.current == $cleanSlug) && isActive != false][0] {
+  *[_type == "product" && (slug.current == $slug || slug.current == $cleanSlug) && isActive != false ${hiddenSlugsFilter}][0] {
     _id,
     name,
     "slug": slug.current,
