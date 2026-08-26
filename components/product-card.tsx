@@ -57,6 +57,11 @@ export function ProductCard({ product }: ProductCardProps) {
   const formattedPrice = product.price > 0 ? formatCOP(product.price) : ''
   const formattedOriginalPrice = product.originalPrice ? formatCOP(product.originalPrice) : null
 
+  const hasDiscount = Boolean(product.originalPrice && product.originalPrice > product.price)
+  const discountPercentage = hasDiscount
+    ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
+    : 0
+
   return (
     <Link 
       href={`/product/${product.slug || product.id}`} 
@@ -65,10 +70,10 @@ export function ProductCard({ product }: ProductCardProps) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative mb-4 aspect-square overflow-hidden bg-white flex items-center justify-center p-4 shrink-0">
-        {/* Sale badge */}
-        {product.originalPrice && (
-          <span className="absolute top-2 left-2 z-10 bg-camel-dark px-2 py-0.5 text-[11px] font-medium uppercase tracking-widest text-white">
-            Sale
+        {/* Discount percentage badge */}
+        {hasDiscount && discountPercentage > 0 && (
+          <span className="absolute top-2 left-2 z-10 bg-camel-dark px-2 py-0.5 text-[11px] font-semibold tracking-wider text-white">
+            -{discountPercentage}%
           </span>
         )}
         

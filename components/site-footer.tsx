@@ -59,7 +59,8 @@ export async function SiteFooter() {
       title: 'Nuestra Empresa',
       links: [
         { label: 'Nosotros', href: '/nosotros' },
-        { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' }
+        { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' },
+        { label: 'Quiz de Estilo', href: '/quiz' }
       ],
     },
     {

@@ -118,6 +118,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       }).format(product.originalPrice)
     : null
 
+  const discountPercentage = product.originalPrice && product.originalPrice > product.price
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0
+
   const rawLatestProducts = await client.fetch(LATEST_PRODUCTS_QUERY).catch(() => [])
   
   const latestProducts = rawLatestProducts.map((p: any) => ({
@@ -186,14 +190,21 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </h1>
 
               {/* Price */}
-              <div className="flex items-end gap-5 mb-10">
+              <div className="flex items-center gap-4 mb-10 flex-wrap">
                 <span className="font-sans text-2xl lg:text-3xl font-normal tracking-wide text-camel-dark">
                   {formattedPrice}
                 </span>
                 {formattedOriginalPrice && (
-                  <span className="mb-0.5 font-sans text-lg font-light text-neutral-400 line-through">
-                    {formattedOriginalPrice}
-                  </span>
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-sans text-lg font-light text-neutral-400 line-through">
+                      {formattedOriginalPrice}
+                    </span>
+                    {discountPercentage > 0 && (
+                      <span className="bg-camel-dark px-2 py-0.5 text-[11px] font-semibold tracking-wider text-white">
+                        -{discountPercentage}%
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
 

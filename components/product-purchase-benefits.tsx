@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { cn } from '@/lib/utils'
 
 export function ProductPurchaseBenefits() {
   const benefits = [
@@ -17,7 +18,7 @@ export function ProductPurchaseBenefits() {
         </svg>
       ),
       text: 'Envío nacional - Disponible',
-      subtext: 'Entrega rápida a toda Colombia',
+      className: 'border-r border-b border-neutral-200/80 md:border-none',
     },
     {
       id: 'discount',
@@ -33,7 +34,7 @@ export function ProductPurchaseBenefits() {
         </svg>
       ),
       text: 'Regístrate y obtén 10% de descuento en tu primera compra',
-      highlight: '10% de descuento',
+      className: 'border-b border-neutral-200/80 md:border-none',
     },
     {
       id: 'secure-payment',
@@ -45,30 +46,32 @@ export function ProductPurchaseBenefits() {
         </svg>
       ),
       text: 'Pago 100% Seguro',
-      subtext: 'Transacciones protegidas',
+      className: 'border-r border-neutral-200/80 md:border-none',
     },
     {
-      id: 'returns',
+      id: 'warranty',
       icon: (
         <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8 md:w-9 md:h-9 text-neutral-800">
-          <path d="M37 21a14 14 0 0 0-24.5-5.5L8 19" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-          <path d="M8 12v7h7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-          <path d="M11 27a14 14 0 0 0 24.5 5.5L40 29" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
-          <path d="M40 36v-7h-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+          <circle cx="24" cy="20" r="13" stroke="currentColor" strokeWidth="1.4" />
+          <path d="M19 20l3.5 3.5 6.5-6.5" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.6" />
+          <path d="M17 31l-2 9 9-4 9 4-2-9" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.4" />
         </svg>
       ),
-      text: 'Devoluciones sin costo',
-      subtext: 'Compra 100% protegida',
+      text: 'Garantía y Calidad',
+      className: 'md:border-none',
     },
   ]
 
   return (
     <div className="w-full my-8 md:my-12 border-y border-neutral-200/80 bg-white/70 backdrop-blur-sm">
-      <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-neutral-200/80">
+      <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x md:divide-neutral-200/80">
         {benefits.map((item) => (
           <div
             key={item.id}
-            className="flex flex-col items-center justify-center text-center p-5 sm:p-6 hover:bg-neutral-50/50 transition-colors duration-300 group"
+            className={cn(
+              'flex flex-col items-center justify-center text-center p-5 sm:p-6 hover:bg-neutral-50/50 transition-colors duration-300 group',
+              item.className
+            )}
           >
             <div className="mb-3 transform transition-transform duration-300 group-hover:scale-110">
               {item.icon}
