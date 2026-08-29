@@ -79,7 +79,7 @@ const portableTextComponents = {
         return null
       }
       return (
-        <figure className="my-10 md:my-14">
+        <figure className="my-8 md:my-12">
           <div className="w-full overflow-hidden rounded-sm bg-neutral-100/40 shadow-sm flex items-center justify-center">
             <Image
               src={optimizeImageUrl(urlFor(value).url(), 1400, 85)}
@@ -93,7 +93,7 @@ const portableTextComponents = {
             />
           </div>
           {value.caption && (
-            <figcaption className="mt-3.5 px-2 text-center font-sans text-[0.82rem] md:text-[0.88rem] leading-relaxed text-neutral-500 font-light italic max-w-xl mx-auto">
+            <figcaption className="mt-3 px-2 text-center font-sans text-[0.75rem] md:text-[0.8rem] leading-relaxed text-neutral-500 font-light italic max-w-xl mx-auto">
               {value.caption}
             </figcaption>
           )}
@@ -103,33 +103,33 @@ const portableTextComponents = {
   },
   block: {
     h1: ({ children }: any) => (
-      <h2 className="font-serif text-2xl md:text-[2rem] font-light text-neutral-950 leading-[1.25] mb-6 mt-12 tracking-tight">
+      <h2 className="font-serif text-xl md:text-[1.65rem] font-light text-neutral-950 leading-[1.3] mb-5 mt-10 tracking-tight">
         {children}
       </h2>
     ),
     h2: ({ children }: any) => (
-      <h2 className="font-serif text-2xl md:text-[1.85rem] font-light text-neutral-950 leading-[1.25] mt-14 mb-6 tracking-tight">
+      <h2 className="font-serif text-xl md:text-[1.55rem] font-light text-neutral-950 leading-[1.3] mt-12 mb-5 tracking-tight">
         {children}
       </h2>
     ),
     h3: ({ children }: any) => (
-      <h3 className="font-serif text-xl md:text-[1.4rem] font-light text-neutral-900 leading-[1.3] mt-10 mb-4 tracking-tight">
+      <h3 className="font-serif text-lg md:text-[1.2rem] font-light text-neutral-900 leading-[1.35] mt-8 mb-3.5 tracking-tight">
         {children}
       </h3>
     ),
     h4: ({ children }: any) => (
-      <h4 className="font-serif text-lg md:text-xl font-normal text-neutral-900 mt-8 mb-3">
+      <h4 className="font-serif text-base md:text-lg font-normal text-neutral-900 mt-6 mb-2.5">
         {children}
       </h4>
     ),
     normal: ({ children }: any) => (
-      <p className="text-[0.95rem] md:text-[1.05rem] leading-[2.1] text-neutral-700 font-light mb-7">
+      <p className="text-[0.88rem] md:text-[0.93rem] leading-[1.95] text-neutral-700 font-light mb-6">
         {children}
       </p>
     ),
     blockquote: ({ children }: any) => (
-      <blockquote className="border-l-[2px] border-camel pl-6 sm:pl-8 my-10 py-3 italic bg-stone-50/80 rounded-r-sm">
-        <p className="font-serif text-xl md:text-2xl font-light text-neutral-900 leading-snug mb-0">
+      <blockquote className="border-l-[2px] border-camel pl-5 sm:pl-7 my-8 py-2.5 italic bg-stone-50/80 rounded-r-sm">
+        <p className="font-serif text-lg md:text-xl font-light text-neutral-900 leading-snug mb-0">
           {children}
         </p>
       </blockquote>
@@ -137,24 +137,24 @@ const portableTextComponents = {
   },
   list: {
     bullet: ({ children }: any) => (
-      <ul className="list-disc pl-6 space-y-3.5 pt-2 mb-8 text-[0.95rem] md:text-[1.02rem] leading-[2] text-neutral-700 font-light">
+      <ul className="list-disc pl-5 space-y-2.5 pt-1.5 mb-7 text-[0.88rem] md:text-[0.93rem] leading-[1.9] text-neutral-700 font-light">
         {children}
       </ul>
     ),
     number: ({ children }: any) => (
-      <ol className="list-decimal pl-6 space-y-3.5 pt-2 mb-8 text-[0.95rem] md:text-[1.02rem] leading-[2] text-neutral-700 font-light">
+      <ol className="list-decimal pl-5 space-y-2.5 pt-1.5 mb-7 text-[0.88rem] md:text-[0.93rem] leading-[1.9] text-neutral-700 font-light">
         {children}
       </ol>
     ),
   },
   listItem: {
     bullet: ({ children }: any) => (
-      <li className="pl-2 marker:text-camel">
+      <li className="pl-1.5 marker:text-camel">
         <span>{children}</span>
       </li>
     ),
     number: ({ children }: any) => (
-      <li className="pl-2 marker:text-camel">
+      <li className="pl-1.5 marker:text-camel">
         <span>{children}</span>
       </li>
     ),
@@ -235,7 +235,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             )}
             
-            <h1 className="font-serif text-3xl md:text-5xl lg:text-[3.25rem] font-light text-neutral-950 leading-[1.18] mb-8 tracking-tight mx-auto max-w-4xl">
+            <h1 className="font-serif text-2xl md:text-4xl lg:text-[2.85rem] font-light text-neutral-950 leading-[1.2] mb-7 tracking-tight mx-auto max-w-4xl">
               {post.title}
             </h1>
             
