@@ -103,33 +103,33 @@ const portableTextComponents = {
   },
   block: {
     h1: ({ children }: any) => (
-      <h2 className="font-serif text-xl md:text-[1.65rem] font-light text-neutral-950 leading-[1.3] mb-5 mt-10 tracking-tight">
+      <h2 className="font-serif text-xl md:text-[1.65rem] font-light text-neutral-950 leading-[1.22] mb-4 mt-9 tracking-tight">
         {children}
       </h2>
     ),
     h2: ({ children }: any) => (
-      <h2 className="font-serif text-xl md:text-[1.55rem] font-light text-neutral-950 leading-[1.3] mt-12 mb-5 tracking-tight">
+      <h2 className="font-serif text-xl md:text-[1.55rem] font-light text-neutral-950 leading-[1.24] mt-10 mb-4 tracking-tight">
         {children}
       </h2>
     ),
     h3: ({ children }: any) => (
-      <h3 className="font-serif text-lg md:text-[1.2rem] font-light text-neutral-900 leading-[1.35] mt-8 mb-3.5 tracking-tight">
+      <h3 className="font-serif text-lg md:text-[1.2rem] font-light text-neutral-900 leading-[1.28] mt-7 mb-3 tracking-tight">
         {children}
       </h3>
     ),
     h4: ({ children }: any) => (
-      <h4 className="font-serif text-base md:text-lg font-normal text-neutral-900 mt-6 mb-2.5">
+      <h4 className="font-serif text-base md:text-lg font-normal text-neutral-900 mt-5 mb-2 leading-[1.3]">
         {children}
       </h4>
     ),
     normal: ({ children }: any) => (
-      <p className="text-[0.88rem] md:text-[0.93rem] leading-[1.95] text-neutral-700 font-light mb-6">
+      <p className="text-[0.88rem] md:text-[0.93rem] leading-[1.78] text-neutral-700 font-light mb-5">
         {children}
       </p>
     ),
     blockquote: ({ children }: any) => (
-      <blockquote className="border-l-[2px] border-camel pl-5 sm:pl-7 my-8 py-2.5 italic bg-stone-50/80 rounded-r-sm">
-        <p className="font-serif text-lg md:text-xl font-light text-neutral-900 leading-snug mb-0">
+      <blockquote className="border-l-[2px] border-camel pl-5 sm:pl-7 my-7 py-2 italic bg-stone-50/80 rounded-r-sm">
+        <p className="font-serif text-lg md:text-xl font-light text-neutral-900 leading-[1.4] mb-0">
           {children}
         </p>
       </blockquote>
@@ -137,12 +137,12 @@ const portableTextComponents = {
   },
   list: {
     bullet: ({ children }: any) => (
-      <ul className="list-disc pl-5 space-y-2.5 pt-1.5 mb-7 text-[0.88rem] md:text-[0.93rem] leading-[1.9] text-neutral-700 font-light">
+      <ul className="list-disc pl-5 space-y-2 pt-1 mb-6 text-[0.88rem] md:text-[0.93rem] leading-[1.75] text-neutral-700 font-light">
         {children}
       </ul>
     ),
     number: ({ children }: any) => (
-      <ol className="list-decimal pl-5 space-y-2.5 pt-1.5 mb-7 text-[0.88rem] md:text-[0.93rem] leading-[1.9] text-neutral-700 font-light">
+      <ol className="list-decimal pl-5 space-y-2 pt-1 mb-6 text-[0.88rem] md:text-[0.93rem] leading-[1.75] text-neutral-700 font-light">
         {children}
       </ol>
     ),
