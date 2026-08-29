@@ -211,13 +211,34 @@ export const homePage = defineType({
               type: 'string',
               validation: (rule) => rule.required(),
             }),
+            defineField({
+              name: 'text',
+              title: 'Texto descriptivo',
+              type: 'text',
+              rows: 3,
+            }),
           ],
         },
       ],
       initialValue: [
-        { _key: 'pillar-1', iconType: 'arch', title: 'Arquitectura' },
-        { _key: 'pillar-2', iconType: 'palm', title: 'Naturaleza' },
-        { _key: 'pillar-3', iconType: 'vase', title: 'Artesanía' },
+        {
+          _key: 'pillar-1',
+          iconType: 'arch',
+          title: 'Diseño',
+          text: 'Piezas que se integran con la arquitectura y ayudan a crear espacios equilibrados, elegantes y con personalidad.',
+        },
+        {
+          _key: 'pillar-2',
+          iconType: 'palm',
+          title: 'Naturaleza',
+          text: 'Texturas, formas y tonos inspirados en lo natural para aportar calidez y armonía a cada ambiente.',
+        },
+        {
+          _key: 'pillar-3',
+          iconType: 'vase',
+          title: 'Detalles',
+          text: 'Objetos elegidos para transformar rincones, vestir tus espacios y darle a tu hogar un sello propio.',
+        },
       ]
     }),
     defineField({

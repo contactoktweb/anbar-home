@@ -10,22 +10,28 @@ export function Concept({ data }: { data?: any }) {
   const defaultPillars = [
     {
       iconType: 'arch',
-      title: 'Arquitectura',
-      text: 'Arcos, simetría y espacios que respiran, evocando la serenidad de la arquitectura del desierto.',
+      title: 'Diseño',
+      text: 'Piezas que se integran con la arquitectura y ayudan a crear espacios equilibrados, elegantes y con personalidad.',
     },
     {
       iconType: 'palm',
       title: 'Naturaleza',
-      text: 'Materiales nobles, fibras vegetales y una conexión cálida con lo orgánico y lo vivo.',
+      text: 'Texturas, formas y tonos inspirados en lo natural para aportar calidez y armonía a cada ambiente.',
     },
     {
       iconType: 'vase',
-      title: 'Artesanía',
-      text: 'Cada pieza nace del trabajo manual, honrando tradiciones de Medio Oriente y Egipto.',
+      title: 'Detalles',
+      text: 'Objetos elegidos para transformar rincones, vestir tus espacios y darle a tu hogar un sello propio.',
     },
   ]
 
-  const pillarsData = data?.conceptPillars || defaultPillars
+  const pillarsData = data?.conceptPillars && data.conceptPillars.length > 0
+    ? data.conceptPillars.map((p: any, idx: number) => ({
+        iconType: p.iconType || defaultPillars[idx]?.iconType || 'arch',
+        title: p.title || defaultPillars[idx]?.title,
+        text: p.text || defaultPillars[idx]?.text,
+      }))
+    : defaultPillars
 
   const getIcon = (type: string) => {
     switch (type) {

@@ -61,7 +61,8 @@ export const HOME_PAGE_QUERY = groq`
     conceptPillars[]{
       _key,
       iconType,
-      title
+      title,
+      text
     },
     conceptQuoteText,
     conceptQuoteAuthor,
