@@ -1,0 +1,32 @@
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": "https://www.anbarhome.co/blog/el-regreso-de-los-espacios-sensoriales#blogposting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.anbarhome.co/blog/el-regreso-de-los-espacios-sensoriales"
+  },
+  "headline": "Espacios sensoriales: cómo crear interiores que se sienten bien",
+  "description": "Descubre cómo crear espacios sensoriales con luz cálida, materiales naturales y objetos decorativos de Anbar Home que aportan textura, calma y personalidad.",
+  "image": [
+    "https://www.anbarhome.co/REEMPLAZAR-CON-URL-CDN/espacios-sensoriales-interiorismo.webp",
+    "https://www.anbarhome.co/REEMPLAZAR-CON-URL-CDN/interior-sensorial-sala-calida.webp",
+    "https://www.anbarhome.co/REEMPLAZAR-CON-URL-CDN/iluminacion-calida-espacios-sensoriales.webp"
+  ],
+  "datePublished": "2026-06-01",
+  "dateModified": "REEMPLAZAR-CON-FECHA-REAL-DE-ACTUALIZACION",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Anbar Home",
+    "url": "https://www.anbarhome.co/"
+  },
+  "articleSection": "Decoración e interiorismo",
+  "inLanguage": "es-CO",
+  "keywords": [
+    "espacios sensoriales",
+    "diseño interior sensorial",
+    "materiales naturales para interiores",
+    "iluminación cálida",
+    "texturas para decoración"
+  ]
+}

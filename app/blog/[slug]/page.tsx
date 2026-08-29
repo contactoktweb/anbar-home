@@ -31,13 +31,44 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   
   if (!post) {
     return {
-      title: 'Blog no encontrado',
+      title: 'Blog no encontrado | Anbar Home',
     }
   }
+
+  const title = post.seoTitle || `${post.title} | Anbar Home`
+  const description = post.metaDescription || post.title
+  const canonicalUrl = `https://www.anbarhome.co/blog/${post.slug}`
+  const ogImageUrl = post.imageUrl ? optimizeImageUrl(post.imageUrl, 1200, 85) : 'https://www.anbarhome.co/anbar-logo.png'
   
   return {
-    title: `${post.title} | Anbar Home`,
-    description: post.title,
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Anbar Home',
+      locale: 'es_CO',
+      type: 'article',
+      publishedTime: post.publishedAt,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.imageAlt || post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
   }
 }
 
@@ -48,48 +79,97 @@ const portableTextComponents = {
         return null
       }
       return (
-        <div className="relative aspect-[16/9] w-full my-12 overflow-hidden rounded-sm bg-neutral-100">
-          <Image
-            src={optimizeImageUrl(urlFor(value).url(), 1200, 75)}
-            alt={value.alt || 'Imagen del blog'}
-            fill
-            sizes="(max-width: 768px) 100vw, 800px"
-            quality={75}
-            className="object-cover"
-          />
-        </div>
+        <figure className="my-10 md:my-14">
+          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100 shadow-sm">
+            <Image
+              src={optimizeImageUrl(urlFor(value).url(), 1200, 80)}
+              alt={value.alt || 'Detalle del blog Anbar Home'}
+              fill
+              sizes="(max-width: 768px) 100vw, 800px"
+              quality={80}
+              className="object-cover"
+              loading="lazy"
+            />
+          </div>
+          {value.caption && (
+            <figcaption className="mt-3.5 px-2 text-center font-sans text-[0.82rem] md:text-[0.88rem] leading-relaxed text-neutral-500 font-light italic">
+              {value.caption}
+            </figcaption>
+          )}
+        </figure>
       )
     },
   },
   block: {
-    h1: ({ children }: any) => <h1 className="font-serif text-3xl md:text-5xl lg:text-[3.25rem] font-light text-neutral-950 leading-[1.15] mb-8 mt-12">{children}</h1>,
-    h2: ({ children }: any) => <h2 className="font-serif text-2xl md:text-[1.75rem] font-light text-neutral-950 mt-16 mb-6">{children}</h2>,
-    h3: ({ children }: any) => <h3 className="font-serif text-xl md:text-2xl font-light text-neutral-950 mt-12 mb-4">{children}</h3>,
-    normal: ({ children }: any) => <p className="text-[0.95rem] md:text-[1.05rem] leading-[2.1] text-neutral-600 font-light mb-8">{children}</p>,
+    h1: ({ children }: any) => (
+      <h2 className="font-serif text-2xl md:text-[2rem] font-light text-neutral-950 leading-[1.25] mb-6 mt-12 tracking-tight">
+        {children}
+      </h2>
+    ),
+    h2: ({ children }: any) => (
+      <h2 className="font-serif text-2xl md:text-[1.85rem] font-light text-neutral-950 leading-[1.25] mt-14 mb-6 tracking-tight">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }: any) => (
+      <h3 className="font-serif text-xl md:text-[1.4rem] font-light text-neutral-900 leading-[1.3] mt-10 mb-4 tracking-tight">
+        {children}
+      </h3>
+    ),
+    h4: ({ children }: any) => (
+      <h4 className="font-serif text-lg md:text-xl font-normal text-neutral-900 mt-8 mb-3">
+        {children}
+      </h4>
+    ),
+    normal: ({ children }: any) => (
+      <p className="text-[0.95rem] md:text-[1.05rem] leading-[2.1] text-neutral-700 font-light mb-7">
+        {children}
+      </p>
+    ),
     blockquote: ({ children }: any) => (
-      <blockquote className="border-l-[1.5px] border-camel pl-6 sm:pl-8 my-10 py-2 italic bg-neutral-50/50 rounded-r-sm">
-        <p className="font-serif text-2xl md:text-3xl font-light text-neutral-950 leading-snug mb-2">{children}</p>
+      <blockquote className="border-l-[2px] border-camel pl-6 sm:pl-8 my-10 py-3 italic bg-stone-50/80 rounded-r-sm">
+        <p className="font-serif text-xl md:text-2xl font-light text-neutral-900 leading-snug mb-0">
+          {children}
+        </p>
       </blockquote>
     ),
   },
   list: {
-    bullet: ({ children }: any) => <ul className="list-disc pl-6 space-y-4 pt-2 mb-8 text-[0.95rem] md:text-[1rem] leading-[2] text-neutral-600 font-light">{children}</ul>,
-    number: ({ children }: any) => <ol className="list-decimal pl-6 space-y-4 pt-2 mb-8 text-[0.95rem] md:text-[1rem] leading-[2] text-neutral-600 font-light">{children}</ol>,
+    bullet: ({ children }: any) => (
+      <ul className="list-disc pl-6 space-y-3.5 pt-2 mb-8 text-[0.95rem] md:text-[1.02rem] leading-[2] text-neutral-700 font-light">
+        {children}
+      </ul>
+    ),
+    number: ({ children }: any) => (
+      <ol className="list-decimal pl-6 space-y-3.5 pt-2 mb-8 text-[0.95rem] md:text-[1.02rem] leading-[2] text-neutral-700 font-light">
+        {children}
+      </ol>
+    ),
   },
   listItem: {
     bullet: ({ children }: any) => (
-      <li className="pl-2">
-        <span className="text-neutral-600">{children}</span>
+      <li className="pl-2 marker:text-camel">
+        <span>{children}</span>
+      </li>
+    ),
+    number: ({ children }: any) => (
+      <li className="pl-2 marker:text-camel">
+        <span>{children}</span>
       </li>
     ),
   },
   marks: {
-    strong: ({ children }: any) => <strong className="font-medium text-neutral-900">{children}</strong>,
+    strong: ({ children }: any) => <strong className="font-medium text-neutral-950">{children}</strong>,
     em: ({ children }: any) => <em className="italic text-neutral-800">{children}</em>,
     link: ({ children, value }: any) => {
-      const rel = !value.href.startsWith('/') ? 'noreferrer noopener' : undefined
+      const isExternal = value.href && !value.href.startsWith('/') && !value.href.includes('anbarhome')
       return (
-        <a href={value.href} rel={rel} className="text-camel-dark underline decoration-camel-dark/30 hover:decoration-camel-dark transition-colors">
+        <a
+          href={value.href}
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noreferrer noopener' : undefined}
+          className="text-camel-dark font-normal underline decoration-camel/40 underline-offset-4 hover:decoration-camel-dark transition-colors"
+        >
           {children}
         </a>
       )
@@ -106,14 +186,44 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound()
   }
 
+  const canonicalUrl = `https://www.anbarhome.co/blog/${post.slug}`
+  const ogImageUrl = post.imageUrl ? optimizeImageUrl(post.imageUrl, 1200, 85) : 'https://www.anbarhome.co/anbar-logo.png'
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.metaDescription || post.title,
+    image: [ogImageUrl],
+    datePublished: post.publishedAt || '2026-08-26T00:00:00.000Z',
+    dateModified: post.publishedAt || '2026-08-26T00:00:00.000Z',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Anbar Home',
+      url: 'https://www.anbarhome.co',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.anbarhome.co/anbar-logo.png',
+      },
+    },
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <SiteHeader />
       <main>
         <article className="min-h-screen bg-[#fdfbf7] selection:bg-camel/20 pb-24">
           <header className="mx-auto max-w-5xl px-6 md:px-10 pt-16 md:pt-24 pb-12 text-center">
             {post.categories && post.categories.length > 0 && (
-              <div className="mb-6 flex items-center justify-center gap-3 text-[0.65rem] uppercase tracking-[0.25em] text-camel-dark font-medium">
+              <div className="mb-6 flex items-center justify-center gap-3 text-[0.68rem] uppercase tracking-[0.25em] text-camel-dark font-medium">
                 <span>{post.categories[0]}</span>
                 {post.categories.length > 1 && (
                   <>
@@ -124,13 +234,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             )}
             
-            <h1 className="font-serif text-3xl md:text-5xl lg:text-[3.25rem] font-light text-neutral-950 leading-[1.15] mb-8 tracking-tight mx-auto max-w-4xl">
+            <h1 className="font-serif text-3xl md:text-5xl lg:text-[3.25rem] font-light text-neutral-950 leading-[1.18] mb-8 tracking-tight mx-auto max-w-4xl">
               {post.title}
             </h1>
             
             <div className="flex flex-wrap items-center justify-center gap-3 text-[0.75rem] text-neutral-500 font-light tracking-wide uppercase">
-              {post.authorName && <span>Por {post.authorName}</span>}
-              {post.authorName && post.publishedAt && <span>|</span>}
+              <span>Por {post.authorName || 'Anbar Home'}</span>
+              {post.publishedAt && <span>|</span>}
               {post.publishedAt && (
                 <span>
                   {new Date(post.publishedAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -140,19 +250,24 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </header>
 
           {post.imageUrl && (
-            <div className="mx-auto max-w-6xl px-4 md:px-8 mb-16 md:mb-24">
-              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100">
+            <figure className="mx-auto max-w-6xl px-4 md:px-8 mb-14 md:mb-20">
+              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100 shadow-sm">
                 <Image
-                  src={optimizeImageUrl(post.imageUrl, 1440, 75)}
+                  src={optimizeImageUrl(post.imageUrl, 1600, 85)}
                   alt={post.imageAlt || post.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 1200px"
-                  quality={75}
+                  quality={85}
                   className="object-cover object-center"
                   priority
                 />
               </div>
-            </div>
+              {post.imageCaption && (
+                <figcaption className="mt-3.5 px-2 text-center font-sans text-[0.82rem] md:text-[0.88rem] leading-relaxed text-neutral-500 font-light italic">
+                  {post.imageCaption}
+                </figcaption>
+              )}
+            </figure>
           )}
 
           <div className="mx-auto max-w-2xl px-6 md:px-0 blog-content">

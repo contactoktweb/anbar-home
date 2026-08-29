@@ -177,11 +177,14 @@ export const POSTS_QUERY = groq`
   *[_type == "post"] | order(publishedAt desc) {
     _id,
     title,
+    seoTitle,
+    metaDescription,
     "slug": slug.current,
     "authorName": author->name,
     "authorImage": author->image.asset->url,
     "imageUrl": mainImage.asset->url,
     "imageAlt": mainImage.alt,
+    "imageCaption": mainImage.caption,
     publishedAt,
     "categories": categories[]->title
   }
@@ -191,12 +194,15 @@ export const POST_BY_SLUG_QUERY = groq`
   *[_type == "post" && (slug.current == $slug || slug.current == $cleanSlug)][0] {
     _id,
     title,
+    seoTitle,
+    metaDescription,
     "slug": slug.current,
     "authorName": author->name,
     "authorBio": author->bio,
     "authorImage": author->image.asset->url,
     "imageUrl": mainImage.asset->url,
     "imageAlt": mainImage.alt,
+    "imageCaption": mainImage.caption,
     publishedAt,
     body,
     "categories": categories[]->title

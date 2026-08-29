@@ -27,6 +27,17 @@ export const postType = defineType({
       to: {type: 'author'},
     }),
     defineField({
+      name: 'seoTitle',
+      title: 'Título SEO',
+      type: 'string',
+    }),
+    defineField({
+      name: 'metaDescription',
+      title: 'Meta Descripción',
+      type: 'text',
+      rows: 3,
+    }),
+    defineField({
       name: 'mainImage',
       type: 'image',
       options: {
@@ -37,7 +48,12 @@ export const postType = defineType({
           name: 'alt',
           type: 'string',
           title: 'Alternative text',
-        })
+        }),
+        defineField({
+          name: 'caption',
+          type: 'string',
+          title: 'Pie de foto (Caption)',
+        }),
       ]
     }),
     defineField({
