@@ -80,19 +80,20 @@ const portableTextComponents = {
       }
       return (
         <figure className="my-10 md:my-14">
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100 shadow-sm">
+          <div className="w-full overflow-hidden rounded-sm bg-neutral-100/40 shadow-sm flex items-center justify-center">
             <Image
-              src={optimizeImageUrl(urlFor(value).url(), 1200, 80)}
+              src={optimizeImageUrl(urlFor(value).url(), 1400, 85)}
               alt={value.alt || 'Detalle del blog Anbar Home'}
-              fill
+              width={1400}
+              height={900}
               sizes="(max-width: 768px) 100vw, 800px"
-              quality={80}
-              className="object-cover"
+              quality={85}
+              className="w-full h-auto max-h-[85vh] object-contain rounded-sm mx-auto"
               loading="lazy"
             />
           </div>
           {value.caption && (
-            <figcaption className="mt-3.5 px-2 text-center font-sans text-[0.82rem] md:text-[0.88rem] leading-relaxed text-neutral-500 font-light italic">
+            <figcaption className="mt-3.5 px-2 text-center font-sans text-[0.82rem] md:text-[0.88rem] leading-relaxed text-neutral-500 font-light italic max-w-xl mx-auto">
               {value.caption}
             </figcaption>
           )}
@@ -250,20 +251,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </header>
 
           {post.imageUrl && (
-            <figure className="mx-auto max-w-6xl px-4 md:px-8 mb-14 md:mb-20">
-              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100 shadow-sm">
+            <figure className="mx-auto max-w-5xl px-4 md:px-8 mb-14 md:mb-20 flex flex-col items-center">
+              <div className="w-full overflow-hidden rounded-sm bg-neutral-100/40 shadow-sm flex items-center justify-center">
                 <Image
                   src={optimizeImageUrl(post.imageUrl, 1600, 85)}
                   alt={post.imageAlt || post.title}
-                  fill
+                  width={1600}
+                  height={900}
                   sizes="(max-width: 768px) 100vw, 1200px"
                   quality={85}
-                  className="object-cover object-center"
+                  className="w-full h-auto max-h-[85vh] object-contain rounded-sm mx-auto"
                   priority
                 />
               </div>
               {post.imageCaption && (
-                <figcaption className="mt-3.5 px-2 text-center font-sans text-[0.82rem] md:text-[0.88rem] leading-relaxed text-neutral-500 font-light italic">
+                <figcaption className="mt-3.5 px-2 text-center font-sans text-[0.82rem] md:text-[0.88rem] leading-relaxed text-neutral-500 font-light italic max-w-2xl mx-auto">
                   {post.imageCaption}
                 </figcaption>
               )}

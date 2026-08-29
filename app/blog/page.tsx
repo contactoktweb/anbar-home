@@ -39,18 +39,18 @@ export default async function BlogPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14">
                 {posts.map((post: any) => (
                   <Link href={`/blog/${post.slug}`} key={post._id} className="group flex flex-col space-y-6 cursor-pointer">
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm bg-neutral-100">
+                    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm bg-neutral-100/70 shadow-sm">
                       {post.imageUrl ? (
                         <Image
-                          src={optimizeImageUrl(post.imageUrl, 700, 75)}
+                          src={optimizeImageUrl(post.imageUrl, 800, 80)}
                           alt={post.imageAlt || post.title}
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          quality={75}
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          quality={80}
+                          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
                         />
                       ) : (
-                        <div className="absolute inset-0 flex items-center justify-center text-neutral-400">
+                        <div className="absolute inset-0 flex items-center justify-center text-neutral-400 font-light text-sm">
                           Sin imagen
                         </div>
                       )}
