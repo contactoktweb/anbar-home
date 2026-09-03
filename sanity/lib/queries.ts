@@ -43,6 +43,8 @@ export const HOME_PAGE_QUERY = groq`
       _key,
       "src": imageDesktop.asset->url,
       "srcMobile": imageMobile.asset->url,
+      "videoDesktop": videoDesktop.asset->url,
+      "videoMobile": videoMobile.asset->url,
       alt,
       "categoryTitle": category->title,
       "categorySlug": category->slug.current

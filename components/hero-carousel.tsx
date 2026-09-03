@@ -8,8 +8,10 @@ import { optimizeImageUrl } from '@/lib/utils'
 
 interface HeroCarouselProps {
   images: {
-    src: string
+    src?: string
     srcMobile?: string
+    videoDesktop?: string
+    videoMobile?: string
     alt: string
     label?: string
     href?: string
@@ -53,7 +55,7 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
 
   useEffect(() => {
     if (!images || images.length <= 1) return
-    const timer = setInterval(goToNext, 4500)
+    const timer = setInterval(goToNext, 5000)
     return () => clearInterval(timer)
   }, [images.length, goToNext])
 
@@ -67,8 +69,82 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
       onTouchEnd={handleTouchEnd}
     >
       {images.map((img, index) => {
-        const optimizedDesktopSrc = optimizeImageUrl(img.src, 1440, 75)
-        const optimizedMobileSrc = optimizeImageUrl(img.srcMobile || img.src, 800, 75)
+        const optimizedDesktopSrc = img.src ? optimizeImageUrl(img.src, 1440, 75) : ''
+        const optimizedMobileSrc = img.srcMobile ? optimizeImageUrl(img.srcMobile, 800, 75) : (optimizedDesktopSrc || '')
+
+        const renderVisualContent = () => (
+          <>
+            {/* Desktop Video o Imagen */}
+            {img.videoDesktop ? (
+              <video
+                src={img.videoDesktop}
+                poster={optimizedDesktopSrc || undefined}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload={index === 0 ? "auto" : "metadata"}
+                className={`h-full w-full object-contain object-center ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
+              />
+            ) : optimizedDesktopSrc ? (
+              <Image
+                src={optimizedDesktopSrc}
+                alt={img.alt}
+                fill
+                className={`object-contain object-center ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
+                priority={index === 0}
+                quality={75}
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
+                sizes="(max-width: 768px) 100vw, 1440px"
+              />
+            ) : null}
+
+            {/* Mobile Video o Imagen */}
+            {img.videoMobile ? (
+              <video
+                src={img.videoMobile}
+                poster={optimizedMobileSrc || undefined}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload={index === 0 ? "auto" : "metadata"}
+                className="h-full w-full object-contain object-center md:hidden"
+              />
+            ) : optimizedMobileSrc ? (
+              <Image
+                src={optimizedMobileSrc}
+                alt={img.alt}
+                fill
+                className="object-contain object-center md:hidden"
+                priority={index === 0}
+                quality={75}
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
+                sizes="100vw"
+              />
+            ) : null}
+
+            {/* Sutil gradiente inferior si tiene etiqueta */}
+            {showLabels && img.label && (
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-90 pointer-events-none" />
+            )}
+            {showLabels && img.label && (
+              <div className="absolute bottom-10 left-8 md:bottom-14 md:left-12 z-10">
+                <h3 className="text-xl font-light tracking-wider text-white drop-shadow-md md:text-3xl">
+                  {img.label}
+                </h3>
+                <div className="mt-3 flex items-center gap-3">
+                  <div className="h-[1px] w-8 bg-camel transition-all duration-500 group-hover:w-12" />
+                  <span className="text-[0.65rem] uppercase tracking-[0.3em] text-white/90 transition-all duration-300 group-hover:text-white">
+                    Explorar
+                  </span>
+                </div>
+              </div>
+            )}
+          </>
+        )
 
         return (
           <div
@@ -79,93 +155,11 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
           >
             {img.href ? (
               <Link href={img.href} className="group relative block h-full w-full">
-                {/* Main optimized desktop image */}
-                <Image
-                  src={optimizedDesktopSrc}
-                  alt={img.alt}
-                  fill
-                  className={`object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02] ${img.srcMobile ? 'hidden md:block' : ''}`}
-                  priority={index === 0}
-                  quality={75}
-                  loading={index === 0 ? "eager" : "lazy"}
-                  fetchPriority={index === 0 ? "high" : "auto"}
-                  sizes="(max-width: 768px) 100vw, 1440px"
-                />
-                {img.srcMobile && (
-                  <Image
-                    src={optimizedMobileSrc}
-                    alt={img.alt}
-                    fill
-                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02] md:hidden"
-                    priority={index === 0}
-                    quality={75}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchPriority={index === 0 ? "high" : "auto"}
-                    sizes="100vw"
-                  />
-                )}
-
-                {/* Subtle bottom gradient overlay for readability when label exists */}
-                {showLabels && img.label && (
-                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-90 pointer-events-none" />
-                )}
-                {showLabels && img.label && (
-                  <div className="absolute bottom-10 left-8 md:bottom-14 md:left-12 z-10">
-                    <h3 className="text-xl font-light tracking-wider text-white drop-shadow-md md:text-3xl">
-                      {img.label}
-                    </h3>
-                    <div className="mt-3 flex items-center gap-3">
-                      <div className="h-[1px] w-8 bg-camel transition-all duration-500 group-hover:w-12" />
-                      <span className="text-[0.65rem] uppercase tracking-[0.3em] text-white/90 transition-all duration-300 group-hover:text-white">
-                        Explorar
-                      </span>
-                    </div>
-                  </div>
-                )}
+                {renderVisualContent()}
               </Link>
             ) : (
               <div className="relative h-full w-full">
-                {/* Main optimized desktop image */}
-                <Image
-                  src={optimizedDesktopSrc}
-                  alt={img.alt}
-                  fill
-                  className={`object-cover object-center ${img.srcMobile ? 'hidden md:block' : ''}`}
-                  priority={index === 0}
-                  quality={75}
-                  loading={index === 0 ? "eager" : "lazy"}
-                  fetchPriority={index === 0 ? "high" : "auto"}
-                  sizes="(max-width: 768px) 100vw, 1440px"
-                />
-                {img.srcMobile && (
-                  <Image
-                    src={optimizedMobileSrc}
-                    alt={img.alt}
-                    fill
-                    className="object-cover object-center md:hidden"
-                    priority={index === 0}
-                    quality={75}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchPriority={index === 0 ? "high" : "auto"}
-                    sizes="100vw"
-                  />
-                )}
-                {showLabels && img.label && (
-                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-60 pointer-events-none" />
-                )}
-                {showLabels && img.label && (
-                  <div className="absolute bottom-10 left-8 md:bottom-14 md:left-12 z-10">
-                    <h3 className="text-xl font-light tracking-wider text-white drop-shadow-md md:text-3xl">
-                      {img.label}
-                    </h3>
-                    <div className="mt-3 flex items-center gap-3">
-                      <div className="h-[1px] w-8 bg-camel" />
-                      <span className="text-[0.65rem] uppercase tracking-[0.3em] text-white/90">
-                        Explorar
-                      </span>
-                    </div>
-                  </div>
-                )}
+                {renderVisualContent()}
               </div>
             )}
           </div>

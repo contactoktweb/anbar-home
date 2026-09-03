@@ -6,6 +6,8 @@ export function HeroWow({ data }: { data?: any }) {
     ? data.heroBanners.map((banner: any) => ({
         src: optimizeImageUrl(banner.src, 1440, 75),
         srcMobile: optimizeImageUrl(banner.srcMobile || banner.src, 800, 75),
+        videoDesktop: banner.videoDesktop,
+        videoMobile: banner.videoMobile,
         alt: banner.alt || 'Anbar Home',
         label: banner.categoryTitle,
         href: banner.categorySlug ? `/category/${banner.categorySlug}` : undefined,
@@ -14,11 +16,10 @@ export function HeroWow({ data }: { data?: any }) {
 
   if (banners.length === 0) return null
 
-
   return (
     <section
       id="inicio"
-      className="relative w-full aspect-[9/16] md:aspect-[16/9] md:max-h-[85vh] lg:max-h-[900px] overflow-hidden bg-neutral-900"
+      className="relative w-full overflow-hidden bg-neutral-950 aspect-[3/4] md:aspect-[1920/818]"
     >
       <HeroCarousel images={banners} />
     </section>

@@ -44,30 +44,44 @@ export const homePage = defineType({
       title: 'Banners del Hero',
       type: 'array',
       group: 'hero',
-      description: 'Agrega las imágenes para el carrusel principal. Por cada banner, puedes subir la versión para PC y para Móvil.',
+      description: 'Agrega los banners (videos o imágenes) para el carrusel principal. Soporta video/imagen para PC y para Móvil.',
       of: [
         {
           type: 'object',
           fields: [
             defineField({
+              name: 'videoDesktop',
+              title: 'Video de Fondo (PC)',
+              type: 'file',
+              options: { accept: 'video/*' },
+              description: 'Video horizontal para computadores (recomendado MP4 a 1080p).',
+            }),
+            defineField({
+              name: 'videoMobile',
+              title: 'Video de Fondo (Móvil)',
+              type: 'file',
+              options: { accept: 'video/*' },
+              description: 'Video vertical para dispositivos móviles (recomendado MP4 vertical).',
+            }),
+            defineField({
               name: 'imageDesktop',
-              title: 'Imagen de Fondo (PC)',
+              title: 'Imagen de Fondo / Poster (PC)',
               type: 'image',
               options: { hotspot: true },
-              validation: (rule) => rule.required(),
+              description: 'Imagen fija o póster que se muestra antes de cargar el video en PC.',
             }),
             defineField({
               name: 'imageMobile',
-              title: 'Imagen de Fondo (Móvil)',
+              title: 'Imagen de Fondo / Poster (Móvil)',
               type: 'image',
               options: { hotspot: true },
-              validation: (rule) => rule.required(),
+              description: 'Imagen fija o póster que se muestra antes de cargar el video en móvil.',
             }),
             defineField({
               name: 'alt',
               title: 'Texto Alternativo (SEO)',
               type: 'string',
-              description: 'Descripción breve de la imagen',
+              description: 'Descripción breve del contenido visual del banner',
               validation: (rule) => rule.required(),
             }),
             defineField({
