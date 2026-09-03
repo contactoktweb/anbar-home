@@ -16,6 +16,8 @@ export interface Product {
   rating: number
   ratingCount?: number
   description?: string
+  stock?: number
+  isLastUnits?: boolean
 }
 
 export interface CartItem extends Product {

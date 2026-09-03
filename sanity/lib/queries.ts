@@ -172,7 +172,9 @@ export const PRODUCT_BY_SLUG_QUERY = groq`
     "images": gallery[].asset->url,
     rating,
     ratingCount,
-    description
+    description,
+    stock,
+    isLastUnits
   }
 `
 

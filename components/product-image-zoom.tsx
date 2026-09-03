@@ -5,7 +5,17 @@ import Image from 'next/image'
 import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { optimizeImageUrl } from '@/lib/utils'
 
-export function ProductImageZoom({ src, images = [], alt }: { src: string, images?: string[], alt: string }) {
+export function ProductImageZoom({ 
+  src, 
+  images = [], 
+  alt,
+  isLastUnits = false 
+}: { 
+  src: string
+  images?: string[]
+  alt: string
+  isLastUnits?: boolean 
+}) {
   const [position, setPosition] = useState({ x: 50, y: 50 })
   const [isZoomed, setIsZoomed] = useState(false)
   const [activeImage, setActiveImage] = useState(src)
@@ -79,6 +89,19 @@ export function ProductImageZoom({ src, images = [], alt }: { src: string, image
           }}
           onMouseMove={handleMouseMove}
         >
+          {/* Floating badge Últimas Unidades */}
+          {isLastUnits && (
+            <div className="absolute top-4 left-4 z-20 pointer-events-none">
+              <span className="inline-flex items-center gap-2 rounded-full bg-neutral-900/90 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-medium tracking-[0.2em] uppercase text-white shadow-sm border border-white/15">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500"></span>
+                </span>
+                Últimas Unidades
+              </span>
+            </div>
+          )}
+
           <Image
             src={optimizeImageUrl(activeImage, 1200, 80)}
             alt={alt}

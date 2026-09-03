@@ -11,6 +11,7 @@ import { FeaturedProducts } from '@/components/featured-products'
 import { ProductTabs } from '@/components/product-tabs'
 import { ProductReviews } from '@/components/product-reviews'
 import { ProductPurchaseBenefits } from '@/components/product-purchase-benefits'
+import { ProductPaymentMethods } from '@/components/product-payment-methods'
 import { ProductTracker } from '@/components/ui/product-tracker'
 import { ShareButtons } from '@/components/share-buttons'
 import { client } from '@/sanity/lib/client'
@@ -84,6 +85,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     notFound()
   }
 
+  const isLastUnits = sanityProduct.isLastUnits !== undefined && sanityProduct.isLastUnits !== null
+    ? Boolean(sanityProduct.isLastUnits)
+    : (sanityProduct.stock !== undefined && sanityProduct.stock !== null ? sanityProduct.stock <= 10 : true)
+
   const product = {
     id: sanityProduct._id,
     sku: sanityProduct.sku,
@@ -98,7 +103,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     images: sanityProduct.images || [],
     rating: sanityProduct.rating || 0,
     ratingCount: sanityProduct.ratingCount || 0,
-    description: sanityProduct.description
+    description: sanityProduct.description,
+    stock: sanityProduct.stock,
+    isLastUnits
   }
 
   const reviews = await client.fetch(REVIEWS_BY_PRODUCT_QUERY, { productId: sanityProduct._id })
@@ -171,17 +178,34 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             
             {/* Image Gallery Column (Seamless open) */}
             <div className="flex flex-col lg:sticky lg:top-28">
-              <ProductImageZoom src={product.image} images={product.images} alt={product.name} />
+              <ProductImageZoom 
+                src={product.image} 
+                images={product.images} 
+                alt={product.name} 
+                isLastUnits={isLastUnits} 
+              />
             </div>
 
             {/* Product Details Column (Open & Luxurious) */}
             <div className="flex flex-col lg:py-10 pr-0 lg:pr-10">
               
-              {/* Breadcrumb / Category */}
-              <div className="mb-8 flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.25em] text-neutral-500 font-medium">
-                <span className="hover:text-neutral-950 cursor-pointer transition-colors">Inicio</span>
-                <span className="h-px w-6 bg-neutral-300"></span>
-                <span className="text-camel-dark">{product.category}</span>
+              {/* Breadcrumb / Category & Badge Últimas Unidades */}
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.25em] text-neutral-500 font-medium">
+                  <span className="hover:text-neutral-950 cursor-pointer transition-colors">Inicio</span>
+                  <span className="h-px w-6 bg-neutral-300"></span>
+                  <span className="text-camel-dark">{product.category}</span>
+                </div>
+
+                {isLastUnits && (
+                  <div className="inline-flex items-center gap-2 rounded-full border border-camel/35 bg-camel/10 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase text-camel-dark shadow-xs">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-camel opacity-75"></span>
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-camel-dark"></span>
+                    </span>
+                    Últimas unidades
+                  </div>
+                )}
               </div>
 
               {/* Title */}
@@ -190,7 +214,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </h1>
 
               {/* Price */}
-              <div className="flex items-center gap-4 mb-10 flex-wrap">
+              <div className="flex items-center gap-4 mb-6 flex-wrap">
                 <span className="font-sans text-2xl lg:text-3xl font-normal tracking-wide text-camel-dark">
                   {formattedPrice}
                 </span>
@@ -208,12 +232,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 )}
               </div>
 
+              {/* Banner / Alerta de Últimas Unidades */}
+              {isLastUnits && (
+                <div className="mb-8 flex items-center gap-2.5 rounded-md border border-camel/20 bg-[#f8f5ee]/80 px-4 py-2.5 text-xs text-neutral-700">
+                  <span className="text-camel-dark text-sm shrink-0">⚡</span>
+                  <p className="font-light text-[12px] leading-snug">
+                    <strong className="font-semibold text-neutral-900">Pieza de alta demanda:</strong> Pocas unidades disponibles en bodega para entrega inmediata.
+                  </p>
+                </div>
+              )}
+
               {/* Divider */}
               <div className="h-[1px] w-full bg-neutral-200/60 mb-4" />
 
               {/* Actions (Add to Cart / Favorites) */}
-              <div className="mb-6">
+              <div className="mb-2">
                 <ProductActions product={product} />
+              </div>
+
+              {/* Medios de Pago */}
+              <div className="mb-6">
+                <ProductPaymentMethods />
               </div>
 
               {/* Share Buttons */}
