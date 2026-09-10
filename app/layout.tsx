@@ -1,9 +1,10 @@
-import { Analytics } from '@vercel/analytics/next'
+import { PublicAnalytics } from '@/components/public-analytics'
 import Script from 'next/script'
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Poppins } from 'next/font/google'
 import { StoreProvider } from '@/components/store-provider'
 import { DiscountModal } from '@/components/discount-modal'
+import { ProductQuickView } from '@/components/quick-view/product-quick-view'
 import { KlaviyoScript } from '@/components/klaviyo-script'
 import { KlaviyoRouteTracker } from '@/components/klaviyo-route-tracker'
 import './globals.css'
@@ -94,7 +95,8 @@ export default function RootLayout({
           <KlaviyoRouteTracker />
           {children}
           <DiscountModal />
-          {process.env.NODE_ENV === 'production' && <Analytics />}
+          <ProductQuickView />
+          {process.env.NODE_ENV === 'production' && <PublicAnalytics />}
           <Script src="https://checkout.wompi.co/widget.js" strategy="beforeInteractive" />
 
           {/* Meta Pixel Code */}

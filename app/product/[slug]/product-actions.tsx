@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Product } from '@/types'
+import { cn } from '@/lib/utils'
 import { useStore } from '@/components/store-provider'
 import { Heart, Check, Minus, Plus, Loader2, Truck, ShieldCheck } from 'lucide-react'
 import { trackEvent } from '@/lib/fb-tracking'
@@ -102,7 +103,7 @@ export function ProductActions({ product }: { product: Product }) {
         </button>
       </div>
 
-      {/* Segunda fila: Al carrito + Favoritos */}
+      {/* Segunda fila: Al carrito */}
       <div className="flex gap-4 w-full">
         <button
           onClick={handleAddToCart}
@@ -123,19 +124,26 @@ export function ProductActions({ product }: { product: Product }) {
             <span className="animate-in fade-in duration-300">Al Carrito</span>
           )}
         </button>
-
-        <button
-          onClick={() => toggleFavorite(product)}
-          className="w-[64px] flex-shrink-0 flex items-center justify-center rounded-sm border border-neutral-200 bg-transparent transition-all hover:border-neutral-300 hover:bg-neutral-50"
-          aria-label="Añadir a favoritos"
-        >
-          <Heart
-            className={`h-5 w-5 transition-colors ${
-              favorite ? 'fill-neutral-950 text-neutral-950' : 'text-neutral-400'
-            }`}
-          />
-        </button>
       </div>
+
+      {/* Tercera fila: Guardar en Favoritos (Secundario) */}
+      <button
+        type="button"
+        onClick={() => toggleFavorite(product)}
+        className={cn(
+          "w-full flex items-center justify-center gap-2 py-3 rounded-sm border transition-all text-xs font-normal uppercase tracking-[0.15em]",
+          favorite
+            ? "border-red-200 text-red-500 bg-red-50/30 hover:bg-red-50"
+            : "border-neutral-200 text-neutral-600 hover:border-neutral-400 hover:text-neutral-900"
+        )}
+        aria-label={favorite ? `Eliminar ${product.name} de favoritos` : `Guardar ${product.name} en favoritos`}
+      >
+        <Heart
+          className={cn("h-4 w-4 transition-transform", favorite ? "fill-red-500 text-red-500 scale-110" : "")}
+          strokeWidth={1.5}
+        />
+        <span>{favorite ? 'Guardado en favoritos' : 'Guardar en favoritos'}</span>
+      </button>
 
       {/* Banner Informativo de Entrega */}
       <div className="mt-2 rounded-md border border-neutral-200/80 bg-[#f7f5f0]/80 p-3.5 flex items-start gap-3.5">

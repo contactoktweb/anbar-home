@@ -18,6 +18,9 @@ export interface Product {
   description?: string
   stock?: number
   isLastUnits?: boolean
+  availability?: string
+  dimensions?: string
+  material?: string
 }
 
 export interface CartItem extends Product {

@@ -31,7 +31,11 @@ export default async function Page() {
     categorySlugs: p.categorySlugs || [],
     image: p.imageUrl,
     images: p.images || [],
-    rating: p.rating || 0
+    rating: p.rating || 0,
+    description: p.description,
+    stock: p.stock,
+    isLastUnits: p.isLastUnits,
+    availability: p.availability
   }))
 
   // Si no hay nueva colección, obtenemos los últimos del 8 al 16 para que no sean los mismos
@@ -50,7 +54,11 @@ export default async function Page() {
     categorySlugs: p.categorySlugs || [],
     image: p.imageUrl,
     images: p.images || [],
-    rating: p.rating || 0
+    rating: p.rating || 0,
+    description: p.description,
+    stock: p.stock,
+    isLastUnits: p.isLastUnits,
+    availability: p.availability
   }))
 
   return (

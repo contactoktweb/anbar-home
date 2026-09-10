@@ -92,7 +92,11 @@ export const HOME_PAGE_QUERY = groq`
       "categorySlugs": coalesce(categories[]->slug.current, array::compact([category->slug.current])),
       "imageUrl": image.asset->url,
       "images": gallery[].asset->url,
-      rating
+      rating,
+      description,
+      stock,
+      isLastUnits,
+      availability
     },
     newArrivalsProducts[@->isActive != false ${hiddenHomeProductsFilter}]->{
       _id,
@@ -106,7 +110,11 @@ export const HOME_PAGE_QUERY = groq`
       "categorySlugs": coalesce(categories[]->slug.current, array::compact([category->slug.current])),
       "imageUrl": image.asset->url,
       "images": gallery[].asset->url,
-      rating
+      rating,
+      description,
+      stock,
+      isLastUnits,
+      availability
     }
   }
 `
@@ -125,7 +133,11 @@ export const PRODUCTS_QUERY = groq`
     "categorySlugs": coalesce(categories[]->slug.current, array::compact([category->slug.current])),
     "imageUrl": image.asset->url,
     "images": gallery[].asset->url,
-    rating
+    rating,
+    description,
+    stock,
+    isLastUnits,
+    availability
   }
 `
 
@@ -153,7 +165,11 @@ export const LATEST_PRODUCTS_QUERY = groq`
     "categorySlugs": coalesce(categories[]->slug.current, array::compact([category->slug.current])),
     "imageUrl": image.asset->url,
     "images": gallery[].asset->url,
-    rating
+    rating,
+    description,
+    stock,
+    isLastUnits,
+    availability
   }
 `
 

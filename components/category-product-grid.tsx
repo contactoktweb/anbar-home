@@ -141,7 +141,7 @@ export function CategoryProductGrid({ products }: { products: Product[] }) {
       )}
 
       {/* Grid */}
-      <div className={cn("grid gap-8 transition-all duration-500", gridColsClass)}>
+      <div className={cn("grid gap-x-4 gap-y-8 sm:gap-6 md:gap-8 transition-all duration-500", gridColsClass)}>
         {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

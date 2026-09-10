@@ -232,16 +232,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 )}
               </div>
 
-              {/* Banner / Alerta de Últimas Unidades */}
-              {isLastUnits && (
-                <div className="mb-8 flex items-center gap-2.5 rounded-md border border-camel/20 bg-[#f8f5ee]/80 px-4 py-2.5 text-xs text-neutral-700">
-                  <span className="text-camel-dark text-sm shrink-0">⚡</span>
-                  <p className="font-light text-[12px] leading-snug">
-                    <strong className="font-semibold text-neutral-900">Pieza de alta demanda:</strong> Pocas unidades disponibles en bodega para entrega inmediata.
-                  </p>
-                </div>
-              )}
-
               {/* Divider */}
               <div className="h-[1px] w-full bg-neutral-200/60 mb-4" />
 

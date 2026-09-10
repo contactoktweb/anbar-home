@@ -109,7 +109,11 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     categorySlugs: p.categorySlugs || [],
     image: p.imageUrl,
     images: p.images || [],
-    rating: p.rating || 0
+    rating: p.rating || 0,
+    description: p.description,
+    stock: p.stock,
+    isLastUnits: p.isLastUnits,
+    availability: p.availability
   }))
 
   const allProducts = formattedSanityProducts

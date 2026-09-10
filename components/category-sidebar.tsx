@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
 export interface SidebarCategory {
@@ -13,6 +13,7 @@ export interface SidebarCategory {
 export function CategorySidebar({ categories = [] }: { categories?: SidebarCategory[] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const pathname = usePathname()
   
   // Default max price for the slider (7M COP)
   const MAX_PRICE_LIMIT = 7000000
@@ -50,16 +51,24 @@ export function CategorySidebar({ categories = [] }: { categories?: SidebarCateg
           Categorías
         </h2>
         <ul className="flex flex-col space-y-2">
-          {categories.map((category) => (
-            <li key={category.href}>
-              <Link
-                href={category.href}
-                className="text-[15px] font-light text-foreground/70 transition-colors hover:text-camel"
-              >
-                {category.name}
-              </Link>
-            </li>
-          ))}
+          {categories.map((category) => {
+            const isActive = pathname === category.href
+            return (
+              <li key={category.href}>
+                <Link
+                  href={category.href}
+                  className={cn(
+                    "text-[15px] transition-colors inline-block",
+                    isActive
+                      ? "text-camel-dark font-medium underline underline-offset-4 decoration-camel/60"
+                      : "font-light text-foreground/70 hover:text-camel"
+                  )}
+                >
+                  {category.name}
+                </Link>
+              </li>
+            )
+          })}
         </ul>
       </div>
 

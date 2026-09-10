@@ -24,7 +24,7 @@ export function GridViewToggle({ className, currentView = '4', onViewChange }: G
       {/* 5 columns */}
       <button 
         onClick={() => onViewChange?.('5')}
-        className={getBtnClass('5')} 
+        className={cn(getBtnClass('5'), "hidden lg:flex")} 
         aria-label="5 columnas"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -44,7 +44,7 @@ export function GridViewToggle({ className, currentView = '4', onViewChange }: G
       {/* 4 columns */}
       <button 
         onClick={() => onViewChange?.('4')}
-        className={getBtnClass('4')} 
+        className={cn(getBtnClass('4'), "hidden md:flex")} 
         aria-label="4 columnas"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -62,7 +62,7 @@ export function GridViewToggle({ className, currentView = '4', onViewChange }: G
       {/* 3 columns */}
       <button 
         onClick={() => onViewChange?.('3')}
-        className={getBtnClass('3')} 
+        className={cn(getBtnClass('3'), "hidden sm:flex")} 
         aria-label="3 columnas"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">

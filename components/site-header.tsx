@@ -21,13 +21,21 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [isFavoritesOpen, setIsFavoritesOpen] = useState(false)
-  const [isCartOpen, setIsCartOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
   const pathname = usePathname()
   
-  const { cart, favorites, removeFromCart, toggleFavorite, updateQuantity, clearCart, clearFavorites } = useStore()
+  const {
+    cart,
+    favorites,
+    isInitialized,
+    removeFromCart,
+    toggleFavorite,
+    updateQuantity,
+    clearCart,
+    isCartOpen,
+    setIsCartOpen,
+  } = useStore()
   
   // Format prices in COP
   const formatCOP = (amount: number) =>
@@ -49,7 +57,6 @@ export function SiteHeader() {
   // Cerrar menús automáticamente al cambiar de ruta
   useEffect(() => {
     setIsCartOpen(false)
-    setIsFavoritesOpen(false)
     setOpen(false)
     setIsSearchOpen(false)
   }, [pathname])
@@ -104,12 +111,18 @@ export function SiteHeader() {
             <Search className="h-5 w-5" strokeWidth={1.5} />
           </button>
           
-          <button onClick={() => setIsFavoritesOpen(true)} className="relative flex items-center transition-colors hover:text-camel p-1" aria-label="Favoritos">
+          <Link
+            href="/favoritos"
+            className="relative flex items-center transition-colors hover:text-camel p-1"
+            aria-label={`Mis Favoritos${isInitialized && favorites.length > 0 ? ` (${favorites.length})` : ''}`}
+          >
             <Heart className="h-5 w-5" strokeWidth={1.5} />
-            {favorites.length > 0 && (
-              <span className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-camel-dark border-[1.5px] border-ivory" />
+            {isInitialized && favorites.length > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-camel-dark text-[10px] font-medium text-white shadow-xs">
+                {favorites.length}
+              </span>
             )}
-          </button>
+          </Link>
 
           <button onClick={() => setIsCartOpen(true)} className="relative flex items-center transition-colors hover:text-camel p-1" aria-label="Carrito">
             <ShoppingBag className="h-5 w-5" strokeWidth={1.5} />
@@ -164,6 +177,18 @@ export function SiteHeader() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/favoritos"
+            onClick={() => setOpen(false)}
+            className="flex items-center justify-between border-b border-border/40 py-3.5 text-[13.5px] font-medium text-camel-dark last:border-b-0"
+          >
+            <span>Mis Favoritos</span>
+            {isInitialized && favorites.length > 0 && (
+              <span className="flex h-5 min-w-[20px] px-1.5 items-center justify-center rounded-full bg-camel-dark text-[11px] font-medium text-white">
+                {favorites.length}
+              </span>
+            )}
+          </Link>
         </nav>
       </div>
 
@@ -198,59 +223,6 @@ export function SiteHeader() {
         </div>
       )}
 
-      {/* Favorites Sidebar Placeholder */}
-      {isFavoritesOpen && (
-        <>
-          <div className="fixed inset-0 z-[100] bg-black/30 backdrop-blur-sm transition-opacity" onClick={() => setIsFavoritesOpen(false)} />
-          <div className="fixed inset-y-0 right-0 z-[110] w-full max-w-md border-l border-border/50 bg-ivory p-6 shadow-2xl animate-in slide-in-from-right-full duration-300 md:p-8">
-            <div className="mb-6 flex items-center justify-between border-b border-border/50 pb-4">
-              <h2 className="font-serif text-2xl text-neutral-900">Mis Favoritos</h2>
-              <button onClick={() => setIsFavoritesOpen(false)} className="text-neutral-500 hover:text-camel"><X className="h-6 w-6" strokeWidth={1.5} /></button>
-            </div>
-            <div className="flex-1 overflow-y-auto">
-              {favorites.length === 0 ? (
-                <div className="flex h-full flex-col items-center justify-center text-center">
-                  <Heart className="mb-4 h-12 w-12 text-neutral-200" strokeWidth={1} />
-                  <p className="text-neutral-500">Tu lista de deseos está vacía.</p>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-4 pb-4">
-                  <div className="flex justify-end pb-2">
-                    <button 
-                      onClick={clearFavorites} 
-                      className="flex items-center gap-1.5 text-[13px] text-neutral-500 transition-colors hover:text-red-500"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      <span>Eliminar todos</span>
-                    </button>
-                  </div>
-                  {favorites.map((product) => (
-                    <div key={product.id} className="flex gap-4 border-b border-border/50 pb-4 last:border-0">
-                      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden bg-white">
-                        <Image
-                          src={optimizeImageUrl(product.image, 160, 75)}
-                          alt={product.name}
-                          fill
-                          sizes="80px"
-                          quality={75}
-                          className="object-cover object-center mix-blend-multiply"
-                        />
-                      </div>
-                      <div className="flex flex-1 flex-col justify-center">
-                        <h3 className="font-sans text-sm font-medium text-neutral-900">{product.name}</h3>
-                        <p className="text-sm font-serif text-camel-dark">{formatCOP(product.price)}</p>
-                      </div>
-                      <button onClick={() => toggleFavorite(product)} className="text-neutral-400 hover:text-red-500">
-                        <Trash2 className="h-4 w-4" strokeWidth={1.5} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </>
-      )}
 
       {/* Cart Sidebar Placeholder */}
       {isCartOpen && (
