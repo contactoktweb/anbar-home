@@ -209,7 +209,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </div>
 
               {/* Title */}
-              <h1 className="font-sans text-3xl md:text-4xl lg:text-5xl font-medium leading-[1.15] text-neutral-950 mb-8 tracking-tight">
+              <h1 
+                title={product.name}
+                className="font-sans text-2xl md:text-3xl lg:text-4xl font-medium leading-[1.2] text-neutral-950 mb-6 tracking-tight line-clamp-2"
+              >
                 {product.name}
               </h1>
 

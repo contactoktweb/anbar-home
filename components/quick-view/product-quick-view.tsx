@@ -376,7 +376,8 @@ export function ProductQuickView() {
             {/* Nombre del producto */}
             <h2
               id={`quickview-title-${modalId}`}
-              className="font-serif text-xl sm:text-2xl md:text-3xl font-normal text-neutral-900 leading-tight"
+              title={product.name}
+              className="font-serif text-lg sm:text-xl md:text-2xl font-normal text-neutral-900 leading-tight line-clamp-2"
             >
               {product.name}
             </h2>
