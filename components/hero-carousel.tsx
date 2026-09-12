@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { optimizeImageUrl } from '@/lib/utils'
@@ -23,6 +22,27 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [touchStartX, setTouchStartX] = useState<number | null>(null)
   const [touchEndX, setTouchEndX] = useState<number | null>(null)
+  const [aspectRatios, setAspectRatios] = useState<Record<number, { desktop?: string; mobile?: string }>>({})
+
+  const handleDesktopMetadata = (index: number, e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const { videoWidth, videoHeight } = e.currentTarget
+    if (videoWidth && videoHeight) {
+      setAspectRatios((prev) => ({
+        ...prev,
+        [index]: { ...prev[index], desktop: `${videoWidth} / ${videoHeight}` },
+      }))
+    }
+  }
+
+  const handleMobileMetadata = (index: number, e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const { videoWidth, videoHeight } = e.currentTarget
+    if (videoWidth && videoHeight) {
+      setAspectRatios((prev) => ({
+        ...prev,
+        [index]: { ...prev[index], mobile: `${videoWidth} / ${videoHeight}` },
+      }))
+    }
+  }
 
   const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % images.length)
@@ -63,14 +83,20 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
 
   return (
     <div
-      className="relative h-full w-full overflow-hidden bg-neutral-950 group/carousel touch-pan-y"
+      className="relative w-full overflow-hidden bg-neutral-950 group/carousel touch-pan-y"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       {images.map((img, index) => {
+        const isActive = index === currentIndex
         const optimizedDesktopSrc = img.src ? optimizeImageUrl(img.src, 1440, 75) : ''
         const optimizedMobileSrc = img.srcMobile ? optimizeImageUrl(img.srcMobile, 800, 75) : (optimizedDesktopSrc || '')
+
+        const desktopAspect = aspectRatios[index]?.desktop || '1920 / 818'
+        const mobileAspect =
+          aspectRatios[index]?.mobile ||
+          (img.videoMobile?.includes('8995d4ba') ? '1 / 1' : '3 / 4')
 
         const renderVisualContent = () => (
           <>
@@ -84,19 +110,18 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
                 loop
                 playsInline
                 preload={index === 0 ? "auto" : "metadata"}
-                className={`h-full w-full object-contain object-center ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
+                onLoadedMetadata={(e) => handleDesktopMetadata(index, e)}
+                style={{ aspectRatio: desktopAspect }}
+                className={`w-full h-auto block object-cover ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
               />
             ) : optimizedDesktopSrc ? (
-              <Image
+              <img
                 src={optimizedDesktopSrc}
                 alt={img.alt}
-                fill
-                className={`object-contain object-center ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
-                priority={index === 0}
-                quality={75}
+                style={{ aspectRatio: desktopAspect }}
+                className={`w-full h-auto block object-cover ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
-                sizes="(max-width: 768px) 100vw, 1440px"
               />
             ) : null}
 
@@ -110,19 +135,18 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
                 loop
                 playsInline
                 preload={index === 0 ? "auto" : "metadata"}
-                className="h-full w-full object-contain object-center md:hidden"
+                onLoadedMetadata={(e) => handleMobileMetadata(index, e)}
+                style={{ aspectRatio: mobileAspect }}
+                className="w-full h-auto block object-cover md:hidden"
               />
             ) : optimizedMobileSrc ? (
-              <Image
+              <img
                 src={optimizedMobileSrc}
                 alt={img.alt}
-                fill
-                className="object-contain object-center md:hidden"
-                priority={index === 0}
-                quality={75}
+                style={{ aspectRatio: mobileAspect }}
+                className="w-full h-auto block object-cover md:hidden"
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
-                sizes="100vw"
               />
             ) : null}
 
@@ -149,23 +173,23 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
         return (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-[1500ms] ease-in-out ${
-              index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+            className={`w-full transition-opacity duration-1000 ease-in-out ${
+              isActive ? 'relative opacity-100 z-10' : 'absolute inset-0 opacity-0 z-0 pointer-events-none'
             }`}
           >
             {img.href ? (
-              <Link href={img.href} className="group relative block h-full w-full">
+              <Link href={img.href} className="group relative block w-full">
                 {renderVisualContent()}
               </Link>
             ) : (
-              <div className="relative h-full w-full">
+              <div className="relative w-full">
                 {renderVisualContent()}
               </div>
             )}
           </div>
         )
       })}
-      
+
       {/* Controles manuales (Flechas extra sutiles) */}
       <button
         onClick={goToPrev}
