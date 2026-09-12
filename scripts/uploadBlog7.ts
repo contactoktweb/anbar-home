@@ -383,7 +383,7 @@ async function main() {
     metaDescription:
       'Aprende cómo elegir jarrones decorativos según el tamaño, acabado y espacio. Ideas para salas, comedores, recibidores, oficinas y más.',
     slug: { _type: 'slug', current: 'como-elegir-jarrones-decorativos' },
-    publishedAt: '2026-08-29T10:00:00.000Z',
+    publishedAt: '2026-09-12T12:00:00.000Z',
     author: authorRef,
     categories: [catJarrones],
     mainImage: {
