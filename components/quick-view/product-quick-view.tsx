@@ -423,10 +423,10 @@ export function ProductQuickView() {
 
           {/* Bloque Inferior: Selector de cantidad, CTA y Enlace */}
           <div className="mt-6 pt-5 border-t border-neutral-200/60 space-y-3.5">
-            {/* Fila 1: Cantidad + Añadir al Carrito */}
-            <div className="flex flex-col sm:flex-row items-stretch gap-3">
+            {/* Fila 1: Cantidad + Añadir al Carrito + Favorito */}
+            <div className="flex items-center gap-2.5 sm:gap-3">
               {/* Selector de cantidad */}
-              <div className="flex h-12 items-center justify-between rounded-lg border border-neutral-300 bg-white px-3 sm:w-36 shrink-0">
+              <div className="flex h-12 w-28 shrink-0 items-center justify-between rounded-lg border border-neutral-300 bg-white px-2 sm:px-3">
                 <button
                   type="button"
                   onClick={() => handleQuantityChange(-1)}
@@ -456,7 +456,7 @@ export function ProductQuickView() {
                 onClick={handleAddToCart}
                 disabled={!specs.isAvailable || isAdding}
                 className={cn(
-                  'flex-1 h-12 rounded-lg font-medium text-xs sm:text-sm uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2 shadow-sm',
+                  'flex-1 h-12 px-4 rounded-lg font-medium text-xs sm:text-[13px] uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap min-w-0 cursor-pointer',
                   specs.isAvailable
                     ? justAdded
                       ? 'bg-emerald-700'
@@ -466,17 +466,17 @@ export function ProductQuickView() {
               >
                 {isAdding ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
                     <span>Añadiendo...</span>
                   </>
                 ) : justAdded ? (
                   <>
-                    <Check className="h-4 w-4" strokeWidth={2.5} />
+                    <Check className="h-4 w-4 shrink-0 text-white" strokeWidth={2.5} />
                     <span>¡Añadido al carrito!</span>
                   </>
                 ) : specs.isAvailable ? (
                   <>
-                    <ShoppingBag className="h-4 w-4" strokeWidth={1.75} />
+                    <ShoppingBag className="h-4 w-4 shrink-0" strokeWidth={1.75} />
                     <span>Añadir al carrito</span>
                   </>
                 ) : (
@@ -489,7 +489,7 @@ export function ProductQuickView() {
                 type="button"
                 onClick={() => toggleFavorite(product)}
                 className={cn(
-                  'h-12 px-3 sm:px-4 shrink-0 flex items-center justify-center gap-1.5 rounded-lg border transition-all hover:bg-neutral-50 active:scale-95 text-xs font-medium',
+                  'h-12 w-12 shrink-0 flex items-center justify-center rounded-lg border transition-all hover:bg-neutral-50 active:scale-95 cursor-pointer',
                   favorite
                     ? 'border-red-200 text-red-500 bg-red-50/40'
                     : 'border-neutral-300 text-neutral-600 hover:text-neutral-900'
@@ -500,13 +500,10 @@ export function ProductQuickView() {
                 }
               >
                 <Heart
-                  className="h-4 w-4 shrink-0 transition-transform"
+                  className="h-5 w-5 shrink-0 transition-transform"
                   strokeWidth={1.75}
                   fill={favorite ? 'currentColor' : 'none'}
                 />
-                <span className="hidden sm:inline">
-                  {favorite ? 'Guardado' : 'Guardar'}
-                </span>
               </button>
             </div>
 

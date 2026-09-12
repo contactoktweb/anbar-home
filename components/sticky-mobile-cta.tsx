@@ -120,7 +120,7 @@ export function StickyMobileCta({
           type="button"
           onClick={handleAddToCart}
           disabled={status !== 'idle'}
-          className="flex-1 max-w-[190px] h-[44px] rounded-sm bg-neutral-950 px-4 text-xs font-medium uppercase tracking-[0.18em] text-white shadow-sm transition-all hover:bg-camel-dark active:scale-[0.98] disabled:opacity-90 flex items-center justify-center gap-1.5 cursor-pointer"
+          className="flex-1 max-w-[190px] h-[44px] rounded-sm bg-neutral-950 px-4 text-xs font-medium uppercase tracking-[0.18em] text-white shadow-sm transition-all hover:bg-camel-dark active:scale-[0.98] disabled:opacity-90 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0"
         >
           {status === 'loading' && (
             <span className="flex items-center gap-1.5 animate-in fade-in duration-200">
