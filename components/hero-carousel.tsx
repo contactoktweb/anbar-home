@@ -83,7 +83,7 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
 
   return (
     <div
-      className="relative w-full overflow-hidden bg-neutral-950 group/carousel touch-pan-y"
+      className="relative w-full overflow-hidden bg-neutral-950 group/carousel touch-pan-y md:max-h-[460px] lg:max-h-[500px] xl:max-h-[540px]"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -112,14 +112,14 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
                 preload={index === 0 ? "auto" : "metadata"}
                 onLoadedMetadata={(e) => handleDesktopMetadata(index, e)}
                 style={{ aspectRatio: desktopAspect }}
-                className={`w-full h-auto block object-cover ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
+                className={`w-full h-auto md:max-h-[460px] lg:max-h-[500px] xl:max-h-[540px] block object-cover object-center ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
               />
             ) : optimizedDesktopSrc ? (
               <img
                 src={optimizedDesktopSrc}
                 alt={img.alt}
                 style={{ aspectRatio: desktopAspect }}
-                className={`w-full h-auto block object-cover ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
+                className={`w-full h-auto md:max-h-[460px] lg:max-h-[500px] xl:max-h-[540px] block object-cover object-center ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
               />
@@ -173,7 +173,7 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
         return (
           <div
             key={index}
-            className={`w-full transition-opacity duration-1000 ease-in-out ${
+            className={`w-full md:max-h-[460px] lg:max-h-[500px] xl:max-h-[540px] transition-opacity duration-1000 ease-in-out ${
               isActive ? 'relative opacity-100 z-10' : 'absolute inset-0 opacity-0 z-0 pointer-events-none'
             }`}
           >
