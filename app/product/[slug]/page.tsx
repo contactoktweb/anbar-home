@@ -7,15 +7,19 @@ import { ProductActions } from './product-actions'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
-import { FeaturedProducts } from '@/components/featured-products'
 import { ProductTabs } from '@/components/product-tabs'
 import { ProductReviews } from '@/components/product-reviews'
 import { ProductPurchaseBenefits } from '@/components/product-purchase-benefits'
 import { ProductPaymentMethods } from '@/components/product-payment-methods'
 import { ProductTracker } from '@/components/ui/product-tracker'
+import { RecentlyViewedTracker } from '@/components/recently-viewed-tracker'
+import { RecentlyViewedProducts } from '@/components/recently-viewed-products'
+import { StickyMobileCta } from '@/components/sticky-mobile-cta'
+import { ProductRecommendationCarousels } from '@/components/product-recommendation-carousels'
+import { getProductRecommendations } from '@/lib/recommendations'
 import { ShareButtons } from '@/components/share-buttons'
 import { client } from '@/sanity/lib/client'
-import { PRODUCT_BY_SLUG_QUERY, LATEST_PRODUCTS_QUERY, REVIEWS_BY_PRODUCT_QUERY } from '@/sanity/lib/queries'
+import { PRODUCT_BY_SLUG_QUERY, PRODUCTS_QUERY, REVIEWS_BY_PRODUCT_QUERY } from '@/sanity/lib/queries'
 import { slugify } from '@/sanity/lib/slugify'
 
 function getSlugVariations(rawSlug: string) {
@@ -129,9 +133,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0
 
-  const rawLatestProducts = await client.fetch(LATEST_PRODUCTS_QUERY).catch(() => [])
+  const rawAllProducts = await client.fetch(PRODUCTS_QUERY).catch(() => [])
   
-  const latestProducts = rawLatestProducts.map((p: any) => ({
+  const allProducts = rawAllProducts.map((p: any) => ({
     id: p._id,
     sku: p.sku,
     slug: p.slug,
@@ -143,8 +147,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     categorySlugs: p.categorySlugs || [],
     image: p.imageUrl,
     images: p.images || [],
-    rating: p.rating || 0
+    rating: p.rating || 0,
+    description: p.description,
+    isLastUnits: p.isLastUnits
   }))
+
+  const { similarProducts, complementaryProducts } = getProductRecommendations(product, allProducts)
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.com'
   const productUrl = `${siteUrl}/product/${product.slug}`
@@ -152,6 +160,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <ProductTracker product={product} />
+      <RecentlyViewedTracker product={product} />
       <SiteHeader />
       <script
         type="application/ld+json"
@@ -269,13 +278,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           />
         </article>
 
-        {/* Featured Products */}
-        <div className="border-t border-neutral-200/40">
-          <FeaturedProducts products={latestProducts} />
-        </div>
+        {/* Recommended Products: También te pueden gustar & Combínalo con */}
+        <ProductRecommendationCarousels
+          similarProducts={similarProducts}
+          complementaryProducts={complementaryProducts}
+        />
+
+        {/* Recently Viewed Products */}
+        <RecentlyViewedProducts excludeId={product.id} />
       </main>
+      <StickyMobileCta product={product} />
       <SiteFooter />
-      <WhatsAppButton />
+      <WhatsAppButton className="bottom-20 md:bottom-7" />
     </>
   )
 }

@@ -1,0 +1,16 @@
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Cómo elegir jarrones decorativos según el espacio",
+  "description": "Aprende cómo elegir jarrones decorativos según el tamaño, acabado y espacio. Ideas para salas, comedores, recibidores, oficinas y más.",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.anbarhome.co/blog/como-elegir-jarrones-decorativos"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Anbar Home",
+    "url": "https://www.anbarhome.co/"
+  },
+  "inLanguage": "es-CO"
+}

@@ -73,7 +73,7 @@ export function ProductActions({ product }: { product: Product }) {
   }
 
   return (
-    <div className="mt-2 flex flex-col gap-4">
+    <div id="product-main-cta-anchor" className="mt-2 flex flex-col gap-4">
       
       {/* Selector de cantidad y Primera fila: Comprar Ahora */}
       <div className="flex gap-4 w-full">

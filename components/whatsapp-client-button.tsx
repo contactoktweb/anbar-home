@@ -1,12 +1,14 @@
 'use client'
 
 import { trackEvent } from '@/lib/fb-tracking'
+import { cn } from '@/lib/utils'
 
 interface WhatsAppClientButtonProps {
   href: string
+  className?: string
 }
 
-export function WhatsAppClientButton({ href }: WhatsAppClientButtonProps) {
+export function WhatsAppClientButton({ href, className }: WhatsAppClientButtonProps) {
   const handleClick = () => {
     trackEvent('Contact')
   }
@@ -18,7 +20,10 @@ export function WhatsAppClientButton({ href }: WhatsAppClientButtonProps) {
       rel="noopener noreferrer"
       aria-label="Escríbenos por WhatsApp"
       onClick={handleClick}
-      className="group fixed bottom-5 right-5 z-50 flex items-center gap-3 md:bottom-7 md:right-7"
+      className={cn(
+        "group fixed bottom-5 right-5 z-50 flex items-center gap-3 md:bottom-7 md:right-7",
+        className
+      )}
     >
       <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-full bg-foreground/90 px-4 py-2 text-[0.7rem] uppercase tracking-[0.18em] text-background opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:block">
         Escríbenos

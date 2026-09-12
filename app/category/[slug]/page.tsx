@@ -9,6 +9,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { WhatsAppButton } from '@/components/whatsapp-button'
 import { CategorySidebar } from '@/components/category-sidebar'
 import { CategoryProductGrid } from '@/components/category-product-grid'
+import { RecentlyViewedProducts } from '@/components/recently-viewed-products'
 
 import { client } from '@/sanity/lib/client'
 import { PRODUCTS_QUERY, CATEGORIES_QUERY, HOME_PAGE_QUERY, HIDDEN_CATEGORY_SLUGS } from '@/sanity/lib/queries'
@@ -178,6 +179,11 @@ export default async function CategoryPage({ params, searchParams }: { params: P
             </div>
 
           </div>
+        </div>
+
+        {/* Recently Viewed Products */}
+        <div className="mt-16 md:mt-24">
+          <RecentlyViewedProducts />
         </div>
       </main>
       <SiteFooter />
