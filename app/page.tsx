@@ -34,7 +34,8 @@ export default async function Page() {
     rating: p.rating || 0,
     description: p.description,
     stock: p.stock,
-    isLastUnits: p.isLastUnits,
+    isLastUnits: p.isLastUnits === true || (typeof p.stock === 'number' && p.stock > 0 && p.stock <= 5),
+    isBestSeller: p.isBestSeller !== undefined ? Boolean(p.isBestSeller) : true,
     availability: p.availability
   }))
 
@@ -57,7 +58,8 @@ export default async function Page() {
     rating: p.rating || 0,
     description: p.description,
     stock: p.stock,
-    isLastUnits: p.isLastUnits,
+    isLastUnits: p.isLastUnits === true || (typeof p.stock === 'number' && p.stock > 0 && p.stock <= 5),
+    isBestSeller: Boolean(p.isBestSeller),
     availability: p.availability
   }))
 

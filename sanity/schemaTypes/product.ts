@@ -74,10 +74,18 @@ export const product = defineType({
       validation: (rule) => rule.min(0),
     }),
     defineField({
+      name: 'isBestSeller',
+      title: 'Etiqueta Más Vendido',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Activa la insignia de "Más Vendido" en este producto.',
+    }),
+    defineField({
       name: 'isLastUnits',
       title: 'Etiqueta Últimas Unidades',
       type: 'boolean',
-      description: 'Activa explícitamente la insignia de "Últimas Unidades". Si no se marca, se activará automáticamente si el stock es menor o igual a 10.',
+      initialValue: false,
+      description: 'Activa explícitamente la insignia de "Últimas Unidades". Si se deja desactivado, solo se activará automáticamente si el stock disponible es bajo (entre 1 y 5 unidades).',
     }),
     defineField({
       name: 'availability',

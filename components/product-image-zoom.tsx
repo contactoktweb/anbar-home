@@ -9,12 +9,14 @@ export function ProductImageZoom({
   src, 
   images = [], 
   alt,
-  isLastUnits = false 
+  isLastUnits = false,
+  isBestSeller = false
 }: { 
   src: string
   images?: string[]
   alt: string
-  isLastUnits?: boolean 
+  isLastUnits?: boolean
+  isBestSeller?: boolean
 }) {
   const [position, setPosition] = useState({ x: 50, y: 50 })
   const [isZoomed, setIsZoomed] = useState(false)
@@ -28,7 +30,7 @@ export function ProductImageZoom({
   // Sync active image index for lightbox
   const activeIndex = allImages.indexOf(activeImage)
 
-  // Prevent body scroll when lightbox is open
+  // Prevent body scroll when lightbox open
   useEffect(() => {
     if (lightboxOpen) {
       document.body.style.overflow = 'hidden'
@@ -89,8 +91,15 @@ export function ProductImageZoom({
           }}
           onMouseMove={handleMouseMove}
         >
-          {/* Floating badge Últimas Unidades */}
-          {isLastUnits && (
+          {/* Floating badge: Más Vendido o Últimas Unidades */}
+          {isBestSeller ? (
+            <div className="absolute top-4 left-4 z-20 pointer-events-none">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900/90 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-medium tracking-[0.2em] uppercase text-white shadow-sm border border-white/15">
+                <span className="text-amber-400 text-xs">★</span>
+                Más Vendido
+              </span>
+            </div>
+          ) : isLastUnits ? (
             <div className="absolute top-4 left-4 z-20 pointer-events-none">
               <span className="inline-flex items-center gap-2 rounded-full bg-neutral-900/90 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-medium tracking-[0.2em] uppercase text-white shadow-sm border border-white/15">
                 <span className="relative flex h-2 w-2">
@@ -100,7 +109,7 @@ export function ProductImageZoom({
                 Últimas Unidades
               </span>
             </div>
-          )}
+          ) : null}
 
           <Image
             src={optimizeImageUrl(activeImage, 1200, 80)}

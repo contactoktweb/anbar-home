@@ -36,6 +36,7 @@ export function RecentlyViewedTracker({ product }: { product: Product }) {
         ratingCount: product.ratingCount || 0,
         description: product.description,
         isLastUnits: product.isLastUnits,
+        isBestSeller: product.isBestSeller,
       }
 
       const updated = [itemToSave, ...filtered].slice(0, MAX_ITEMS)

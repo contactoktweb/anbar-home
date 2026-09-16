@@ -107,7 +107,9 @@ export function ProductCard({ product }: ProductCardProps) {
       style: 'currency',
       currency: 'COP',
       minimumFractionDigits: 0,
-    }).format(amount)
+    })
+      .format(amount)
+      .replace(/\s+/g, '')
 
   const formattedPrice = product.price > 0 ? formatCOP(product.price) : ''
   const formattedOriginalPrice =
@@ -144,12 +146,25 @@ export function ProductCard({ product }: ProductCardProps) {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Badge de descuento */}
-        {hasDiscount && discountPercentage > 0 && (
-          <span className="absolute top-2.5 left-2.5 z-20 bg-camel-dark px-2 py-0.5 text-[11px] font-semibold tracking-wider text-white rounded-sm pointer-events-none shadow-sm">
-            -{discountPercentage}%
-          </span>
-        )}
+        {/* Badges: Descuento, Más Vendido o Últimas Unidades */}
+        <div className="absolute top-2.5 left-2.5 z-20 flex flex-col items-start gap-1 pointer-events-none">
+          {hasDiscount && discountPercentage > 0 && (
+            <span className="bg-camel-dark px-2 py-0.5 text-[11px] font-semibold tracking-wider text-white rounded-sm shadow-sm">
+              -{discountPercentage}%
+            </span>
+          )}
+          {product.isBestSeller && (
+            <span className="bg-neutral-900/90 backdrop-blur-xs px-2 py-0.5 text-[10px] font-medium tracking-widest uppercase text-white rounded-sm shadow-sm flex items-center gap-1 border border-white/10">
+              <span className="text-amber-400 text-[10px]">★</span>
+              Más Vendido
+            </span>
+          )}
+          {!product.isBestSeller && product.isLastUnits && (
+            <span className="bg-amber-700/90 backdrop-blur-xs px-2 py-0.5 text-[10px] font-medium tracking-wider uppercase text-white rounded-sm shadow-sm">
+              Últimas unidades
+            </span>
+          )}
+        </div>
 
         {/* Imagen principal */}
         {primaryImg && (
@@ -237,8 +252,8 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Información del Producto */}
       <div className="flex flex-1 flex-col pt-0.5">
-        {/* 1. Nombre del producto (máximo 2 líneas estables) */}
-        <h3 className="font-sans text-[14.5px] sm:text-[15px] font-medium leading-snug text-neutral-800 transition-colors group-hover:text-camel line-clamp-2 min-h-[2.4rem] sm:min-h-[2.6rem]">
+        {/* 1. Nombre del producto */}
+        <h3 className="font-sans text-[14.5px] sm:text-[15px] font-medium leading-snug text-neutral-800 transition-colors group-hover:text-camel line-clamp-2">
           <Link
             href={productUrl}
             className="relative z-20 outline-none focus-visible:underline focus-visible:text-camel"

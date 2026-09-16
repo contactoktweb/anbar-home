@@ -18,6 +18,7 @@ export interface Product {
   description?: string
   stock?: number
   isLastUnits?: boolean
+  isBestSeller?: boolean
   availability?: string
   dimensions?: string
   material?: string

@@ -132,7 +132,9 @@ export function ProductQuickView() {
       style: 'currency',
       currency: 'COP',
       minimumFractionDigits: 0,
-    }).format(amount)
+    })
+      .format(amount)
+      .replace(/\s+/g, '')
 
   const formattedPrice = product.price > 0 ? formatCOP(product.price) : ''
   const formattedOriginalPrice =
@@ -266,12 +268,25 @@ export function ProductQuickView() {
 
         {/* COLUMNA 1: Galería de imágenes */}
         <div className="w-full md:w-1/2 bg-white flex flex-col items-center justify-center p-4 sm:p-6 relative border-b md:border-b-0 md:border-r border-neutral-200/60 shrink-0">
-          {/* Badge de descuento */}
-          {hasDiscount && discountPercentage > 0 && (
-            <span className="absolute top-4 left-4 z-20 bg-camel-dark px-2.5 py-1 text-xs font-semibold tracking-wider text-white rounded-sm shadow-sm">
-              -{discountPercentage}%
-            </span>
-          )}
+          {/* Badges: Descuento, Más Vendido o Últimas Unidades */}
+          <div className="absolute top-4 left-4 z-20 flex flex-col items-start gap-1 pointer-events-none">
+            {hasDiscount && discountPercentage > 0 && (
+              <span className="bg-camel-dark px-2.5 py-1 text-xs font-semibold tracking-wider text-white rounded-sm shadow-sm">
+                -{discountPercentage}%
+              </span>
+            )}
+            {product.isBestSeller && (
+              <span className="bg-neutral-900/90 backdrop-blur-xs px-2.5 py-1 text-[10px] font-medium tracking-widest uppercase text-white rounded-sm shadow-sm flex items-center gap-1 border border-white/10">
+                <span className="text-amber-400 text-xs">★</span>
+                Más Vendido
+              </span>
+            )}
+            {!product.isBestSeller && product.isLastUnits && (
+              <span className="bg-amber-700/90 backdrop-blur-xs px-2.5 py-1 text-[10px] font-medium tracking-wider uppercase text-white rounded-sm shadow-sm">
+                Últimas unidades
+              </span>
+            )}
+          </div>
 
           {/* Imagen principal con soporte swipe en móvil */}
           <div

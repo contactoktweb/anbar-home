@@ -96,6 +96,7 @@ export const HOME_PAGE_QUERY = groq`
       description,
       stock,
       isLastUnits,
+      isBestSeller,
       availability
     },
     newArrivalsProducts[@->isActive != false ${hiddenHomeProductsFilter}]->{
@@ -114,6 +115,7 @@ export const HOME_PAGE_QUERY = groq`
       description,
       stock,
       isLastUnits,
+      isBestSeller,
       availability
     }
   }
@@ -137,6 +139,7 @@ export const PRODUCTS_QUERY = groq`
     description,
     stock,
     isLastUnits,
+    isBestSeller,
     availability
   }
 `
@@ -169,6 +172,7 @@ export const LATEST_PRODUCTS_QUERY = groq`
     description,
     stock,
     isLastUnits,
+    isBestSeller,
     availability
   }
 `
@@ -190,7 +194,8 @@ export const PRODUCT_BY_SLUG_QUERY = groq`
     ratingCount,
     description,
     stock,
-    isLastUnits
+    isLastUnits,
+    isBestSeller
   }
 `
 

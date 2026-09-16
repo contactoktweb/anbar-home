@@ -113,7 +113,8 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     rating: p.rating || 0,
     description: p.description,
     stock: p.stock,
-    isLastUnits: p.isLastUnits,
+    isLastUnits: p.isLastUnits === true || (typeof p.stock === 'number' && p.stock > 0 && p.stock <= 5),
+    isBestSeller: Boolean(p.isBestSeller),
     availability: p.availability
   }))
 

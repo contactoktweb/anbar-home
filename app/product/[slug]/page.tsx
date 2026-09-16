@@ -89,9 +89,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     notFound()
   }
 
-  const isLastUnits = sanityProduct.isLastUnits !== undefined && sanityProduct.isLastUnits !== null
-    ? Boolean(sanityProduct.isLastUnits)
-    : (sanityProduct.stock !== undefined && sanityProduct.stock !== null ? sanityProduct.stock <= 10 : true)
+  const isLastUnits = Boolean(
+    sanityProduct.isLastUnits === true ||
+    (typeof sanityProduct.stock === 'number' && sanityProduct.stock > 0 && sanityProduct.stock <= 5)
+  )
+
+  const isBestSeller = Boolean(
+    sanityProduct.isBestSeller === true ||
+    (!isLastUnits && (sanityProduct.ratingCount >= 3 || sanityProduct.rating >= 4.8))
+  )
 
   const product = {
     id: sanityProduct._id,
@@ -109,7 +115,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ratingCount: sanityProduct.ratingCount || 0,
     description: sanityProduct.description,
     stock: sanityProduct.stock,
-    isLastUnits
+    isLastUnits,
+    isBestSeller
   }
 
   const reviews = await client.fetch(REVIEWS_BY_PRODUCT_QUERY, { productId: sanityProduct._id })
@@ -119,14 +126,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     style: 'currency',
     currency: 'COP',
     minimumFractionDigits: 0,
-  }).format(product.price)
+  })
+    .format(product.price)
+    .replace(/\s+/g, '')
 
   const formattedOriginalPrice = product.originalPrice
     ? new Intl.NumberFormat('es-CO', {
         style: 'currency',
         currency: 'COP',
         minimumFractionDigits: 0,
-      }).format(product.originalPrice)
+      })
+        .format(product.originalPrice)
+        .replace(/\s+/g, '')
     : null
 
   const discountPercentage = product.originalPrice && product.originalPrice > product.price
@@ -149,7 +160,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     images: p.images || [],
     rating: p.rating || 0,
     description: p.description,
-    isLastUnits: p.isLastUnits
+    stock: p.stock,
+    isLastUnits: p.isLastUnits === true || (typeof p.stock === 'number' && p.stock > 0 && p.stock <= 5),
+    isBestSeller: Boolean(p.isBestSeller)
   }))
 
   const { similarProducts, complementaryProducts } = getProductRecommendations(product, allProducts)
@@ -191,14 +204,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 src={product.image} 
                 images={product.images} 
                 alt={product.name} 
-                isLastUnits={isLastUnits} 
+                isLastUnits={isLastUnits}
+                isBestSeller={isBestSeller}
               />
             </div>
 
             {/* Product Details Column (Open & Luxurious) */}
             <div className="flex flex-col lg:py-10 pr-0 lg:pr-10">
               
-              {/* Breadcrumb / Category & Badge Últimas Unidades */}
+              {/* Breadcrumb / Category & Badge */}
               <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.25em] text-neutral-500 font-medium">
                   <span className="hover:text-neutral-950 cursor-pointer transition-colors">Inicio</span>
@@ -206,7 +220,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   <span className="text-camel-dark">{product.category}</span>
                 </div>
 
-                {isLastUnits && (
+                {isBestSeller ? (
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-600/30 bg-amber-500/10 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase text-amber-900 shadow-xs">
+                    <span className="text-amber-600 font-bold">★</span>
+                    Más Vendido
+                  </div>
+                ) : isLastUnits ? (
                   <div className="inline-flex items-center gap-2 rounded-full border border-camel/35 bg-camel/10 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase text-camel-dark shadow-xs">
                     <span className="relative flex h-2 w-2">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-camel opacity-75"></span>
@@ -214,13 +233,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     </span>
                     Últimas unidades
                   </div>
-                )}
+                ) : null}
               </div>
 
               {/* Title */}
               <h1 
                 title={product.name}
-                className="font-sans text-2xl md:text-3xl lg:text-4xl font-medium leading-[1.2] text-neutral-950 mb-6 tracking-tight line-clamp-2"
+                className="font-sans text-2xl md:text-3xl lg:text-4xl font-medium leading-[1.2] text-neutral-950 mb-3 tracking-tight line-clamp-2"
               >
                 {product.name}
               </h1>

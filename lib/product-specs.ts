@@ -124,8 +124,8 @@ export function extractProductSpecs(product: Product): ProductSpecs {
   if (isOutOfStock) {
     availabilityLabel = 'Agotado'
   } else if (
-    product.isLastUnits ||
-    (typeof product.stock === 'number' && product.stock > 0 && product.stock <= 10)
+    product.isLastUnits === true ||
+    (typeof product.stock === 'number' && product.stock > 0 && product.stock <= 5)
   ) {
     availabilityLabel = 'Últimas unidades'
   }
