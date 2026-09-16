@@ -1,9 +1,12 @@
-import crypto from 'crypto';
-
-const hashData = (data: string) => {
-  if (!data) return data;
-  return crypto.createHash('sha256').update(data.trim().toLowerCase()).digest('hex');
-};
+import {
+  hashValue,
+  normalizeEmail,
+  normalizePhone,
+  normalizeName,
+  normalizeCity,
+  normalizeState,
+  normalizeCountry,
+} from './fb-normalization';
 
 const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1068742772254099';
 const ACCESS_TOKEN = process.env.META_CAPI_ACCESS_TOKEN;
@@ -34,16 +37,31 @@ export const sendServerEvent = async (payloadData: CAPIEventPayload) => {
     client_user_agent: clientUserAgent,
   };
 
-  if (userData.em) processedUserData.em = [hashData(userData.em)];
-  if (userData.ph) processedUserData.ph = [hashData(userData.ph)];
-  if (userData.fn) processedUserData.fn = [hashData(userData.fn)];
-  if (userData.ln) processedUserData.ln = [hashData(userData.ln)];
-  if (userData.ct) processedUserData.ct = [hashData(userData.ct)];
-  if (userData.st) processedUserData.st = [hashData(userData.st)];
-  if (userData.country) processedUserData.country = [hashData(userData.country)];
-  if (userData.db) processedUserData.db = [hashData(userData.db)];
-  if (userData.ge) processedUserData.ge = [hashData(userData.ge)];
-  
+  const em = normalizeEmail(userData.em);
+  if (em) processedUserData.em = [em];
+
+  const ph = normalizePhone(userData.ph);
+  if (ph) processedUserData.ph = [ph];
+
+  const fn = normalizeName(userData.fn);
+  if (fn) processedUserData.fn = [fn];
+
+  const ln = normalizeName(userData.ln);
+  if (ln) processedUserData.ln = [ln];
+
+  const ct = normalizeCity(userData.ct);
+  if (ct) processedUserData.ct = [ct];
+
+  const st = normalizeState(userData.st);
+  if (st) processedUserData.st = [st];
+
+  const country = normalizeCountry(userData.country);
+  if (country) processedUserData.country = [country];
+
+  if (userData.external_id) {
+    processedUserData.external_id = [hashValue(userData.external_id)];
+  }
+
   if (userData.fbp) processedUserData.fbp = userData.fbp;
   if (userData.fbc) processedUserData.fbc = userData.fbc;
 

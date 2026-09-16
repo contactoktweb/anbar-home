@@ -146,7 +146,7 @@ export async function POST(request: Request) {
           // Meta CAPI Purchase
           const isPurchaseSent = order.meta?.purchaseSentToMeta === true;
           
-          if (!isPurchaseSent && order.meta) {
+          if (!isPurchaseSent) {
             // Reconstruir contents del carrito guardado
             const contents = order.items ? order.items.map((item: any) => ({
               id: item.sku || item._key,
@@ -156,15 +156,15 @@ export async function POST(request: Request) {
 
             const contentIds = contents.map((c: any) => c.id);
 
-            const purchaseEventId = order.meta.purchaseEventId || `purchase_${targetOrderId}`;
+            const purchaseEventId = order.meta?.purchaseEventId || `purchase_${targetOrderId}`;
 
             const capiPayload = {
               eventName: 'Purchase',
               eventTime: Math.floor(Date.now() / 1000),
               eventId: purchaseEventId,
-              eventSourceUrl: order.meta.eventSourceUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.co'}/checkout`,
-              clientIp: order.meta.clientIp,
-              clientUserAgent: order.meta.clientUserAgent,
+              eventSourceUrl: order.meta?.eventSourceUrl || `${process.env.NEXT_PUBLIC_SITE_URL || 'https://anbarhome.co'}/checkout`,
+              clientIp: order.meta?.clientIp,
+              clientUserAgent: order.meta?.clientUserAgent,
               userData: {
                 em: order.customerEmail,
                 ph: order.customerPhone,
@@ -172,9 +172,10 @@ export async function POST(request: Request) {
                 ln: order.customerLastName,
                 ct: order.shippingAddress?.city,
                 st: order.shippingAddress?.department,
-                country: 'co', // Asumiendo Colombia
-                fbp: order.meta.fbp,
-                fbc: order.meta.fbc,
+                country: 'co', // Colombia
+                fbp: order.meta?.fbp,
+                fbc: order.meta?.fbc,
+                external_id: order.meta?.externalId,
               },
               eventData: {
                 currency: currency,

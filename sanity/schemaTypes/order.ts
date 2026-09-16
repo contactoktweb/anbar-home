@@ -146,6 +146,7 @@ export const order = defineType({
       fields: [
         { name: 'fbp', type: 'string', title: '_fbp Cookie' },
         { name: 'fbc', type: 'string', title: '_fbc Cookie' },
+        { name: 'externalId', type: 'string', title: 'External ID' },
         { name: 'clientIp', type: 'string', title: 'IP del Cliente' },
         { name: 'clientUserAgent', type: 'string', title: 'User Agent' },
         { name: 'eventSourceUrl', type: 'string', title: 'Source URL' },

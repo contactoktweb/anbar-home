@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
-import crypto from 'crypto';
-
-const hashData = (data: string) => {
-  if (!data) return data;
-  return crypto.createHash('sha256').update(data.trim().toLowerCase()).digest('hex');
-};
+import {
+  hashValue,
+  normalizeEmail,
+  normalizePhone,
+  normalizeName,
+  normalizeCity,
+  normalizeState,
+  normalizeCountry,
+} from '@/lib/fb-normalization';
 
 const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '1068742772254099';
 const ACCESS_TOKEN = process.env.META_CAPI_ACCESS_TOKEN;
@@ -26,15 +29,27 @@ export async function POST(req: Request) {
       client_user_agent: userAgent, // No cifrar con hash
     };
 
-    if (userData.em) processedUserData.em = [hashData(userData.em)];
-    if (userData.ph) processedUserData.ph = [hashData(userData.ph)];
-    if (userData.fn) processedUserData.fn = [hashData(userData.fn)];
-    if (userData.ln) processedUserData.ln = [hashData(userData.ln)];
-    if (userData.ct) processedUserData.ct = [hashData(userData.ct)];
-    if (userData.st) processedUserData.st = [hashData(userData.st)];
-    if (userData.country) processedUserData.country = [hashData(userData.country)];
-    if (userData.db) processedUserData.db = [hashData(userData.db)];
-    if (userData.ge) processedUserData.ge = [hashData(userData.ge)];
+    const em = normalizeEmail(userData.em);
+    if (em) processedUserData.em = [em];
+
+    const ph = normalizePhone(userData.ph);
+    if (ph) processedUserData.ph = [ph];
+
+    const fn = normalizeName(userData.fn);
+    if (fn) processedUserData.fn = [fn];
+
+    const ln = normalizeName(userData.ln);
+    if (ln) processedUserData.ln = [ln];
+
+    const ct = normalizeCity(userData.ct);
+    if (ct) processedUserData.ct = [ct];
+
+    const st = normalizeState(userData.st);
+    if (st) processedUserData.st = [st];
+
+    const country = normalizeCountry(userData.country);
+    if (country) processedUserData.country = [country];
+
     // Parse cookies from headers as a fallback
     const cookieHeader = req.headers.get('cookie') || '';
     const cookies: Record<string, string> = {};
@@ -53,8 +68,8 @@ export async function POST(req: Request) {
     else if (cookies['_fbc']) processedUserData.fbc = cookies['_fbc'];
 
     // Asignar external_id cifrado
-    if (userData.external_id) processedUserData.external_id = [hashData(userData.external_id)];
-    else if (cookies['_anbar_ext_id']) processedUserData.external_id = [hashData(cookies['_anbar_ext_id'])];
+    if (userData.external_id) processedUserData.external_id = [hashValue(userData.external_id)];
+    else if (cookies['_anbar_ext_id']) processedUserData.external_id = [hashValue(cookies['_anbar_ext_id'])];
 
     // Eliminar propiedades nulas o vacías del custom_data
     const cleanEventData = Object.fromEntries(

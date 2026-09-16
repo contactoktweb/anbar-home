@@ -28,6 +28,12 @@ export function PurchaseTracker({ orderData, userData, eventId }: PurchaseTracke
 
   useEffect(() => {
     if (!tracked.current && orderData.value > 0) {
+      const trackingKey = `purchase_tracked_${eventId || orderData.order_id || 'done'}`
+      if (typeof window !== 'undefined' && sessionStorage.getItem(trackingKey)) {
+        tracked.current = true
+        return
+      }
+
       trackEvent('Purchase', {
         currency: orderData.currency,
         value: orderData.value,
@@ -36,9 +42,15 @@ export function PurchaseTracker({ orderData, userData, eventId }: PurchaseTracke
         ...(orderData.contents && orderData.contents.length > 0 ? { contents: orderData.contents } : {}),
         ...(orderData.order_id ? { order_id: orderData.order_id } : {})
       }, userData || {}, '', eventId)
+
       tracked.current = true
+      if (typeof window !== 'undefined') {
+        try {
+          sessionStorage.setItem(trackingKey, 'true')
+        } catch {}
+      }
     }
-  }, [orderData])
+  }, [orderData, userData, eventId])
 
   return null
 }

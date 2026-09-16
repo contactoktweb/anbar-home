@@ -49,6 +49,7 @@ export async function POST(request: Request) {
       meta: {
         fbp: meta?.fbp || '',
         fbc: meta?.fbc || '',
+        externalId: meta?.externalId || '',
         clientIp: ip.split(',')[0].trim(),
         clientUserAgent: userAgent,
         eventSourceUrl: meta?.eventSourceUrl || '',

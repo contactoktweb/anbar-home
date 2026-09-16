@@ -87,6 +87,7 @@ export default function CheckoutPage() {
       trackEvent('InitiateCheckout', {
         currency: 'COP',
         value: cartTotal,
+        content_type: 'product',
         num_items: cart.reduce((total, item) => total + item.quantity, 0),
         content_ids: cart.map(item => item.sku || item.id),
         contents: cart.map(item => ({
@@ -199,6 +200,7 @@ export default function CheckoutPage() {
       trackEvent('AddPaymentInfo', {
         currency: 'COP',
         value: cartTotal,
+        content_type: 'product',
         content_ids: cart.map(item => item.sku || item.id),
         contents: cart.map(item => ({
           id: item.sku || item.id,
@@ -231,6 +233,7 @@ export default function CheckoutPage() {
       // Extraer meta fields
       const fbp = getCookie('_fbp')
       const fbc = getCookie('_fbc')
+      const externalId = getCookie('_anbar_ext_id')
       const eventSourceUrl = window.location.href
 
       // 1. Crear el pedido en Sanity primero
@@ -244,7 +247,7 @@ export default function CheckoutPage() {
           subtotalAmount: cartSubtotal,
           discountAmount: discountAmount,
           discountCode: appliedCoupon?.code || '',
-          meta: { fbp, fbc, eventSourceUrl }
+          meta: { fbp, fbc, externalId, eventSourceUrl }
         }),
       })
 

@@ -36,6 +36,8 @@ export function ProductQuickView() {
   const modalId = useId()
   const dialogRef = useRef<HTMLDivElement>(null)
   const previousActiveElement = useRef<HTMLElement | null>(null)
+  const addTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const cartTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
@@ -66,6 +68,8 @@ export function ProductQuickView() {
 
       return () => {
         document.body.style.overflow = originalOverflow
+        if (addTimerRef.current) clearTimeout(addTimerRef.current)
+        if (cartTimerRef.current) clearTimeout(cartTimerRef.current)
         if (previousActiveElement.current) {
           previousActiveElement.current.focus()
         }
@@ -189,8 +193,11 @@ export function ProductQuickView() {
 
     setIsAdding(true)
 
-    // Breve feedback visual
-    setTimeout(() => {
+    if (addTimerRef.current) clearTimeout(addTimerRef.current)
+    if (cartTimerRef.current) clearTimeout(cartTimerRef.current)
+
+    // Breve feedback visual antes de añadir
+    addTimerRef.current = setTimeout(() => {
       addToCart(product, quantity)
 
       // Meta Pixel Event
@@ -214,12 +221,13 @@ export function ProductQuickView() {
       setIsAdding(false)
       setJustAdded(true)
 
-      // Abrir el sidecart tras 500ms y resetear feedback
-      setTimeout(() => {
+      // Cerrar la vista previa y desplegar el carrito lateral para mostrar el producto añadido
+      cartTimerRef.current = setTimeout(() => {
         setJustAdded(false)
+        closeQuickView()
         openCart()
-      }, 700)
-    }, 400)
+      }, 650)
+    }, 350)
   }
 
   // Navegar a la ficha completa
@@ -424,29 +432,29 @@ export function ProductQuickView() {
           {/* Bloque Inferior: Selector de cantidad, CTA y Enlace */}
           <div className="mt-6 pt-5 border-t border-neutral-200/60 space-y-3.5">
             {/* Fila 1: Cantidad + Añadir al Carrito + Favorito */}
-            <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* Selector de cantidad */}
-              <div className="flex h-12 w-28 shrink-0 items-center justify-between rounded-lg border border-neutral-300 bg-white px-2 sm:px-3">
+              <div className="flex h-12 w-24 sm:w-28 shrink-0 items-center justify-between rounded-lg border border-neutral-300 bg-white px-1 sm:px-2">
                 <button
                   type="button"
                   onClick={() => handleQuantityChange(-1)}
                   disabled={!specs.isAvailable || quantity <= 1}
-                  className="flex h-8 w-8 items-center justify-center text-neutral-600 transition-colors hover:text-camel-dark disabled:opacity-40 disabled:hover:text-neutral-600"
+                  className="flex h-8 w-7 sm:w-8 items-center justify-center text-neutral-600 transition-colors hover:text-camel-dark disabled:opacity-40 disabled:hover:text-neutral-600"
                   aria-label="Disminuir cantidad"
                 >
-                  <Minus className="h-4 w-4" strokeWidth={2} />
+                  <Minus className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2} />
                 </button>
-                <span className="text-sm font-medium text-neutral-900 min-w-[20px] text-center">
+                <span className="text-sm font-medium text-neutral-900 min-w-[18px] text-center">
                   {quantity}
                 </span>
                 <button
                   type="button"
                   onClick={() => handleQuantityChange(1)}
                   disabled={!specs.isAvailable || quantity >= maxStock}
-                  className="flex h-8 w-8 items-center justify-center text-neutral-600 transition-colors hover:text-camel-dark disabled:opacity-40 disabled:hover:text-neutral-600"
+                  className="flex h-8 w-7 sm:w-8 items-center justify-center text-neutral-600 transition-colors hover:text-camel-dark disabled:opacity-40 disabled:hover:text-neutral-600"
                   aria-label="Aumentar cantidad"
                 >
-                  <Plus className="h-4 w-4" strokeWidth={2} />
+                  <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2} />
                 </button>
               </div>
 
@@ -456,10 +464,10 @@ export function ProductQuickView() {
                 onClick={handleAddToCart}
                 disabled={!specs.isAvailable || isAdding}
                 className={cn(
-                  'flex-1 h-12 px-4 rounded-lg font-medium text-xs sm:text-[13px] uppercase tracking-wider text-white transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap min-w-0 cursor-pointer',
+                  'flex-1 h-12 px-2.5 sm:px-4 rounded-lg font-medium text-xs sm:text-[13px] uppercase tracking-wide sm:tracking-wider text-white transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm min-w-0 cursor-pointer select-none',
                   specs.isAvailable
                     ? justAdded
-                      ? 'bg-emerald-700'
+                      ? 'bg-emerald-700 shadow-emerald-700/20'
                       : 'bg-neutral-950 hover:bg-camel-dark active:scale-[0.99]'
                     : 'bg-neutral-400 cursor-not-allowed opacity-75'
                 )}
@@ -471,13 +479,15 @@ export function ProductQuickView() {
                   </>
                 ) : justAdded ? (
                   <>
-                    <Check className="h-4 w-4 shrink-0 text-white" strokeWidth={2.5} />
-                    <span>¡Añadido al carrito!</span>
+                    <Check className="h-4 w-4 shrink-0 text-white animate-in zoom-in duration-200" strokeWidth={2.5} />
+                    <span className="hidden min-[400px]:inline">¡Añadido al carrito!</span>
+                    <span className="min-[400px]:hidden">¡Añadido!</span>
                   </>
                 ) : specs.isAvailable ? (
                   <>
                     <ShoppingBag className="h-4 w-4 shrink-0" strokeWidth={1.75} />
-                    <span>Añadir al carrito</span>
+                    <span className="hidden min-[400px]:inline">Añadir al carrito</span>
+                    <span className="min-[400px]:hidden">Añadir</span>
                   </>
                 ) : (
                   <span>Agotado</span>
@@ -489,7 +499,7 @@ export function ProductQuickView() {
                 type="button"
                 onClick={() => toggleFavorite(product)}
                 className={cn(
-                  'h-12 w-12 shrink-0 flex items-center justify-center rounded-lg border transition-all hover:bg-neutral-50 active:scale-95 cursor-pointer',
+                  'h-12 w-11 sm:w-12 shrink-0 flex items-center justify-center rounded-lg border transition-all hover:bg-neutral-50 active:scale-95 cursor-pointer',
                   favorite
                     ? 'border-red-200 text-red-500 bg-red-50/40'
                     : 'border-neutral-300 text-neutral-600 hover:text-neutral-900'

@@ -79,7 +79,10 @@ export default async function CheckoutSuccessPage(props: {
               ln: order.customerLastName,
               ct: order.shippingAddress?.city,
               st: order.shippingAddress?.department,
-              country: 'co'
+              country: 'co',
+              fbp: order.meta?.fbp,
+              fbc: order.meta?.fbc,
+              external_id: order.meta?.externalId,
             }
 
             customerInfo = {
@@ -120,8 +123,13 @@ export default async function CheckoutSuccessPage(props: {
               updateData.emailSent = true
             }
 
-            if (transaction.status === 'APPROVED' && order.status !== 'APPROVED') {
-              updateData.paidAt = new Date().toISOString()
+            if (transaction.status === 'APPROVED') {
+              if (order.status !== 'APPROVED') {
+                updateData.paidAt = new Date().toISOString()
+              }
+              updateData['meta.purchaseEventId'] = purchaseEventId
+              updateData['meta.purchaseSentToMeta'] = true
+              updateData['meta.purchaseSentToMetaAt'] = new Date().toISOString()
             }
 
             await adminClient.patch(order._id).set(updateData).commit()
@@ -170,7 +178,10 @@ export default async function CheckoutSuccessPage(props: {
             ln: order.customerLastName,
             ct: order.shippingAddress?.city,
             st: order.shippingAddress?.department,
-            country: 'co'
+            country: 'co',
+            fbp: order.meta?.fbp,
+            fbc: order.meta?.fbc,
+            external_id: order.meta?.externalId,
           }
           customerInfo = {
             name: `${order.customerFirstName || ''} ${order.customerLastName || ''}`.trim(),
@@ -206,7 +217,7 @@ export default async function CheckoutSuccessPage(props: {
             value: orderValue,
             content_ids: orderContentIds,
             contents: orderContents,
-            order_id: transactionId
+            order_id: orderId || transactionId
           }}
           userData={userData}
         />

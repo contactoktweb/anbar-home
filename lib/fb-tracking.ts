@@ -69,6 +69,21 @@ export const trackEvent = async (
   // 1. Client-Side tracking (Pixel)
   const fbq = ensureFbq();
   if (fbq) {
+    if (userData.em || userData.ph || userData.fn || userData.external_id) {
+      try {
+        fbq('set', 'userData', {
+          ...(userData.em ? { em: userData.em.toLowerCase().trim() } : {}),
+          ...(userData.ph ? { ph: userData.ph.replace(/\D/g, '') } : {}),
+          ...(userData.fn ? { fn: userData.fn.toLowerCase().trim() } : {}),
+          ...(userData.ln ? { ln: userData.ln.toLowerCase().trim() } : {}),
+          ...(userData.ct ? { ct: userData.ct.toLowerCase().trim() } : {}),
+          ...(userData.st ? { st: userData.st.toLowerCase().trim() } : {}),
+          country: 'co',
+          ...(userData.external_id ? { external_id: userData.external_id } : {}),
+        });
+      } catch {}
+    }
+
     fbq('track', eventName, eventData, { eventID: eventId });
   }
 

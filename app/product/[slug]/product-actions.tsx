@@ -52,23 +52,6 @@ export function ProductActions({ product }: { product: Product }) {
 
   const handleBuyNow = () => {
     addToCart(product, quantity)
-    
-    trackEvent('InitiateCheckout', {
-      content_name: product.name,
-      content_ids: [product.sku || product.id],
-      content_type: 'product',
-      num_items: quantity,
-      value: product.price * quantity,
-      currency: 'COP',
-      contents: [
-        {
-          id: product.sku || product.id,
-          quantity: quantity,
-          item_price: product.price
-        }
-      ]
-    })
-
     router.push('/checkout')
   }
 

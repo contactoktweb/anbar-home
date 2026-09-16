@@ -54,6 +54,17 @@ export function SiteHeader() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Bloquear scroll cuando el carrito está abierto
+  useEffect(() => {
+    if (isCartOpen) {
+      const originalOverflow = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = originalOverflow
+      }
+    }
+  }, [isCartOpen])
+
   // Cerrar menús automáticamente al cambiar de ruta
   useEffect(() => {
     setIsCartOpen(false)
@@ -227,8 +238,8 @@ export function SiteHeader() {
       {/* Cart Sidebar Placeholder */}
       {isCartOpen && (
         <>
-          <div className="fixed inset-0 z-[100] bg-black/30 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)} />
-          <div className="fixed inset-y-0 right-0 z-[110] w-full max-w-md border-l border-border/50 bg-ivory p-6 shadow-2xl animate-in slide-in-from-right-full duration-300 md:p-8">
+          <div className="fixed inset-0 z-[140] bg-black/30 backdrop-blur-sm transition-opacity" onClick={() => setIsCartOpen(false)} />
+          <div className="fixed inset-y-0 right-0 z-[150] w-full max-w-md border-l border-border/50 bg-ivory p-6 shadow-2xl animate-in slide-in-from-right-full duration-300 md:p-8">
             <div className="mb-6 flex items-center justify-between border-b border-border/50 pb-4">
               <h2 className="font-serif text-2xl text-neutral-900">Carrito de Compras</h2>
               <button onClick={() => setIsCartOpen(false)} className="text-neutral-500 hover:text-camel"><X className="h-6 w-6" strokeWidth={1.5} /></button>
