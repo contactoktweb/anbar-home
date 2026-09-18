@@ -29,3 +29,49 @@ export function optimizeImageUrl(
   return url
 }
 
+/**
+ * Detecta si un producto pertenece a las colecciones o temática navideña
+ */
+export function isChristmasProduct(product?: {
+  name?: string
+  category?: string
+  categorySlugs?: string[]
+  categories?: string[]
+} | null): boolean {
+  if (!product) return false
+
+  const christmasSlugs = [
+    'arboles-de-navidad',
+    'villas-navidenas',
+    'navidad-premium',
+    'navidad-en-la-mesa',
+    'pesebres-y-nacimientos',
+    'navidad',
+  ]
+
+  const hasMatchingSlug = (product.categorySlugs || []).some((slug) =>
+    christmasSlugs.includes(slug)
+  )
+  if (hasMatchingSlug) return true
+
+  const textToCheck = [
+    product.category || '',
+    product.name || '',
+    ...(product.categories || []),
+  ]
+    .join(' ')
+    .toLowerCase()
+
+  return (
+    textToCheck.includes('navid') ||
+    textToCheck.includes('pesebre') ||
+    textToCheck.includes('árbol') ||
+    textToCheck.includes('arbol') ||
+    textToCheck.includes('villa') ||
+    textToCheck.includes('nacimiento') ||
+    textToCheck.includes('guirnalda') ||
+    textToCheck.includes('corona navideña') ||
+    textToCheck.includes('corona navid')
+  )
+}
+

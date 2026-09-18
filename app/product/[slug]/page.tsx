@@ -18,6 +18,8 @@ import { StickyMobileCta } from '@/components/sticky-mobile-cta'
 import { ProductRecommendationCarousels } from '@/components/product-recommendation-carousels'
 import { getProductRecommendations } from '@/lib/recommendations'
 import { ShareButtons } from '@/components/share-buttons'
+import { isChristmasProduct } from '@/lib/utils'
+import { Sparkles } from 'lucide-react'
 import { client } from '@/sanity/lib/client'
 import { PRODUCT_BY_SLUG_QUERY, PRODUCTS_QUERY, REVIEWS_BY_PRODUCT_QUERY } from '@/sanity/lib/queries'
 import { slugify } from '@/sanity/lib/slugify'
@@ -119,6 +121,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     isBestSeller
   }
 
+  const isChristmas = isChristmasProduct(product)
+
   const reviews = await client.fetch(REVIEWS_BY_PRODUCT_QUERY, { productId: sanityProduct._id })
 
   // Format currency
@@ -206,13 +210,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 alt={product.name} 
                 isLastUnits={isLastUnits}
                 isBestSeller={isBestSeller}
+                isChristmas={isChristmas}
               />
             </div>
 
             {/* Product Details Column (Open & Luxurious) */}
             <div className="flex flex-col lg:py-10 pr-0 lg:pr-10">
               
-              {/* Breadcrumb / Category & Badge */}
+              {/* Breadcrumb / Category & Badges */}
               <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.25em] text-neutral-500 font-medium">
                   <span className="hover:text-neutral-950 cursor-pointer transition-colors">Inicio</span>
@@ -220,20 +225,29 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   <span className="text-camel-dark">{product.category}</span>
                 </div>
 
-                {isBestSeller ? (
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-600/30 bg-amber-500/10 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase text-amber-900 shadow-xs">
-                    <span className="text-amber-600 font-bold">★</span>
-                    Más Vendido
-                  </div>
-                ) : isLastUnits ? (
-                  <div className="inline-flex items-center gap-2 rounded-full border border-camel/35 bg-camel/10 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase text-camel-dark shadow-xs">
-                    <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-camel opacity-75"></span>
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-camel-dark"></span>
-                    </span>
-                    Últimas unidades
-                  </div>
-                ) : null}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {isChristmas && (
+                    <div className="inline-flex items-center gap-1.5 rounded-full border border-[#7A1A28]/25 bg-gradient-to-r from-[#7A1A28]/10 via-[#7A1A28]/5 to-transparent px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase text-[#7A1A28] shadow-xs">
+                      <Sparkles className="h-3 w-3 text-[#D4AF37]" />
+                      Edición Navideña
+                    </div>
+                  )}
+
+                  {isBestSeller ? (
+                    <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-600/30 bg-amber-500/10 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase text-amber-900 shadow-xs">
+                      <span className="text-amber-600 font-bold">★</span>
+                      Más Vendido
+                    </div>
+                  ) : isLastUnits ? (
+                    <div className="inline-flex items-center gap-2 rounded-full border border-camel/35 bg-camel/10 px-3 py-1 text-[11px] font-medium tracking-[0.14em] uppercase text-camel-dark shadow-xs">
+                      <span className="relative flex h-2 w-2">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-camel opacity-75"></span>
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-camel-dark"></span>
+                      </span>
+                      Últimas unidades
+                    </div>
+                  ) : null}
+                </div>
               </div>
 
               {/* Title */}
@@ -268,7 +282,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
               {/* Actions (Add to Cart / Favorites) */}
               <div className="mb-2">
-                <ProductActions product={product} />
+                <ProductActions product={product} isChristmas={isChristmas} />
               </div>
 
               {/* Medios de Pago */}

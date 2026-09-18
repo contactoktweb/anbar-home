@@ -1,6 +1,77 @@
 # CHANGELOG AI
 
-## [2026-09-16] - Corrección de Insignias: "Más Vendido" y "Últimas unidades"
+## [2026-09-17] - Resaltes Globales en Color Borgoña
+
+### Requerimiento
+- Transformar todos los resaltes de la web al color borgoña / gorgoña (`#7A1A28`), incluyendo categorías activas, subrayados, deslizadores, botones de acción, selecciones de texto y enlaces.
+
+### Cambios Realizados
+1. **Variables Globales de Estilo (`app/globals.css`):**
+   - Se redefinieron `--camel`, `--primary`, `--ring`, `--sidebar-primary` y `--sidebar-ring` al tono borgoña festivo `#7A1A28`, y `--camel-dark`, `--chart-2` a `#5E121E`.
+   - Se configuró la selección global de texto (`::selection`) con fondo borgoña translúcido (`rgba(122, 26, 40, 0.2)`) y texto `#7A1A28`.
+2. **Barra Lateral de Categorías (`components/category-sidebar.tsx`):**
+   - Se actualizó el enlace de la categoría activa a `text-[#7A1A28]` con subrayado `decoration-[#7A1A28]/80`.
+   - Efecto hover actualizado a `hover:text-[#7A1A28]`.
+   - Control deslizante de rango de precios con pista en `#7A1A28`/25 y tirador con borde `#7A1A28`.
+   - Botón "Aplicar" de filtro estilizado con fondo borgoña `#7A1A28` y hover `#5E121E`.
+3. **Pestaña Flotante de Categorías (`components/sidebar-filters.tsx`):**
+   - Pestaña lateral vertical "Categorías" actualizada con fondo `#7A1A28` y hover `#5E121E`.
+4. **Banners de Cabecera en Tienda y Favoritos:**
+   - En `app/search/page.tsx` y `app/favoritos/page.tsx`, se sustituyó el fondo `#C19A6B` por `#7A1A28`.
+5. **Tarjetas de Producto y Grillas:**
+   - En `components/product-card.tsx`, se cambió el borde hover a `group-hover:border-[#7A1A28]/40`.
+
+## [2026-09-17] - Realce del Listón Navideño y Vista de Producto Temática
+
+### Requerimiento
+- Hacer el elemento decorativo navideño de la tarjeta de producto más llamativo (sin usar etiquetas de texto "Navidad").
+- Trasladar la atmósfera y temática navideña a la vista individual del producto (`/product/[slug]`).
+
+### Cambios Realizados
+1. **Listón Navideño Artesanal 3D (`components/christmas-ribbon.tsx`):**
+   - **Mayor Presencia y Escala:** Se aumentó el tamaño a 90px en tarjetas y 134px en vista de producto (hero image), cubriendo la esquina con un corte diagonal de terciopelo envolvente de alta visibilidad.
+   - **Iluminación y Relieve:** Degradado de terciopelo borgoña con luces y sombras profundas (`#430811` a `#9C2237`), doble ribete perimetral en oro champán metálico y costura central en pespunte bordado en hilo de oro.
+   - **Moño Navideño Esculpido:** Lazo volumétrico con pliegues interiores sombreados, ribetes dorados a lo largo de las alas y caídas fluidas con corte en V (cola de milano) ribeteadas en oro.
+   - **Broche Joya de Temporada:** Estrella navideña facetada de 8 puntas con halo resplandeciente áurico y gema de diamante central.
+2. **Tarjeta de Producto (`components/product-card.tsx`):**
+   - Integración del nuevo listón escalado con micro-interacción de hover (sutil inclinación y escala suave).
+   - Reubicación de las etiquetas de descuento (`-X%`), Más Vendido y Últimas Unidades a `top-[94px]` para garantizar separación visual armónica sin superposiciones.
+3. **Vista de Detalle de Producto (`app/product/[slug]/page.tsx` & `components/product-image-zoom.tsx`):**
+   - **Listón Hero en la Galería:** Incorporación del listón en tamaño grande (`size="lg"`, 134px) sobre la imagen principal de productos navideños.
+   - **Reubicación Inteligente de Badges:** Las insignias de *Más Vendido* y *Últimas Unidades* se reubican limpiamente en la esquina superior derecha (`top-4 right-4`) evitando colisiones con el listón.
+   - **Llamado a la Acción Temático (`app/product/[slug]/product-actions.tsx`):** Botón principal *"Comprar Ahora"* vestido en el tono borgoña festivo (`#7A1A28`) con sombras cálidas de temporada.
+   - **Barra Flotante Móvil (`components/sticky-mobile-cta.tsx`):** Resalte temático con indicador *"Colección Navidad"* y botón borgoña de temporada para una experiencia inmersiva continua en dispositivos táctiles.
+4. **Utilidad de Detección Navideña Centralizada (`lib/utils.ts`):**
+   - Función `isChristmasProduct` que unifica la identificación precisa de artículos de temporada a través de slugs de categoría, nombres y atributos.
+
+## [2026-09-17] - Categorías Navideñas en Navegación y Desplegable 'Hogar'
+
+### Requerimiento
+- Reemplazar las categorías principales de la barra de navegación con las colecciones navideñas.
+- Crear un menú desplegable interactivo para "Hogar" que contenga las categorías anteriores (Línea Suprema, Jarrones escultóricos, Esculturas, Acentos Decorativos).
+- Habilitar el acceso y visualización de productos en las colecciones navideñas.
+
+### Cambios Realizados
+1. **Rediseño Navideño de Tarjeta de Producto (`components/product-card.tsx`):**
+   - **Listón Navideño Artesanal (Sin Texto):** Se sustituyó la etiqueta que decía "Navidad" por un distinguido **listón navideño de regalo** (`ChristmasRibbon`) en terciopelo borgoña con vivos en hilo metálico dorado, lazo superior con broche de estrella y caída con corte en V (fishtail).
+   - **Marco y Resplandor:** Contenedor de imagen refinado con esquinas suaves (`rounded-xl`), borde en transición a oro champán (`#C5A059`/60) y sutil resplandor ambiental navideño en borgoña/oro al pasar el cursor.
+   - **Insignias de Descuento y Ventas:** Etiqueta de descuento en tono borgoña festivo (`#7A1A28`), y badges refinados con detalles dorados para *Más Vendido* y *Últimas unidades*, posicionados ordenadamente debajo del listón cuando apliquen.
+   - **Detalles Festivos Sutiles:** Destello `✦` sutil en la esquina superior al hacer hover y separador festivo `✦` en las especificaciones de medidas y material.
+   - **Tipografía y Acciones:** Título del producto en serif elegante con hover a borgoña (`#7A1A28`), botón de *Vista Rápida* en borgoña con tipografía serif, botones de favoritos y carrito estilizados con micro-interacciones de temporada.
+2. **Barra de Navegación (`components/site-header.tsx`):**
+   - Se configuraron como enlaces directos prioritarios las colecciones navideñas: *Árboles de Navidad*, *Villas navideñas*, *Navidad Premium*, *Pesebres y nacimientos*, *Navidad en la mesa*.
+   - Se implementó el menú desplegable "Hogar" para escritorio con diseño glassmorphism, indicador activo cuando se visita alguna de sus categorías hijas, soporte hover con puente invisible contra cierres accidentales y accesibilidad con teclado.
+   - Contenido del desplegable Hogar: *Línea suprema*, *Jarrones escultóricos*, *Esculturas*, *Acentos Decorativos*.
+   - Se implementó un acordeón interactivo y fluido para "Hogar" en el menú lateral móvil (drawer) con scroll optimizado (`max-h-[85vh] overflow-y-auto`).
+   - Se conservaron los accesos directos a *SALE* y *Blogs*.
+   - **Color de Resalte:** Se actualizó el color del subrayado, estados activos y efectos hover de los enlaces de navegación al tono **borgoña** (`#7A1A28`), aportando una estética navideña y de lujo atemporal acorde a la paleta de Anbar Home.
+2. **Estilos Globales (`app/globals.css`):**
+   - Se incorporó la variable temática `--burgundy: #7A1A28;` y sus utilidades en `@theme inline` (`--color-burgundy`, `--color-borgona`).
+3. **Consultas GROQ (`sanity/lib/queries.ts`):**
+   - Se vació `HIDDEN_CATEGORY_SLUGS` (`[]`), desbloqueando las categorías `navidad-premium` y `arboles-de-navidad` para que sus productos aparezcan normalmente en la tienda, catálogos y búsquedas.
+4. **Recomendaciones Cruzadas (`lib/recommendations.ts`):**
+   - Se añadieron las afinidades entre colecciones navideñas (`arboles-de-navidad`, `villas-navidenas`, `navidad-premium`, `pesebres-y-nacimientos`, `navidad-en-la-mesa`) en `COMPLEMENTARY_CATEGORY_SLUGS`.
+
 
 ### Problema
 - Anteriormente, en `app/product/[slug]/page.tsx`, la evaluación de `isLastUnits` tenía una condición de fallback (`: true`) que marcaba arbitrariamente a todos los productos sin stock explícito o sin configuración previa como "Últimas unidades".

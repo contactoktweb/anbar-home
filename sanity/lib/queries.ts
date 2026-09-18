@@ -4,10 +4,7 @@ import { groq } from 'next-sanity'
  * Categorías temporalmente ocultas de la tienda pública (ej. colecciones navideñas de temporada).
  * Para volver a mostrarlas más adelante, simplemente vacía este arreglo: []
  */
-export const HIDDEN_CATEGORY_SLUGS: string[] = [
-  'navidad-premium',
-  'arboles-de-navidad',
-]
+export const HIDDEN_CATEGORY_SLUGS: string[] = []
 
 const hiddenSlugsFilter = HIDDEN_CATEGORY_SLUGS.length > 0
   ? `&& !defined((categories[]->slug.current)[@ in ${JSON.stringify(HIDDEN_CATEGORY_SLUGS)}][0]) && !(category->slug.current in ${JSON.stringify(HIDDEN_CATEGORY_SLUGS)})`

@@ -34,8 +34,11 @@ const COMPLEMENTARY_CATEGORY_SLUGS: Record<string, string[]> = {
   'candelabros': ['jarrones-escultoricos', 'esculturas', 'acentos-decorativos'],
   'acentos-decorativos': ['jarrones-escultoricos', 'esculturas', 'candelabros'],
   'linea-suprema': ['jarrones-escultoricos', 'esculturas', 'candelabros', 'acentos-decorativos'],
-  'pesebres-y-nacimientos': ['navidad-en-la-mesa', 'candelabros', 'acentos-decorativos'],
-  'navidad-en-la-mesa': ['pesebres-y-nacimientos', 'candelabros', 'acentos-decorativos'],
+  'arboles-de-navidad': ['navidad-premium', 'villas-navidenas', 'pesebres-y-nacimientos', 'navidad-en-la-mesa'],
+  'navidad-premium': ['arboles-de-navidad', 'navidad-en-la-mesa', 'villas-navidenas', 'pesebres-y-nacimientos'],
+  'villas-navidenas': ['pesebres-y-nacimientos', 'arboles-de-navidad', 'navidad-premium', 'navidad-en-la-mesa'],
+  'pesebres-y-nacimientos': ['navidad-en-la-mesa', 'villas-navidenas', 'arboles-de-navidad', 'candelabros', 'acentos-decorativos'],
+  'navidad-en-la-mesa': ['pesebres-y-nacimientos', 'navidad-premium', 'arboles-de-navidad', 'candelabros', 'acentos-decorativos'],
 }
 
 function normalize(text: string = ''): string {

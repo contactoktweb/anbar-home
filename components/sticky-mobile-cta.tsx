@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Product } from '@/types'
 import { useStore } from '@/components/store-provider'
 import { Heart, Check, Loader2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, isChristmasProduct } from '@/lib/utils'
 import { trackEvent } from '@/lib/fb-tracking'
 
 interface StickyMobileCtaProps {
@@ -77,16 +77,18 @@ export function StickyMobileCta({
     minimumFractionDigits: 0,
   }).format(product.price)
 
+  const isChristmas = isChristmasProduct(product)
+
   return (
     <div
-      aria-hidden={!isVisible}
       className={cn(
-        'fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-md border-t border-neutral-200/80 shadow-[0_-4px_24px_rgba(0,0,0,0.08)] px-3.5 py-2.5 pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] transition-transform duration-300 ease-out will-change-transform',
-        isVisible ? 'translate-y-0' : 'translate-y-full pointer-events-none'
+        'fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-neutral-200/80 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 md:hidden',
+        isVisible ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none'
       )}
+      aria-hidden={!isVisible}
     >
       <div className="flex items-center justify-between gap-3 max-w-md mx-auto">
-        {/* Left: Heart Favorite + Price */}
+        {/* Left: Favorite & Price info */}
         <div className="flex items-center gap-2.5 min-w-0">
           <button
             type="button"
@@ -109,8 +111,13 @@ export function StickyMobileCta({
             <span className="font-sans text-sm font-medium tracking-tight text-neutral-900 truncate">
               {formattedPrice}
             </span>
-            <span className="text-[10px] uppercase tracking-wider text-neutral-400 font-light truncate">
-              Envío a Colombia
+            <span
+              className={cn(
+                'text-[10px] uppercase tracking-wider font-light truncate',
+                isChristmas ? 'text-[#7A1A28] font-medium' : 'text-neutral-400'
+              )}
+            >
+              {isChristmas ? 'Colección Navidad' : 'Envío a Colombia'}
             </span>
           </div>
         </div>
@@ -120,7 +127,10 @@ export function StickyMobileCta({
           type="button"
           onClick={handleAddToCart}
           disabled={status !== 'idle'}
-          className="flex-1 max-w-[190px] h-[44px] rounded-sm bg-neutral-950 px-4 text-xs font-medium uppercase tracking-[0.18em] text-white shadow-sm transition-all hover:bg-camel-dark active:scale-[0.98] disabled:opacity-90 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0"
+          className={cn(
+            'flex-1 max-w-[190px] h-[44px] rounded-sm px-4 text-xs font-medium uppercase tracking-[0.18em] text-white shadow-sm transition-all active:scale-[0.98] disabled:opacity-90 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0',
+            isChristmas ? 'bg-[#7A1A28] hover:bg-[#5E121E]' : 'bg-neutral-950 hover:bg-camel-dark'
+          )}
         >
           {status === 'loading' && (
             <span className="flex items-center gap-1.5 animate-in fade-in duration-200">

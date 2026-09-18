@@ -20,7 +20,7 @@ export default function FavoritosPage() {
       <SiteHeader />
       <main className="min-h-screen pb-20 bg-[#FAFAF8]">
         {/* Banner de Cabecera */}
-        <div className="w-full bg-[#C19A6B] py-12 md:py-16 text-center shadow-inner">
+        <div className="w-full bg-[#7A1A28] py-12 md:py-16 text-center shadow-inner">
           <div className="mx-auto max-w-4xl px-6">
             <h1 className="text-3xl md:text-4xl font-serif text-white tracking-widest uppercase font-normal">
               Favoritos

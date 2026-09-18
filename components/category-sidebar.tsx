@@ -60,8 +60,8 @@ export function CategorySidebar({ categories = [] }: { categories?: SidebarCateg
                   className={cn(
                     "text-[15px] transition-colors inline-block",
                     isActive
-                      ? "text-camel-dark font-medium underline underline-offset-4 decoration-camel/60"
-                      : "font-light text-foreground/70 hover:text-camel"
+                      ? "text-[#7A1A28] font-medium underline underline-offset-4 decoration-[#7A1A28]/80"
+                      : "font-light text-foreground/70 hover:text-[#7A1A28]"
                   )}
                 >
                   {category.name}
@@ -89,7 +89,7 @@ export function CategorySidebar({ categories = [] }: { categories?: SidebarCateg
             step={50000}
             value={maxPrice}
             onChange={(e) => setMaxPrice(parseInt(e.target.value, 10))}
-            className="w-full appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-camel/20 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-camel [&::-webkit-slider-thumb]:bg-ivory [&::-webkit-slider-thumb]:-mt-1.5 focus:outline-none"
+            className="w-full appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-[#7A1A28]/25 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#7A1A28] [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:-mt-1.5 focus:outline-none"
           />
         </div>
 
@@ -99,7 +99,7 @@ export function CategorySidebar({ categories = [] }: { categories?: SidebarCateg
           </span>
           <button 
             onClick={handleApply}
-            className="bg-camel-dark px-5 py-2 text-[13px] text-white transition-colors hover:bg-camel"
+            className="bg-[#7A1A28] px-5 py-2 text-[13px] text-white transition-colors hover:bg-[#5E121E]"
           >
             Aplicar
           </button>

@@ -3,20 +3,23 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react'
-import { optimizeImageUrl } from '@/lib/utils'
+import { cn, optimizeImageUrl } from '@/lib/utils'
+import { ChristmasRibbon } from '@/components/christmas-ribbon'
 
 export function ProductImageZoom({ 
   src, 
   images = [], 
   alt,
   isLastUnits = false,
-  isBestSeller = false
+  isBestSeller = false,
+  isChristmas = false
 }: { 
   src: string
   images?: string[]
   alt: string
   isLastUnits?: boolean
   isBestSeller?: boolean
+  isChristmas?: boolean
 }) {
   const [position, setPosition] = useState({ x: 50, y: 50 })
   const [isZoomed, setIsZoomed] = useState(false)
@@ -91,25 +94,43 @@ export function ProductImageZoom({
           }}
           onMouseMove={handleMouseMove}
         >
-          {/* Floating badge: Más Vendido o Últimas Unidades */}
-          {isBestSeller ? (
-            <div className="absolute top-4 left-4 z-20 pointer-events-none">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900/90 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-medium tracking-[0.2em] uppercase text-white shadow-sm border border-white/15">
-                <span className="text-amber-400 text-xs">★</span>
-                Más Vendido
+        {/* Listón navideño llamativo en la esquina superior izquierda si corresponde */}
+        {isChristmas && (
+          <ChristmasRibbon
+            size="lg"
+            className="z-20 drop-shadow-[0_8px_20px_rgba(78,12,23,0.5)]"
+          />
+        )}
+
+        {/* Floating badge: Más Vendido o Últimas Unidades (reubicado a la derecha si hay listón) */}
+        {isBestSeller ? (
+          <div
+            className={cn(
+              'absolute z-20 pointer-events-none transition-all duration-300',
+              isChristmas ? 'top-4 right-4 md:right-5' : 'top-4 left-4'
+            )}
+          >
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900/90 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-medium tracking-[0.2em] uppercase text-white shadow-sm border border-white/15">
+              <span className="text-amber-400 text-xs">★</span>
+              Más Vendido
+            </span>
+          </div>
+        ) : isLastUnits ? (
+          <div
+            className={cn(
+              'absolute z-20 pointer-events-none transition-all duration-300',
+              isChristmas ? 'top-4 right-4 md:right-5' : 'top-4 left-4'
+            )}
+          >
+            <span className="inline-flex items-center gap-2 rounded-full bg-neutral-900/90 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-medium tracking-[0.2em] uppercase text-white shadow-sm border border-white/15">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500"></span>
               </span>
-            </div>
-          ) : isLastUnits ? (
-            <div className="absolute top-4 left-4 z-20 pointer-events-none">
-              <span className="inline-flex items-center gap-2 rounded-full bg-neutral-900/90 backdrop-blur-md px-3.5 py-1.5 text-[10px] font-medium tracking-[0.2em] uppercase text-white shadow-sm border border-white/15">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500"></span>
-                </span>
-                Últimas Unidades
-              </span>
-            </div>
-          ) : null}
+              Últimas Unidades
+            </span>
+          </div>
+        ) : null}
 
           <Image
             src={optimizeImageUrl(activeImage, 1200, 80)}
@@ -145,7 +166,7 @@ export function ProductImageZoom({
                 key={idx}
                 onClick={() => setActiveImage(img)}
                 className={`relative h-20 w-20 shrink-0 overflow-hidden border-2 transition-colors ${
-                  activeImage === img ? 'border-camel-dark' : 'border-transparent hover:border-neutral-300'
+                  activeImage === img ? 'border-[#7A1A28]' : 'border-transparent hover:border-neutral-300'
                 } bg-[#F8F6F2]`}
               >
                 <Image

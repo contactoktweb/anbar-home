@@ -4,10 +4,11 @@ import { useState, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Product } from '@/types'
-import { cn, optimizeImageUrl } from '@/lib/utils'
+import { cn, optimizeImageUrl, isChristmasProduct } from '@/lib/utils'
 import { extractProductSpecs } from '@/lib/product-specs'
 import { ShoppingBag, Heart, Check, Eye } from 'lucide-react'
 import { useStore } from '@/components/store-provider'
+import { ChristmasRibbon } from '@/components/christmas-ribbon'
 
 interface ProductCardProps {
   product: Product
@@ -122,6 +123,9 @@ export function ProductCard({ product }: ProductCardProps) {
     ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
     : 0
 
+  // Detectar si el producto corresponde a la colección o temática navideña
+  const isChristmas = isChristmasProduct(product)
+
   const productUrl = `/product/${product.slug || product.id}`
 
   return (
@@ -139,28 +143,44 @@ export function ProductCard({ product }: ProductCardProps) {
         className="absolute inset-0 z-10 cursor-pointer"
       />
 
-      {/* Contenedor de Imagen con proporciones consistentes */}
+      {/* Contenedor de Imagen con marco elegante y toque festivo */}
       <div
-        className="relative mb-3.5 aspect-square overflow-hidden bg-white flex items-center justify-center p-3 sm:p-4 shrink-0 rounded-sm"
+        className="relative mb-3.5 aspect-square overflow-hidden rounded-xl bg-[#FAF9F5] border border-neutral-200/80 flex items-center justify-center p-3 sm:p-4 shrink-0 transition-all duration-500 group-hover:border-[#7A1A28]/40 group-hover:shadow-[0_12px_36px_-10px_rgba(122,26,40,0.15)] group-hover:bg-white"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Badges: Descuento, Más Vendido o Últimas Unidades */}
-        <div className="absolute top-2.5 left-2.5 z-20 flex flex-col items-start gap-1 pointer-events-none">
+        {/* Resplandor sutil navideño en hover (oro y borgoña difuminados) */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#7A1A28]/[0.03] via-transparent to-[#D4AF37]/[0.07] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+        {/* Detalle sutil de destello festivo en la esquina superior derecha */}
+        <div className="pointer-events-none absolute top-2.5 right-2.5 z-20 flex items-center justify-center text-amber-500/80 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:scale-110">
+          <span className="text-[11px] leading-none drop-shadow-xs select-none">✦</span>
+        </div>
+
+        {/* Listón Navideño Llamativo en la esquina superior izquierda (sin texto) */}
+        {isChristmas && <ChristmasRibbon size="sm" />}
+
+        {/* Badges Adicionales: Descuento, Más Vendido o Últimas Unidades */}
+        <div
+          className={cn(
+            'absolute left-2.5 z-20 flex flex-col items-start gap-1 pointer-events-none transition-all duration-300',
+            isChristmas ? 'top-[94px]' : 'top-2.5'
+          )}
+        >
           {hasDiscount && discountPercentage > 0 && (
-            <span className="bg-camel-dark px-2 py-0.5 text-[11px] font-semibold tracking-wider text-white rounded-sm shadow-sm">
+            <span className="bg-[#7A1A28] px-2 py-0.5 text-[10.5px] font-semibold tracking-wider text-amber-50 rounded-sm shadow-xs border border-amber-300/20">
               -{discountPercentage}%
             </span>
           )}
           {product.isBestSeller && (
-            <span className="bg-neutral-900/90 backdrop-blur-xs px-2 py-0.5 text-[10px] font-medium tracking-widest uppercase text-white rounded-sm shadow-sm flex items-center gap-1 border border-white/10">
+            <span className="bg-neutral-900/95 backdrop-blur-xs px-2 py-0.5 text-[9.5px] font-medium tracking-widest uppercase text-amber-100 rounded-sm shadow-xs flex items-center gap-1 border border-amber-300/25">
               <span className="text-amber-400 text-[10px]">★</span>
               Más Vendido
             </span>
           )}
           {!product.isBestSeller && product.isLastUnits && (
-            <span className="bg-amber-700/90 backdrop-blur-xs px-2 py-0.5 text-[10px] font-medium tracking-wider uppercase text-white rounded-sm shadow-sm">
+            <span className="bg-[#8A3324]/95 backdrop-blur-xs px-2 py-0.5 text-[9.5px] font-medium tracking-wider uppercase text-amber-100 rounded-sm shadow-xs border border-amber-200/20">
               Últimas unidades
             </span>
           )}
@@ -209,7 +229,7 @@ export function ProductCard({ product }: ProductCardProps) {
           />
         )}
 
-        {/* Indicador visual discreto en mobile (2 puntos) */}
+        {/* Indicador visual discreto en mobile (2 puntos con acento festivo) */}
         {hasSecondImage && (
           <div
             className="absolute bottom-2.5 left-0 right-0 flex justify-center gap-1.5 z-20 pointer-events-none md:hidden"
@@ -219,7 +239,7 @@ export function ProductCard({ product }: ProductCardProps) {
               className={cn(
                 'h-1 rounded-full transition-all duration-300',
                 mobileImageIndex === 0
-                  ? 'w-3.5 bg-camel-dark'
+                  ? 'w-3.5 bg-[#7A1A28]'
                   : 'w-1.5 bg-neutral-300/80'
               )}
             />
@@ -227,14 +247,14 @@ export function ProductCard({ product }: ProductCardProps) {
               className={cn(
                 'h-1 rounded-full transition-all duration-300',
                 mobileImageIndex === 1
-                  ? 'w-3.5 bg-camel-dark'
+                  ? 'w-3.5 bg-[#7A1A28]'
                   : 'w-1.5 bg-neutral-300/80'
               )}
             />
           </div>
         )}
 
-        {/* Botón flotante Vista Rápida en Desktop (Hover) */}
+        {/* Botón flotante Vista Rápida en Desktop (Hover refinado en borgoña y oro) */}
         <button
           type="button"
           onClick={(e) => {
@@ -242,7 +262,7 @@ export function ProductCard({ product }: ProductCardProps) {
             e.stopPropagation()
             openQuickView(product)
           }}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 hidden md:flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-xs font-medium tracking-wide text-neutral-900 shadow-md backdrop-blur-sm transition-all duration-300 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-neutral-900 hover:text-white"
+          className="absolute bottom-3.5 left-1/2 -translate-x-1/2 z-20 hidden md:flex items-center gap-1.5 rounded-full bg-white/95 px-4 py-2 text-xs font-serif tracking-wider text-neutral-900 shadow-lg border border-amber-200/50 backdrop-blur-md transition-all duration-300 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-[#7A1A28] hover:text-white hover:border-[#7A1A28]"
           aria-label={`Vista rápida de ${product.name}`}
         >
           <Eye className="h-3.5 w-3.5" strokeWidth={1.75} />
@@ -252,38 +272,38 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Información del Producto */}
       <div className="flex flex-1 flex-col pt-0.5">
-        {/* 1. Nombre del producto */}
-        <h3 className="font-sans text-[14.5px] sm:text-[15px] font-medium leading-snug text-neutral-800 transition-colors group-hover:text-camel line-clamp-2">
+        {/* 1. Nombre del producto en serif elegante */}
+        <h3 className="font-serif text-[14.5px] sm:text-[15.5px] font-normal leading-snug text-neutral-900 transition-colors duration-300 group-hover:text-[#7A1A28] line-clamp-2">
           <Link
             href={productUrl}
-            className="relative z-20 outline-none focus-visible:underline focus-visible:text-camel"
+            className="relative z-20 outline-none focus-visible:underline focus-visible:text-[#7A1A28]"
           >
             {product.name || '\u00A0'}
           </Link>
         </h3>
 
-        {/* 2. Precio */}
-        <div className="flex items-baseline gap-2 mt-1">
-          <span className="text-[15px] sm:text-[16px] font-sans font-medium text-neutral-900 tracking-tight">
+        {/* 2. Precio con tipografía serena */}
+        <div className="flex items-baseline gap-2 mt-1.5">
+          <span className="text-[15px] sm:text-[16.5px] font-serif font-medium text-neutral-900 tracking-tight">
             {product.price > 0 ? formattedPrice : '$'}
           </span>
           {formattedOriginalPrice && (
-            <span className="text-[12.5px] sm:text-[13px] font-sans text-neutral-400 line-through">
+            <span className="text-[12px] sm:text-[12.5px] font-sans text-neutral-400 line-through">
               {formattedOriginalPrice}
             </span>
           )}
         </div>
 
-        {/* 3. Medidas y Material (Jerarquía secundaria, compacta y discreta) */}
+        {/* 3. Medidas y Material con destello festivo */}
         {(specs.compactDimensions || specs.compactMaterial) && (
-          <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11.5px] sm:text-[12px] text-neutral-500 font-light leading-relaxed">
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] sm:text-[11.5px] text-neutral-500 font-light leading-relaxed">
             {specs.compactDimensions && (
               <span className="text-neutral-600 font-normal">
                 {specs.compactDimensions}
               </span>
             )}
             {specs.compactDimensions && specs.compactMaterial && (
-              <span className="text-neutral-300 select-none">·</span>
+              <span className="text-amber-500/70 select-none text-[9px]">✦</span>
             )}
             {specs.compactMaterial && (
               <span className="truncate max-w-full">
@@ -293,9 +313,9 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
 
-        {/* 4. Barra inferior de acciones secundarias */}
+        {/* 4. Barra inferior de acciones con toques festivos */}
         <div className="flex items-center justify-between mt-auto pt-3">
-          {/* Calificación decorativa */}
+          {/* Calificación decorativa en oro champán */}
           {product.rating > 0 ? (
             <div
               className="flex items-center gap-1 pointer-events-none"
@@ -331,12 +351,12 @@ export function ProductCard({ product }: ProductCardProps) {
             <div />
           )}
 
-          {/* Acciones independientes (z-20 para prevenir navegación de la card) */}
+          {/* Acciones independientes en borgoña y oro */}
           <div className="relative z-20 flex items-center gap-1 sm:gap-1.5">
             {/* Vista Rápida botón de icono */}
             <button
               type="button"
-              className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-400 transition-colors hover:text-camel-dark hover:bg-neutral-100/80 active:scale-95"
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full text-neutral-400 transition-colors hover:text-[#7A1A28] hover:bg-[#7A1A28]/10 active:scale-95"
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
@@ -352,8 +372,10 @@ export function ProductCard({ product }: ProductCardProps) {
             <button
               type="button"
               className={cn(
-                'flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-neutral-100/80 active:scale-95',
-                favorite ? 'text-red-500' : 'text-neutral-400 hover:text-red-500'
+                'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-colors active:scale-95',
+                favorite
+                  ? 'text-[#7A1A28] bg-[#7A1A28]/10'
+                  : 'text-neutral-400 hover:text-[#7A1A28] hover:bg-[#7A1A28]/10'
               )}
               onClick={(e) => {
                 e.preventDefault()
@@ -378,10 +400,10 @@ export function ProductCard({ product }: ProductCardProps) {
             <button
               type="button"
               className={cn(
-                'flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-neutral-100/80 active:scale-95',
+                'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-all duration-300 active:scale-95 border',
                 isAdded
-                  ? 'text-emerald-600 bg-emerald-50'
-                  : 'text-neutral-400 hover:text-camel'
+                  ? 'text-white bg-emerald-700 border-emerald-700 shadow-xs'
+                  : 'text-neutral-500 border-neutral-200/80 hover:text-white hover:bg-[#7A1A28] hover:border-[#7A1A28] hover:shadow-xs'
               )}
               onClick={(e) => {
                 e.preventDefault()
@@ -395,7 +417,7 @@ export function ProductCard({ product }: ProductCardProps) {
             >
               {isAdded ? (
                 <Check
-                  className="h-4 w-4 text-emerald-600 animate-pulse scale-110"
+                  className="h-4 w-4 text-white animate-pulse scale-110"
                   strokeWidth={2.5}
                 />
               ) : (

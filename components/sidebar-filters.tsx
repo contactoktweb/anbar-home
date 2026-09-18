@@ -15,7 +15,7 @@ export function SidebarFilters() {
         onClick={() => setIsOpen(true)}
         style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
         className={cn(
-          "fixed left-0 top-1/2 z-40 flex -translate-y-1/2 items-center justify-center rounded-r-md bg-camel-dark px-2 py-6 font-serif text-sm uppercase tracking-widest text-white shadow-md transition-all duration-300 hover:bg-camel hover:pr-4",
+          "fixed left-0 top-1/2 z-40 flex -translate-y-1/2 items-center justify-center rounded-r-md bg-[#7A1A28] px-2 py-6 font-serif text-sm uppercase tracking-widest text-white shadow-md transition-all duration-300 hover:bg-[#5E121E] hover:pr-4",
           isOpen ? "-translate-x-full opacity-0" : "translate-x-0 opacity-100"
         )}
       >

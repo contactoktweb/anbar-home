@@ -8,7 +8,13 @@ import { useStore } from '@/components/store-provider'
 import { Heart, Check, Minus, Plus, Loader2, Truck, ShieldCheck } from 'lucide-react'
 import { trackEvent } from '@/lib/fb-tracking'
 
-export function ProductActions({ product }: { product: Product }) {
+export function ProductActions({
+  product,
+  isChristmas = false,
+}: {
+  product: Product
+  isChristmas?: boolean
+}) {
   const { cart, addToCart, toggleFavorite, isFavorite } = useStore()
   const router = useRouter()
   const favorite = isFavorite(product.id)
@@ -80,7 +86,12 @@ export function ProductActions({ product }: { product: Product }) {
 
         <button
           onClick={handleBuyNow}
-          className="flex-1 rounded-sm bg-camel-dark px-4 py-4 text-[13px] font-normal uppercase tracking-[0.2em] text-white transition-all hover:bg-neutral-950"
+          className={cn(
+            "flex-1 rounded-sm px-4 py-4 text-[13px] font-normal uppercase tracking-[0.2em] text-white transition-all",
+            isChristmas
+              ? "bg-[#7A1A28] hover:bg-[#5E121E] shadow-sm shadow-[#7A1A28]/25"
+              : "bg-camel-dark hover:bg-neutral-950"
+          )}
         >
           Comprar Ahora
         </button>
