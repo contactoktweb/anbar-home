@@ -108,22 +108,27 @@ export function SiteHeader() {
             : 'bg-ivory',
         )}
       >
-        {/* Fila Superior: Logo y Acciones (Buscar, Favoritos, Carrito) */}
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5 md:py-4 md:px-10">
-        <Link href="/" className="flex items-center flex-shrink-0" aria-label="Anbar Home">
-          <Image
-            src="/LOGO ANBAR.png"
-            alt="Anbar Home"
-            width={180}
-            height={74}
-            priority
-            fetchPriority="high"
-            className="h-9 w-auto object-contain md:h-11 xl:h-12"
-          />
-        </Link>
+        {/* Fila Superior: Logo Centrado y Acciones (Buscar, Favoritos, Carrito) */}
+        <div className="relative mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5 md:py-4 md:px-10">
+          {/* Logo Centrado */}
+          <Link
+            href="/"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center flex-shrink-0 transition-opacity hover:opacity-90"
+            aria-label="Anbar Home"
+          >
+            <Image
+              src="/LOGO ANBAR.png"
+              alt="Anbar Home"
+              width={180}
+              height={74}
+              priority
+              fetchPriority="high"
+              className="h-9 w-auto object-contain md:h-11 xl:h-12"
+            />
+          </Link>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-3.5 md:gap-5 flex-shrink-0">
+          {/* Action Buttons */}
+          <div className="ml-auto flex items-center gap-3.5 md:gap-5 flex-shrink-0">
           <button onClick={() => setIsSearchOpen(true)} className="transition-colors hover:text-[#7A1A28] p-1.5" aria-label="Buscar">
             <Search className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
           </button>

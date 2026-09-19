@@ -1,5 +1,15 @@
 # CHANGELOG AI
 
+## [2026-09-19] - Centrado del Logo en el Header
+
+### Requerimiento
+- Centrar el logo de Anbar Home horizontalmente en la fila superior de la cabecera tanto en desktop como en mobile, en lugar de mantenerlo a la izquierda.
+
+### Cambios Realizados
+1. **Cabecera (`components/site-header.tsx`):**
+   - Posicionamiento absoluto y centrado geométrico perfecto (`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`) para el logo dentro de la barra superior.
+   - Acciones a la derecha y distribución equilibrada en todos los viewports.
+
 ## [2026-09-19] - Rediseño de Cabecera en Dos Niveles (Logo y Acciones Arriba / Categorías Abajo)
 
 ### Requerimiento
