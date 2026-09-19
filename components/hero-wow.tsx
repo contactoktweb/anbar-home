@@ -2,19 +2,28 @@ import { HeroCarousel } from '@/components/hero-carousel'
 import { optimizeImageUrl } from '@/lib/utils'
 
 export function HeroWow({ data }: { data?: any }) {
+  const fallbackBanners = [
+    {
+      src: '/banner/horizontal.png',
+      srcMobile: '/banner/vertical.png',
+      alt: 'Anbar Home - Colección de Temporada Navideña',
+      href: '/category/todos-los-productos',
+    }
+  ]
+
   const banners = data?.heroBanners?.length > 0
     ? data.heroBanners.map((banner: any) => ({
-        src: optimizeImageUrl(banner.src, 1440, 75),
-        srcMobile: optimizeImageUrl(banner.srcMobile || banner.src, 800, 75),
+        src: banner.src ? optimizeImageUrl(banner.src, 1920, 85) : '/banner/horizontal.png',
+        srcMobile: banner.srcMobile
+          ? optimizeImageUrl(banner.srcMobile, 1080, 85)
+          : (banner.src ? optimizeImageUrl(banner.src, 1080, 85) : '/banner/vertical.png'),
         videoDesktop: banner.videoDesktop,
         videoMobile: banner.videoMobile,
         alt: banner.alt || 'Anbar Home',
         label: banner.categoryTitle,
-        href: banner.categorySlug ? `/category/${banner.categorySlug}` : undefined,
+        href: banner.categorySlug ? `/category/${banner.categorySlug}` : '/category/todos-los-productos',
       }))
-    : []
-
-  if (banners.length === 0) return null
+    : fallbackBanners
 
   return (
     <section
@@ -25,3 +34,4 @@ export function HeroWow({ data }: { data?: any }) {
     </section>
   )
 }
+

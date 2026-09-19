@@ -81,6 +81,12 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     categoryName = 'Todos los productos'
   } else if (slug === 'summer-sale' || slug === 'sale') {
     categoryName = 'SALE'
+  } else if (slug === 'esferas-navidenas') {
+    categoryName = 'Esferas Navideñas'
+  } else if (slug === 'animales') {
+    categoryName = 'Animales'
+  } else if (slug === 'piezas-grandes-premium') {
+    categoryName = 'Piezas Grandes Premium'
   }
 
   // Format sidebar categories (guaranteeing a single SALE link)
@@ -121,9 +127,22 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   const allProducts = formattedSanityProducts
   
   // Filter products by any of their categorySlugs matching the URL slug
-  let filteredProducts = allProducts.filter((product: any) =>
-    (product.categorySlugs || []).includes(slug)
-  )
+  let filteredProducts = allProducts.filter((product: any) => {
+    if ((product.categorySlugs || []).includes(slug)) return true
+
+    // Fallbacks inteligentes para colecciones de temporada destacadas
+    const text = `${product.name} ${product.description || ''}`.toLowerCase()
+    if (slug === 'esferas-navidenas') {
+      return text.includes('esfera') || text.includes('burbuja') || text.includes('bola')
+    }
+    if (slug === 'animales') {
+      return /animal|reno|oso|caballo|ciervo|ave|ardilla|venado|pajaro|conejo/i.test(text)
+    }
+    if (slug === 'piezas-grandes-premium') {
+      return (product.categorySlugs || []).includes('navidad-premium') || /grande|majestuoso|gigante|xxl|versalles|imperial/i.test(text)
+    }
+    return false
+  })
 
   // Override for all products: return all products in the store
   if (slug === 'todos-los-productos' || slug === 'todos') {

@@ -93,10 +93,10 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
         const optimizedDesktopSrc = img.src ? optimizeImageUrl(img.src, 1440, 75) : ''
         const optimizedMobileSrc = img.srcMobile ? optimizeImageUrl(img.srcMobile, 800, 75) : (optimizedDesktopSrc || '')
 
-        const desktopAspect = aspectRatios[index]?.desktop || '1920 / 818'
+        const desktopAspect = aspectRatios[index]?.desktop || '1915 / 821'
         const mobileAspect =
           aspectRatios[index]?.mobile ||
-          (img.videoMobile?.includes('8995d4ba') ? '1 / 1' : '3 / 4')
+          (img.videoMobile?.includes('8995d4ba') ? '1 / 1' : '1080 / 1350')
 
         const renderVisualContent = () => (
           <>

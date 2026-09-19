@@ -16,6 +16,8 @@ E-commerce y tienda online de Anbar Home, marca de decoración artesanal, estét
 - `components/product-card.tsx`: Tarjeta de producto para catálogos y carruseles con listón artesanal navideño, acentos borgoña, oro champán, badges festivos, swipe mobile y vista rápida.
 - `components/product-image-zoom.tsx`: Visor con zoom interactivo, listón navideño en tamaño hero (`size="lg"`) y reubicación inteligente de badges.
 - `components/sticky-mobile-cta.tsx`: Barra de compra flotante móvil adaptativa con temática y botones festivos en productos de Navidad.
-- `components/site-header.tsx`: Cabecera principal y barra de navegación responsive con categorías navideñas de temporada y desplegable/acordeón de "Hogar" para colecciones permanentes.
+- `components/site-header.tsx`: Cabecera principal en dos niveles: fila superior clara con logotipo y botones de acción (buscar, favoritos, carrito), y fila inferior con la barra de navegación de categorías en fondo borgoña exacto (`#4b0d10`) con tipografía en oro champán (`#E3C58B`).
+- `components/hero-wow.tsx` & `components/hero-carousel.tsx`: Carrusel hero principal con soporte dual optimizado para banner horizontal en PC (1915x821) y vertical en celular (1080x1350), gestos táctiles y transiciones suaves.
 - `lib/utils.ts`: Utilidades del sistema, incluyendo `isChristmasProduct` para detección centralizada de productos de la temporada navideña.
 - `sanity/schemaTypes/product.ts`: Esquema de producto en Sanity con campos para stock, `isLastUnits`, `isBestSeller`, precios y categorías.
+

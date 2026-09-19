@@ -108,161 +108,43 @@ export function SiteHeader() {
             : 'bg-ivory',
         )}
       >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3 md:px-10">
-        <Link href="/" className="flex items-center flex-shrink-0 mr-4" aria-label="Anbar Home">
+        {/* Fila Superior: Logo y Acciones (Buscar, Favoritos, Carrito) */}
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5 md:py-4 md:px-10">
+        <Link href="/" className="flex items-center flex-shrink-0" aria-label="Anbar Home">
           <Image
             src="/LOGO ANBAR.png"
             alt="Anbar Home"
-            width={160}
-            height={66}
+            width={180}
+            height={74}
             priority
             fetchPriority="high"
-            className="h-8 w-auto object-contain md:h-9 xl:h-10"
+            className="h-9 w-auto object-contain md:h-11 xl:h-12"
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-3 lg:gap-4 xl:gap-6 2xl:gap-7 lg:flex">
-          {christmasLinks.map((link) => {
-            const isActive = pathname === link.href
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "group relative whitespace-nowrap text-[12.5px] xl:text-[13.5px] 2xl:text-[14px] font-medium tracking-wide transition-colors duration-300 hover:text-[#7A1A28]",
-                  isActive ? "text-[#7A1A28] font-semibold" : "text-neutral-800"
-                )}
-              >
-                {link.label}
-                <span
-                  className={cn(
-                    "absolute -bottom-1 left-0 h-[2px] bg-[#7A1A28] transition-all duration-300",
-                    isActive ? "w-full" : "w-0 group-hover:w-full"
-                  )}
-                />
-              </Link>
-            )
-          })}
-
-          {/* Hogar Dropdown */}
-          <div
-            className="relative group/hogar"
-            onMouseEnter={() => setIsHogarDropdownOpen(true)}
-            onMouseLeave={() => setIsHogarDropdownOpen(false)}
-          >
-            <button
-              type="button"
-              className={cn(
-                "group relative inline-flex items-center gap-1 whitespace-nowrap text-[12.5px] xl:text-[13.5px] 2xl:text-[14px] font-medium tracking-wide transition-colors duration-300 hover:text-[#7A1A28] focus:outline-none py-1",
-                isHogarActive ? "text-[#7A1A28] font-semibold" : "text-neutral-800"
-              )}
-              aria-expanded={isHogarDropdownOpen}
-              aria-haspopup="true"
-              onClick={() => setIsHogarDropdownOpen((prev) => !prev)}
-            >
-              <span>Hogar</span>
-              <ChevronDown
-                className={cn(
-                  "h-3.5 w-3.5 transition-transform duration-300",
-                  isHogarDropdownOpen ? "rotate-180 text-[#7A1A28]" : "text-neutral-500 group-hover/hogar:rotate-180 group-hover/hogar:text-[#7A1A28]"
-                )}
-              />
-              <span
-                className={cn(
-                  "absolute -bottom-0.5 left-0 h-[2px] bg-[#7A1A28] transition-all duration-300",
-                  isHogarActive ? "w-full" : "w-0 group-hover:w-full"
-                )}
-              />
-            </button>
-
-            {/* Dropdown Panel */}
-            <div
-              className={cn(
-                "absolute top-full left-1/2 -translate-x-1/2 pt-2.5 z-50 transition-all duration-200 ease-out",
-                isHogarDropdownOpen
-                  ? "opacity-100 visible translate-y-0 pointer-events-auto"
-                  : "opacity-0 invisible -translate-y-2 pointer-events-none group-hover/hogar:opacity-100 group-hover/hogar:visible group-hover/hogar:translate-y-0 group-hover/hogar:pointer-events-auto"
-              )}
-            >
-              <div className="w-56 overflow-hidden rounded-xl border border-neutral-200/90 bg-ivory/98 p-1.5 shadow-xl backdrop-blur-md">
-                <div className="py-1">
-                  {homeDropdownLinks.map((item) => {
-                    const isActive = pathname === item.href
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setIsHogarDropdownOpen(false)}
-                        className={cn(
-                          "flex items-center justify-between rounded-lg px-3.5 py-2.5 text-[13px] font-medium transition-all duration-200",
-                          isActive
-                            ? "bg-[#7A1A28]/10 text-[#7A1A28] font-semibold"
-                            : "text-neutral-700 hover:bg-[#7A1A28]/10 hover:text-[#7A1A28] hover:translate-x-0.5"
-                        )}
-                      >
-                        <span>{item.label}</span>
-                        {isActive && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#7A1A28]" />
-                        )}
-                      </Link>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Secondary Links: SALE & Blogs */}
-          {secondaryLinks.map((link) => {
-            const isActive = pathname === link.href
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "group relative whitespace-nowrap text-[12.5px] xl:text-[13.5px] 2xl:text-[14px] font-medium tracking-wide transition-colors duration-300",
-                  link.label === 'SALE'
-                    ? isActive ? "text-red-700 font-bold" : "text-red-600 font-semibold hover:text-red-700"
-                    : isActive ? "text-[#7A1A28] font-semibold" : "text-neutral-800 hover:text-[#7A1A28]"
-                )}
-              >
-                {link.label}
-                <span
-                  className={cn(
-                    "absolute -bottom-1 left-0 h-[2px] transition-all duration-300",
-                    link.label === 'SALE' ? "bg-red-600" : "bg-[#7A1A28]",
-                    isActive ? "w-full" : "w-0 group-hover:w-full"
-                  )}
-                />
-              </Link>
-            )
-          })}
-        </nav>
-
         {/* Action Buttons */}
-        <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
-          <button onClick={() => setIsSearchOpen(true)} className="transition-colors hover:text-[#7A1A28] p-1" aria-label="Buscar">
-            <Search className="h-5 w-5" strokeWidth={1.5} />
+        <div className="flex items-center gap-3.5 md:gap-5 flex-shrink-0">
+          <button onClick={() => setIsSearchOpen(true)} className="transition-colors hover:text-[#7A1A28] p-1.5" aria-label="Buscar">
+            <Search className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
           </button>
           
           <Link
             href="/favoritos"
-            className="relative flex items-center transition-colors hover:text-[#7A1A28] p-1"
+            className="relative flex items-center transition-colors hover:text-[#7A1A28] p-1.5"
             aria-label={`Mis Favoritos${isInitialized && favorites.length > 0 ? ` (${favorites.length})` : ''}`}
           >
-            <Heart className="h-5 w-5" strokeWidth={1.5} />
+            <Heart className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
             {isInitialized && favorites.length > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-[#7A1A28] text-[10px] font-medium text-white shadow-xs">
+              <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-[#7A1A28] text-[10px] font-medium text-white shadow-xs">
                 {favorites.length}
               </span>
             )}
           </Link>
 
-          <button onClick={() => setIsCartOpen(true)} className="relative flex items-center transition-colors hover:text-[#7A1A28] p-1" aria-label="Carrito">
-            <ShoppingBag className="h-5 w-5" strokeWidth={1.5} />
+          <button onClick={() => setIsCartOpen(true)} className="relative flex items-center transition-colors hover:text-[#7A1A28] p-1.5" aria-label="Carrito">
+            <ShoppingBag className="h-5 w-5 md:h-[22px] md:w-[22px]" strokeWidth={1.5} />
             {cart.length > 0 && (
-              <span className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-[#7A1A28] border-[1.5px] border-ivory" />
+              <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-[#7A1A28] border-[1.5px] border-ivory" />
             )}
           </button>
 
@@ -293,6 +175,129 @@ export function SiteHeader() {
               )}
             />
           </button>
+        </div>
+      </div>
+
+      {/* Fila Inferior (Desktop): Navegación de Categorías con tonalidad Borgoña #4b0d10 & Oro Champán */}
+      <div className="hidden border-t border-[#3b090c] lg:block bg-[#4b0d10] shadow-md">
+        <div className="mx-auto flex max-w-7xl items-center justify-center px-4 sm:px-6 py-2.5 md:px-10">
+          <nav className="flex items-center justify-center gap-5 xl:gap-8 2xl:gap-10">
+            {christmasLinks.map((link) => {
+              const isActive = pathname === link.href
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "group relative whitespace-nowrap text-[13px] xl:text-[13.5px] 2xl:text-[14.5px] font-medium tracking-wide transition-all duration-300 py-1",
+                    isActive ? "text-[#F5E2BE] font-semibold" : "text-[#E3C58B]/90 hover:text-white"
+                  )}
+                >
+                  {link.label}
+                  <span
+                    className={cn(
+                      "absolute bottom-0 left-0 h-[2px] bg-[#E3C58B] transition-all duration-300 shadow-[0_0_8px_rgba(227,197,139,0.6)]",
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    )}
+                  />
+                </Link>
+              )
+            })}
+
+            {/* Hogar Dropdown */}
+            <div
+              className="relative group/hogar"
+              onMouseEnter={() => setIsHogarDropdownOpen(true)}
+              onMouseLeave={() => setIsHogarDropdownOpen(false)}
+            >
+              <button
+                type="button"
+                className={cn(
+                  "group relative inline-flex items-center gap-1.5 whitespace-nowrap text-[13px] xl:text-[13.5px] 2xl:text-[14.5px] font-medium tracking-wide transition-all duration-300 focus:outline-none py-1",
+                  isHogarActive ? "text-[#F5E2BE] font-semibold" : "text-[#E3C58B]/90 hover:text-white"
+                )}
+                aria-expanded={isHogarDropdownOpen}
+                aria-haspopup="true"
+                onClick={() => setIsHogarDropdownOpen((prev) => !prev)}
+              >
+                <span>Hogar</span>
+                <ChevronDown
+                  className={cn(
+                    "h-3.5 w-3.5 transition-transform duration-300",
+                    isHogarDropdownOpen ? "rotate-180 text-[#F5E2BE]" : "text-[#E3C58B]/70 group-hover/hogar:rotate-180 group-hover/hogar:text-white"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "absolute bottom-0 left-0 h-[2px] bg-[#E3C58B] transition-all duration-300 shadow-[0_0_8px_rgba(227,197,139,0.6)]",
+                    isHogarActive ? "w-full" : "w-0 group-hover:w-full"
+                  )}
+                />
+              </button>
+
+              {/* Dropdown Panel */}
+              <div
+                className={cn(
+                  "absolute top-full left-1/2 -translate-x-1/2 pt-2.5 z-50 transition-all duration-200 ease-out",
+                  isHogarDropdownOpen
+                    ? "opacity-100 visible translate-y-0 pointer-events-auto"
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none group-hover/hogar:opacity-100 group-hover/hogar:visible group-hover/hogar:translate-y-0 group-hover/hogar:pointer-events-auto"
+                )}
+              >
+                <div className="w-56 overflow-hidden rounded-xl border border-[#5d1216] bg-[#4b0d10] p-1.5 shadow-2xl backdrop-blur-md">
+                  <div className="py-1">
+                    {homeDropdownLinks.map((item) => {
+                      const isActive = pathname === item.href
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsHogarDropdownOpen(false)}
+                          className={cn(
+                            "flex items-center justify-between rounded-lg px-3.5 py-2.5 text-[13px] font-medium transition-all duration-200",
+                            isActive
+                              ? "bg-white/15 text-[#F5E2BE] font-semibold"
+                              : "text-[#E3C58B]/90 hover:bg-white/10 hover:text-white hover:translate-x-0.5"
+                          )}
+                        >
+                          <span>{item.label}</span>
+                          {isActive && (
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#E3C58B] shadow-[0_0_6px_#E3C58B]" />
+                          )}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Secondary Links: SALE & Blogs */}
+            {secondaryLinks.map((link) => {
+              const isActive = pathname === link.href
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "group relative whitespace-nowrap text-[13px] xl:text-[13.5px] 2xl:text-[14.5px] font-medium tracking-wide transition-all duration-300 py-1",
+                    link.label === 'SALE'
+                      ? isActive ? "text-[#FFD1D6] font-bold" : "text-[#FFA8B2] font-semibold hover:text-white"
+                      : isActive ? "text-[#F5E2BE] font-semibold" : "text-[#E3C58B]/90 hover:text-white"
+                  )}
+                >
+                  {link.label}
+                  <span
+                    className={cn(
+                      "absolute bottom-0 left-0 h-[2px] transition-all duration-300",
+                      link.label === 'SALE' ? "bg-[#FFA8B2]" : "bg-[#E3C58B] shadow-[0_0_8px_rgba(227,197,139,0.6)]",
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    )}
+                  />
+                </Link>
+              )
+            })}
+          </nav>
         </div>
       </div>
 

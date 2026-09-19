@@ -50,16 +50,16 @@ export function CategoryGridSection({ data }: CategoryGridSectionProps) {
           </div>
         </Reveal>
 
-        {/* Mobile Swipeable (Peek effect) / Desktop 5-Column Grid */}
-        <div className="flex md:grid md:grid-cols-5 gap-3 sm:gap-4 md:gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0">
+        {/* Mobile Swipeable (Peek effect) / Desktop Multi-Column Responsive Layout */}
+        <div className="flex sm:grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 md:gap-4 lg:gap-3.5 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-3 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0">
           {categories.map((cat, idx) => {
             const href = cat.categorySlug ? `/category/${cat.categorySlug}` : '/category/todos-los-productos'
 
             return (
-              <Reveal key={cat._key || idx} delay={idx * 0.06}>
+              <Reveal key={cat._key || idx} delay={idx * 0.05}>
                 <Link
                   href={href}
-                  className="group flex-shrink-0 w-[150px] sm:w-[190px] md:w-auto snap-start block relative bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-neutral-200/80"
+                  className="group flex-shrink-0 w-[150px] sm:w-auto snap-start block relative bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-neutral-200/80 hover:border-[#7A1A28]/40"
                 >
                   {/* Square Image Container */}
                   <div className="relative aspect-square w-full overflow-hidden bg-neutral-100">
@@ -67,7 +67,7 @@ export function CategoryGridSection({ data }: CategoryGridSectionProps) {
                       src={optimizeImageUrl(cat.imageUrl, 500, 75)}
                       alt={cat.title}
                       fill
-                      sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 20vw"
+                      sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 15vw"
                       className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                       quality={75}
                     />
@@ -76,14 +76,14 @@ export function CategoryGridSection({ data }: CategoryGridSectionProps) {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                     {/* Arrow badge on hover */}
-                    <div className="absolute bottom-2.5 right-2.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-neutral-800 opacity-0 group-hover:opacity-100 group-hover:bg-camel group-hover:text-white transition-all duration-300 shadow-sm">
+                    <div className="absolute bottom-2.5 right-2.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-neutral-800 opacity-0 group-hover:opacity-100 group-hover:bg-[#7A1A28] group-hover:text-white transition-all duration-300 shadow-sm">
                       <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                     </div>
                   </div>
 
                   {/* Card Title Bar */}
-                  <div className="p-3 sm:p-4 text-center bg-white">
-                    <h3 className="font-serif text-xs sm:text-sm md:text-base text-neutral-900 font-medium tracking-wide group-hover:text-camel transition-colors duration-300 line-clamp-1">
+                  <div className="p-3 sm:p-3.5 text-center bg-white">
+                    <h3 className="font-serif text-xs sm:text-xs md:text-[13px] lg:text-sm text-neutral-900 font-medium tracking-wide group-hover:text-[#7A1A28] transition-colors duration-300 line-clamp-1">
                       {cat.title}
                     </h3>
                   </div>

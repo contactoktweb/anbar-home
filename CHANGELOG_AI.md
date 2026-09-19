@@ -1,6 +1,60 @@
 # CHANGELOG AI
 
-## [2026-09-17] - Resaltes Globales en Color Borgoña
+## [2026-09-19] - Rediseño de Cabecera en Dos Niveles (Logo y Acciones Arriba / Categorías Abajo)
+
+### Requerimiento
+- Desahogar la cabecera eliminando la agrupación de todos los elementos en una sola línea.
+- Subir el logo de Anbar Home y los botones de acción (búsqueda, favoritos y carrito de compras) a una fila superior espaciosa.
+- Bajar la barra de navegación de categorías a una segunda fila independiente, centrada y distinguida.
+
+### Cambios Realizados
+1. **Cabecera (`components/site-header.tsx`):**
+   - **Nivel Superior:** Contenedor con mayor altura y presencia para el logo (`h-11 md:h-12`), alineado con las acciones de búsqueda, favoritos y carrito con micro-interacciones pulidas.
+   - **Nivel Inferior:** Franja horizontal en tonalidad borgoña exacta (`#4b0d10`) con borde superior `#3b090c`, tipografía en oro champán resplandeciente (`#E3C58B`), efecto hover en blanco radiante, subrayado dorado con halo luminoso y desplegable Hogar en `#4b0d10`.
+   - Conservación completa de la experiencia en móvil (menú lateral drawer con acordeón interactivo).
+
+## [2026-09-19] - Actualización de Banners Principales (PC y Móvil)
+
+### Requerimiento
+- Configurar y actualizar el banner principal del Home utilizando las imágenes de `public/banner/`:
+  - `horizontal.png` (1915x821) para computadores (PC / Desktop).
+  - `vertical.png` (1080x1350) para dispositivos móviles (Celular).
+
+### Cambios Realizados
+1. **Sanity CMS:**
+   - Se subieron las dos imágenes en alta resolución a Sanity (`banner-horizontal-navidad.png` y `banner-vertical-navidad.png`).
+   - Se actualizó el campo `heroBanners` en el documento `homePage` asociando `imageDesktop` e `imageMobile`.
+2. **Componente Hero (`components/hero-wow.tsx`):**
+   - Se estableció la resolución y prioridad de carga óptima de las imágenes.
+   - Se incluyó fallback directo a `/banner/horizontal.png` y `/banner/vertical.png`.
+3. **Carrusel Hero (`components/hero-carousel.tsx`):**
+   - Se calibró la relación de aspecto (`aspectRatio`) predeterminada: `1915 / 821` en escritorio y `1080 / 1350` (proporción 4:5) en móvil para evitar cortes de imagen o deformaciones visuales.
+
+## [2026-09-19] - Actualización de Categorías Destacadas con Imágenes de Temporada
+
+### Requerimiento
+- Analizar las imágenes de la carpeta `public/CATEGORIAS`, colocarlas en la sección de "Categorías Destacadas" del home y conectarlas con su redireccionamiento correspondiente a cada categoría.
+
+### Imágenes y Categorías Procesadas
+1. `ARBOLES.png` -> **Árboles de Navidad** (`/category/arboles-de-navidad`)
+2. `VILLAS.png` -> **Villas Navideñas** (`/category/villas-navidenas`)
+3. `NACIMIENTOS .png` -> **Pesebres y Nacimientos** (`/category/pesebres-y-nacimientos`)
+4. `NAVIDAD EN LA MESA.png` -> **Navidad en la Mesa** (`/category/navidad-en-la-mesa`)
+5. `PIEZAS GRANDES PREMIUM.png` -> **Piezas Grandes Premium** (`/category/piezas-grandes-premium` y vinculada a `navidad-premium`)
+6. `ESFERAS NAVIDEÑAS.png` -> **Esferas Navideñas** (`/category/esferas-navidenas`)
+7. `ANIMALES.png` -> **Animales** (`/category/animales`)
+
+### Cambios Realizados
+1. **Sanity CMS:**
+   - Se subieron los 7 assets de imagen directamente a Sanity y se vinculó `homePage.homeCategories` con sus títulos, referencias a categorías y `customSlug`.
+2. **Página de Catálogo Dinámico (`app/category/[slug]/page.tsx`):**
+   - Soporte y títulos SEO para los slugs `/category/esferas-navidenas`, `/category/animales` y `/category/piezas-grandes-premium`.
+   - Filtrado inteligente de productos basado en categorías asignadas y términos clave (ej. esferas, adornos de mesa, animales decorativos, renos, osos, piezas grandes/majestuosas).
+3. **Componente de Cuadros de Categoría (`components/category-grid-section.tsx`):**
+   - Distribución responsive optimizada para 7 tarjetas (`sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7`).
+   - Soporte nativo de swipe/touch fluido en dispositivos móviles con efecto peek y sin desbordamiento horizontal global.
+   - Resaltes hover y flecha indicadora con la paleta borgoña festiva `#7A1A28`.
+
 
 ### Requerimiento
 - Transformar todos los resaltes de la web al color borgoña / gorgoña (`#7A1A28`), incluyendo categorías activas, subrayados, deslizadores, botones de acción, selecciones de texto y enlaces.
