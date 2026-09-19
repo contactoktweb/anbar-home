@@ -82,10 +82,10 @@ export function DiscountModal() {
         </button>
 
         {/* Imagen de Fondo (Horizontal para PC / Vertical para Móvil) */}
-        <div className="relative w-full aspect-[9/15.5] sm:aspect-[9/14] md:aspect-[2.15/1]">
+        <div className="relative w-full aspect-[1080/1350] md:aspect-[1915/821]">
           {/* Versión PC */}
           <Image
-            src="/banner/Banner horizontal 10_.png"
+            src="/banner/horizontal.png"
             alt="10% OFF Primera Compra"
             fill
             className="object-cover object-center hidden md:block"
@@ -94,7 +94,7 @@ export function DiscountModal() {
           />
           {/* Versión Móvil */}
           <Image
-            src="/banner/Banner Vertical 10_.png"
+            src="/banner/vertical.png"
             alt="10% OFF Primera Compra"
             fill
             className="object-cover object-center md:hidden"
@@ -102,8 +102,8 @@ export function DiscountModal() {
             quality={90}
           />
 
-          {/* Formulario / Mensaje de Éxito posicionado más arriba y centrado en móvil */}
-          <div className="absolute inset-x-6 sm:inset-x-8 bottom-9 sm:bottom-12 max-w-[280px] sm:max-w-[310px] mx-auto md:mx-0 md:max-w-[330px] md:inset-x-auto md:right-8 lg:right-12 md:bottom-3.5 lg:bottom-5 z-20">
+          {/* Formulario / Mensaje de Éxito posicionado estratégicamente bajo el texto */}
+          <div className="absolute inset-x-3 sm:inset-x-5 bottom-2 sm:bottom-3 max-w-[280px] sm:max-w-[310px] mx-auto md:mx-0 md:max-w-[340px] lg:max-w-[380px] md:inset-x-auto md:left-[63.7%] md:-translate-x-1/2 md:bottom-4 lg:bottom-6 z-20">
             
             {isSubmitted ? (
               /* Vista de Éxito sin mostrar el código */

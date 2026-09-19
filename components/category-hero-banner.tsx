@@ -17,15 +17,10 @@ export function CategoryHeroBanner({
   categoryName = 'Colección',
   categoryBanner,
 }: CategoryHeroBannerProps) {
-  const allBanners = data?.heroBanners || []
-
-  // 1. Prioritize image uploaded directly to this category in Sanity
-  // 2. Otherwise find matching banner specifically assigned to this category slug in heroBanners
-  const matchedBanner = allBanners.find((b: any) => b.categorySlug === currentSlug)
-
-  const rawSrc = categoryBanner?.src || matchedBanner?.src
-  const rawSrcMobile = categoryBanner?.srcMobile || matchedBanner?.srcMobile
-  const alt = categoryName || matchedBanner?.alt || 'Anbar Home'
+  // Solo se usa la imagen subida directamente a esta categoría en Sanity
+  const rawSrc = categoryBanner?.src
+  const rawSrcMobile = categoryBanner?.srcMobile
+  const alt = categoryName || 'Anbar Home'
 
   // Si la categoría tiene imagen de banner propia, mostrarla
   if (rawSrc) {

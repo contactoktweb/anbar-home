@@ -1,6 +1,27 @@
 # CHANGELOG AI
 
-## [2026-09-19] - Banner Borgoña Personalizado para Categorías sin Imagen
+## [2026-09-19] - Restauración de Videos en Hero, Banners Subidos por Categoría y Modal de Descuento 10% OFF
+
+### Requerimiento
+1. En el hero de la homepage: restaurar los videos que estaban antes (Jarrones escultóricos, Esculturas y Acentos decorativos en formato horizontal y vertical).
+2. Para cada categoría: el banner mostrado debe ser el que se sube en Sanity para esa categoría. Si no tiene imagen subida, mostrar la cabecera borgoña con la tipografía del sitio.
+3. Las imágenes de `public/banner/` (`horizontal.png` y `vertical.png`) corresponden al modal de descuento por primera compra (`components/discount-modal.tsx`), por lo que se debe actualizar la imagen de fondo del modal con estos archivos.
+
+### Cambios Realizados
+1. **Hero Principal con Videos (`components/hero-wow.tsx` y Sanity CMS):**
+   - Se restauraron los 3 banners de video originales en el documento `homePage` de Sanity, vinculados a sus videos MP4 optimizados para desktop (1920x818) y móvil, posters y enlaces de categoría.
+   - Se configuraron los fallbacks de `HeroWow` con los 3 videos y posters CDN originales para garantizar su visualización continua.
+   - Se restablecieron los aspect ratios por defecto para video (`1920 / 818` en PC y `3 / 4` en móvil) en `components/hero-carousel.tsx`.
+2. **Banner de Categorías Dinámico (`components/category-hero-banner.tsx`):**
+   - Se eliminó el fallback a banners del hero para que las categorías dependan exclusivamente de si tienen imagen propia subida en Sanity (`categoryBanner.src` / `category.imageDesktop`).
+   - Categorías con banner propio subido muestran su banner en alta resolución sin cortes.
+   - Categorías sin banner propio muestran la cabecera temática borgoña noble (`#4b0d10`) con el nombre de la categoría en tipografía del sitio y detalle en oro champán.
+3. **Modal de Descuento 10% OFF (`components/discount-modal.tsx`):**
+   - Se actualizaron las rutas de imagen de fondo a `/banner/horizontal.png` (PC) y `/banner/vertical.png` (Móvil).
+   - Se ajustó el aspect ratio exacto (`aspect-[1080/1350] md:aspect-[1915/821]`).
+   - Se posicionó el formulario de correo alineado armoniosamente con el diseño y texto "10% OFF", tanto en escritorio como en dispositivos móviles.
+
+
 
 ### Requerimiento
 - Evitar el uso del banner general del Home (10% OFF) en categorías que no cuentan con imagen de fondo propia.
