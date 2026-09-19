@@ -1,5 +1,18 @@
 # CHANGELOG AI
 
+## [2026-09-19] - Banner Borgoña Personalizado para Categorías sin Imagen
+
+### Requerimiento
+- Evitar el uso del banner general del Home (10% OFF) en categorías que no cuentan con imagen de fondo propia.
+- Mostrar en su lugar un banner con fondo color borgoña noble de la marca y la tipografía del sitio con el nombre de la categoría.
+
+### Cambios Realizados
+1. **Componente de Banner de Categoría (`components/category-hero-banner.tsx`):**
+   - Se eliminó el fallback automático a `allBanners[0]`.
+   - Si la categoría no tiene imagen configurada en Sanity, se renderiza una cabecera hero con fondo borgoña profundo (`#4b0d10` a `#400b0e`), detalle en oro champán (`#E3C58B`), tag sutil "COLECCIÓN EXCLUSIVA" y el nombre de la categoría con tipografía serif del sitio (`#F5E2BE`).
+2. **Página de Categoría (`app/category/[slug]/page.tsx`):**
+   - Se unificó la jerarquía de encabezados `H1` para mantener un SEO óptimo sin duplicados.
+
 ## [2026-09-19] - Centrado del Logo en el Header
 
 ### Requerimiento

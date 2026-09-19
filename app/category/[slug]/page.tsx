@@ -174,7 +174,6 @@ export default async function CategoryPage({ params, searchParams }: { params: P
     <>
       <SiteHeader />
       <main className="min-h-screen pb-20">
-        <h1 className="sr-only">{categoryName} - Anbar Home</h1>
         <CategoryHeroBanner
           data={homeData}
           currentSlug={slug}

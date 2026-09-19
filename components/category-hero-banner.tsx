@@ -14,52 +14,67 @@ interface CategoryHeroBannerProps {
 export function CategoryHeroBanner({
   data,
   currentSlug,
-  categoryName,
+  categoryName = 'Colección',
   categoryBanner,
 }: CategoryHeroBannerProps) {
   const allBanners = data?.heroBanners || []
 
   // 1. Prioritize image uploaded directly to this category in Sanity
-  // 2. Otherwise find matching banner for this category slug in home heroBanners
-  // 3. Otherwise fallback to the first home hero banner
-  const fallbackBanner =
-    allBanners.find((b: any) => b.categorySlug === currentSlug) || allBanners[0]
+  // 2. Otherwise find matching banner specifically assigned to this category slug in heroBanners
+  const matchedBanner = allBanners.find((b: any) => b.categorySlug === currentSlug)
 
-  const rawSrc = categoryBanner?.src || fallbackBanner?.src
-  const rawSrcMobile = categoryBanner?.srcMobile || fallbackBanner?.srcMobile
-  const alt = categoryName || fallbackBanner?.alt || 'Anbar Home'
+  const rawSrc = categoryBanner?.src || matchedBanner?.src
+  const rawSrcMobile = categoryBanner?.srcMobile || matchedBanner?.srcMobile
+  const alt = categoryName || matchedBanner?.alt || 'Anbar Home'
 
-  if (!rawSrc) return null
+  // Si la categoría tiene imagen de banner propia, mostrarla
+  if (rawSrc) {
+    const src = optimizeImageUrl(rawSrc, 1440, 75)
+    const srcMobile = rawSrcMobile ? optimizeImageUrl(rawSrcMobile, 800, 75) : null
 
-  const src = optimizeImageUrl(rawSrc, 1440, 75)
-  const srcMobile = rawSrcMobile ? optimizeImageUrl(rawSrcMobile, 800, 75) : null
-
-  return (
-    <section className="w-full">
-      {/* Desktop Image: 100% full width and 100% natural uncropped height */}
-      <Image
-        src={src}
-        alt={alt}
-        width={1440}
-        height={810}
-        className={`w-full h-auto block object-contain ${srcMobile ? 'hidden md:block' : ''}`}
-        priority
-        quality={75}
-        sizes="100vw"
-      />
-      {/* Mobile Image: 100% full width and 100% natural uncropped height */}
-      {srcMobile && (
+    return (
+      <section className="w-full">
+        <h1 className="sr-only">{categoryName} - Anbar Home</h1>
+        {/* Desktop Image: 100% full width and 100% natural uncropped height */}
         <Image
-          src={srcMobile}
+          src={src}
           alt={alt}
-          width={800}
-          height={1400}
-          className="w-full h-auto block object-contain md:hidden"
+          width={1440}
+          height={810}
+          className={`w-full h-auto block object-contain ${srcMobile ? 'hidden md:block' : ''}`}
           priority
           quality={75}
           sizes="100vw"
         />
-      )}
+        {/* Mobile Image: 100% full width and 100% natural uncropped height */}
+        {srcMobile && (
+          <Image
+            src={srcMobile}
+            alt={alt}
+            width={800}
+            height={1400}
+            className="w-full h-auto block object-contain md:hidden"
+            priority
+            quality={75}
+            sizes="100vw"
+          />
+        )}
+      </section>
+    )
+  }
+
+  // Si NO tiene imagen de fondo: mostrar banner elegante en tono Borgoña con tipografía del sitio
+  return (
+    <section className="relative w-full overflow-hidden bg-gradient-to-b from-[#4b0d10] via-[#591014] to-[#400b0e] py-14 sm:py-16 md:py-20 lg:py-24 text-center border-b border-[#5d1216] shadow-md">
+      <div className="relative mx-auto max-w-4xl px-6">
+        <span className="inline-block text-[11px] sm:text-xs md:text-sm font-medium tracking-[0.25em] text-[#E3C58B] uppercase">
+          Colección Exclusiva
+        </span>
+        <h1 className="mt-3 font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal tracking-wide text-[#F5E2BE]">
+          {categoryName}
+        </h1>
+        <div className="mt-5 mx-auto h-[1px] w-24 bg-gradient-to-r from-transparent via-[#E3C58B]/70 to-transparent" />
+      </div>
     </section>
   )
 }
