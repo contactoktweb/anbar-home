@@ -65,7 +65,7 @@ export function CategoryHeroBanner({
         <span className="inline-block text-[11px] sm:text-xs md:text-sm font-medium tracking-[0.25em] text-[#E3C58B] uppercase">
           Colección Exclusiva
         </span>
-        <h1 className="mt-3 font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal tracking-wide text-[#F5E2BE]">
+        <h1 className="mt-3 font-[family-name:var(--font-poppins)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal tracking-wide text-[#F5E2BE]">
           {categoryName}
         </h1>
         <div className="mt-5 mx-auto h-[1px] w-24 bg-gradient-to-r from-transparent via-[#E3C58B]/70 to-transparent" />

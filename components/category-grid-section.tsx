@@ -38,7 +38,7 @@ export function CategoryGridSection({ data }: CategoryGridSectionProps) {
             <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-camel font-semibold">
               Colecciones
             </span>
-            <h2 className="mt-1 sm:mt-2 font-serif text-2xl sm:text-3xl md:text-4xl text-neutral-900 font-normal tracking-tight">
+            <h2 className="mt-1 sm:mt-2 font-[family-name:var(--font-poppins)] text-2xl sm:text-3xl md:text-4xl text-neutral-900 font-normal tracking-tight">
               {title}
             </h2>
             {subtitle && (
