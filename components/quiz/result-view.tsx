@@ -1,23 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
-import { 
-  Sparkles, 
-  RotateCcw, 
-  Download, 
-  Trash2, 
-  ArrowRight, 
-  CheckCircle2, 
-  ExternalLink,
-  MessageCircle
-} from 'lucide-react';
-import { 
-  ProfileDefinition, 
-  QuizAnswers, 
-  CATEGORY_LINKS, 
-  getOptionLabel 
-} from '@/lib/quiz-data';
+import { CheckCircle2, RotateCcw, Heart, Mail, ArrowRight } from 'lucide-react';
+import { ProfileDefinition, QuizAnswers } from '@/lib/quiz-data';
 
 interface ResultViewProps {
   profileKey: string;
@@ -33,386 +18,127 @@ interface ResultViewProps {
 }
 
 export function ResultView({
-  profileKey,
-  profile,
-  answers,
-  motivations,
-  spaces,
-  initialContact,
   onRestart,
-  onSaveContact,
-  onDownloadJSON,
-  onClearData
 }: ResultViewProps) {
-  const [name, setName] = useState(initialContact?.name || '');
-  const [email, setEmail] = useState(initialContact?.email || '');
-  const [whatsapp, setWhatsapp] = useState(initialContact?.whatsapp || '');
-  const [city, setCity] = useState(initialContact?.city || answers?.q20_demographics?.city || '');
-  const [dataConsent, setDataConsent] = useState(initialContact?.dataConsent || false);
-  const [marketingConsent, setMarketingConsent] = useState(initialContact?.marketingConsent || false);
-  const [contactSubmitted, setContactSubmitted] = useState(false);
-  const [contactError, setContactError] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState('');
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes('@')) {
-      setContactError('Por favor ingresa un correo electrónico válido.');
+      setEmailError('Por favor ingresa un correo válido.');
       return;
     }
-    if (!dataConsent) {
-      setContactError('Debes autorizar el tratamiento de datos para registrar tu perfil.');
-      return;
-    }
-    setContactError('');
-    onSaveContact({
-      name: name.trim(),
-      email: email.trim(),
-      whatsapp: whatsapp.trim(),
-      city: city.trim(),
-      dataConsent,
-      marketingConsent
-    });
-    setContactSubmitted(true);
+    // El contacto ya se guarda en Sanity automáticamente desde quiz-container
+    setEmailSent(true);
+    setEmailError('');
   };
-
-  const scrollToRecommendations = () => {
-    const el = document.getElementById('recommendationsGrid');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const whatsappConsultMessage = encodeURIComponent(
-    `¡Hola Anbar Home! Realicé el Quiz de Estilo y mi perfil resultó ser "${profile.name}". Me gustaría recibir asesoría personalizada para transformar mis espacios.`
-  );
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16 animate-fade-in">
-      {/* Hero Result Banner */}
-      <div className="text-center bg-white border border-neutral-200/80 rounded-3xl p-8 sm:p-12 shadow-xs mb-10 relative overflow-hidden">
-        {/* Subtle decorative background glow */}
-        <div className="absolute -top-24 -right-24 w-60 h-60 bg-camel/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-60 h-60 bg-camel/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 animate-fade-in text-center">
 
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <Sparkles className="w-4 h-4 text-camel-dark" />
-          <span className="text-[11px] uppercase tracking-[0.25em] text-camel-dark font-medium">
-            Tu Recomendación de Estilo
-          </span>
-          <Sparkles className="w-4 h-4 text-camel-dark" />
-        </div>
-
-        <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-neutral-900 font-normal leading-tight tracking-tight mb-5">
-          {profile.name}
-        </h2>
-
-        <p className="text-neutral-600 font-light text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-6">
-          {profile.description}
-        </p>
-
-        <p className="text-xs text-neutral-400 font-light max-w-md mx-auto mb-8">
-          Este resultado es una recomendación de diseño basada en tus preferencias decorativas; no constituye un diagnóstico científico.
-        </p>
-
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={scrollToRecommendations}
-            className="px-6 py-3.5 bg-camel-dark hover:bg-neutral-950 text-white text-xs sm:text-sm uppercase tracking-wider font-medium rounded-xl shadow-xs transition-all duration-300"
-          >
-            Explorar recomendaciones
-          </button>
-          <button
-            type="button"
-            onClick={onRestart}
-            className="inline-flex items-center gap-2 px-5 py-3.5 border border-neutral-300 hover:border-neutral-900 text-neutral-700 text-xs sm:text-sm font-medium rounded-xl transition-colors bg-white"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Repetir el quiz</span>
-          </button>
-        </div>
+      {/* Ícono de éxito */}
+      <div className="w-20 h-20 mx-auto mb-8 rounded-full bg-camel/10 flex items-center justify-center">
+        <CheckCircle2 className="w-10 h-10 text-camel-dark" />
       </div>
 
-      {/* Recommendations Grid */}
-      <div id="recommendationsGrid" className="scroll-mt-24 space-y-8 mb-12">
-        <div className="text-center mb-6">
-          <h3 className="font-serif text-2xl sm:text-3xl text-neutral-900 font-normal">
-            Curaduría personalizada para tu perfil
-          </h3>
-          <p className="text-xs sm:text-sm text-neutral-500 font-light mt-1">
-            Basado en tus elecciones de espacios, sensaciones y elementos favoritos.
+      {/* Eyebrow */}
+      <div className="flex items-center justify-center gap-2 mb-5">
+        <span className="h-px w-8 bg-camel/40" />
+        <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-camel-dark font-medium">
+          Encuesta completada
+        </span>
+        <span className="h-px w-8 bg-camel/40" />
+      </div>
+
+      {/* Título */}
+      <h1 className="text-3xl sm:text-4xl font-semibold text-neutral-900 mb-5 leading-tight tracking-tight">
+        ¡Muchas gracias por tu participación!
+      </h1>
+
+      {/* Mensaje principal */}
+      <div className="bg-white border border-neutral-200/70 rounded-2xl p-6 sm:p-8 mb-8 shadow-sm text-left space-y-4">
+        <p className="text-sm sm:text-base text-neutral-700 leading-relaxed">
+          Tu tiempo y opinión son muy valiosos para nosotros. Las respuestas que has compartido contribuirán directamente a la investigación académica sobre el comportamiento de compra de productos decorativos en Colombia.
+        </p>
+        <p className="text-sm sm:text-base text-neutral-700 leading-relaxed">
+          Los resultados de este estudio forman parte de un <strong className="text-neutral-900">Trabajo Final de Máster</strong> del programa de Dirección de Marketing y Ventas de la Universidad Internacional de Valencia (VIU), y serán tratados con absoluta <strong className="text-neutral-900">confidencialidad y anonimato</strong>.
+        </p>
+        <div className="flex items-center gap-2 pt-2 text-camel-dark">
+          <Heart className="w-4 h-4 shrink-0" />
+          <p className="text-xs font-medium">
+            Tu colaboración hace posible esta investigación.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Motivaciones */}
-          <article className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-xs">
-            <h4 className="font-serif text-lg text-neutral-900 mb-3 font-normal">
-              Principales motivaciones
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {motivations.map((item, idx) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center px-3 py-1.5 rounded-full bg-camel/10 text-camel-dark text-xs font-medium"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </article>
-
-          {/* Espacios prioritarios */}
-          <article className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-xs">
-            <h4 className="font-serif text-lg text-neutral-900 mb-3 font-normal">
-              Espacios para transformar
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {spaces.map((item, idx) => (
-                <span
-                  key={idx}
-                  className="inline-flex items-center px-3 py-1.5 rounded-full bg-neutral-100 text-neutral-800 text-xs font-medium"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </article>
-
-          {/* Comportamiento */}
-          <article className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-xs">
-            <h4 className="font-serif text-lg text-neutral-900 mb-3 font-normal">
-              Estilo y visión de compra
-            </h4>
-            <p className="text-xs sm:text-sm text-neutral-600 font-light leading-relaxed">
-              {profile.behavior}
-            </p>
-          </article>
-
-          {/* Categorías recomendadas con enlaces directos a la tienda */}
-          <article className="bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-xs">
-            <h4 className="font-serif text-lg text-neutral-900 mb-3 font-normal">
-              Categorías sugeridas en Anbar
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {profile.categories.map((cat, idx) => {
-                const link = CATEGORY_LINKS[cat] || '/category/todos-los-productos';
-                return (
-                  <Link
-                    key={idx}
-                    href={link}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-camel-dark hover:bg-camel/5 text-neutral-800 hover:text-camel-dark text-xs font-medium transition-all group"
-                  >
-                    <span>{cat}</span>
-                    <ExternalLink className="w-3 h-3 text-neutral-400 group-hover:text-camel-dark transition-colors" />
-                  </Link>
-                );
-              })}
-            </div>
-          </article>
-
-          {/* Experiencia Anbar Sugerida (Full Width) */}
-          <article className="md:col-span-2 bg-camel/5 border border-camel/30 rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <div className="flex-1">
-              <span className="text-[11px] uppercase tracking-wider text-camel-dark font-medium block mb-1">
-                Acompañamiento Exclusivo
-              </span>
-              <h4 className="font-serif text-xl text-neutral-900 mb-2 font-normal">
-                Tu experiencia Anbar sugerida
-              </h4>
-              <p className="text-xs sm:text-sm text-neutral-600 font-light leading-relaxed max-w-xl">
-                {profile.advisory}
-              </p>
-            </div>
-            <a
-              href={`https://wa.me/573176587000?text=${whatsappConsultMessage}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3.5 bg-neutral-900 hover:bg-camel-dark text-white text-xs font-medium uppercase tracking-wider rounded-xl shadow-xs transition-colors shrink-0"
-            >
-              <MessageCircle className="w-4 h-4 text-emerald-400" />
-              <span>Consultar por WhatsApp</span>
-            </a>
-          </article>
-        </div>
       </div>
 
-      {/* Summary of Answers */}
-      <section className="bg-white border border-neutral-200/80 rounded-2xl p-6 sm:p-8 shadow-xs mb-10">
-        <h3 className="font-serif text-xl sm:text-2xl text-neutral-900 font-normal mb-1">
-          Una mirada a tus respuestas
-        </h3>
-        <p className="text-xs text-neutral-500 font-light mb-6">
-          Algunos de los aspectos que orientaron tu perfil decorativo.
-        </p>
-
-        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm divide-y sm:divide-y-0 divide-neutral-100">
-          <div className="py-2.5 sm:p-3 rounded-xl sm:bg-neutral-50/50">
-            <dt className="text-neutral-400 font-light">Estilo seleccionado</dt>
-            <dd className="text-neutral-800 font-medium mt-0.5">
-              {getOptionLabel('q4_style', answers.q4_style) || 'No especificado'}
-            </dd>
-          </div>
-          <div className="py-2.5 sm:p-3 rounded-xl sm:bg-neutral-50/50">
-            <dt className="text-neutral-400 font-light">Pieza de mayor interés</dt>
-            <dd className="text-neutral-800 font-medium mt-0.5">
-              {getOptionLabel('q6_category', answers.q6_category) || 'No especificado'}
-            </dd>
-          </div>
-          <div className="py-2.5 sm:p-3 rounded-xl sm:bg-neutral-50/50">
-            <dt className="text-neutral-400 font-light">Momento proyectado de cambio</dt>
-            <dd className="text-neutral-800 font-medium mt-0.5">
-              {getOptionLabel('q3_timing', answers.q3_timing) || 'No especificado'}
-            </dd>
-          </div>
-          <div className="py-2.5 sm:p-3 rounded-xl sm:bg-neutral-50/50">
-            <dt className="text-neutral-400 font-light">Presupuesto habitual</dt>
-            <dd className="text-neutral-800 font-medium mt-0.5">
-              {getOptionLabel('q9_budget', answers.q9_budget) || 'No especificado'}
-            </dd>
-          </div>
-          <div className="py-2.5 sm:p-3 rounded-xl sm:bg-neutral-50/50">
-            <dt className="text-neutral-400 font-light">Canal de compra preferido</dt>
-            <dd className="text-neutral-800 font-medium mt-0.5">
-              {getOptionLabel('q13_purchase_channel', answers.q13_purchase_channel) || 'No especificado'}
-            </dd>
-          </div>
-          <div className="py-2.5 sm:p-3 rounded-xl sm:bg-neutral-50/50">
-            <dt className="text-neutral-400 font-light">Relación previa con Anbar Home</dt>
-            <dd className="text-neutral-800 font-medium mt-0.5">
-              {getOptionLabel('q16_relationship', answers.q16_relationship) || 'No especificado'}
-            </dd>
-          </div>
-        </dl>
-      </section>
-
-      {/* Optional Lead Capture Form */}
-      <section className="bg-white border border-neutral-200/80 rounded-2xl p-6 sm:p-8 shadow-xs mb-10">
-        <h3 className="font-serif text-xl sm:text-2xl text-neutral-900 font-normal mb-1">
-          Recibe tu perfil completo y una selección personalizada
-        </h3>
-        <p className="text-xs text-neutral-500 font-light mb-6">
-          Tu resultado básico ya está disponible arriba. Compartir tus datos es totalmente opcional para recibir asesoría directa.
-        </p>
-
-        {contactSubmitted ? (
-          <div className="p-6 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3 text-emerald-800 text-sm">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-            <span>¡Gracias! Tus datos han sido guardados exitosamente. Nos pondremos en contacto contigo con tu curaduría.</span>
-          </div>
-        ) : (
-          <form onSubmit={handleContactSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-neutral-600 font-medium mb-1.5">
-                  Nombre completo
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Tu nombre"
-                  className="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-camel-dark focus:ring-1 focus:ring-camel-dark"
-                />
-              </div>
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-neutral-600 font-medium mb-1.5">
-                  Correo electrónico *
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tucorreo@ejemplo.com"
-                  className="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-camel-dark focus:ring-1 focus:ring-camel-dark"
-                />
-              </div>
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-neutral-600 font-medium mb-1.5">
-                  WhatsApp <span className="text-neutral-400 font-light lowercase">(opcional)</span>
-                </label>
-                <input
-                  type="tel"
-                  value={whatsapp}
-                  onChange={(e) => setWhatsapp(e.target.value)}
-                  placeholder="+57 300 000 0000"
-                  className="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-camel-dark focus:ring-1 focus:ring-camel-dark"
-                />
-              </div>
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-neutral-600 font-medium mb-1.5">
-                  Ciudad
-                </label>
-                <input
-                  type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  placeholder="Ej. Bogotá"
-                  className="w-full px-4 py-3 rounded-xl border border-neutral-200 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-camel-dark focus:ring-1 focus:ring-camel-dark"
-                />
-              </div>
+      {/* Formulario opcional de correo */}
+      {!emailSent ? (
+        <div className="bg-neutral-50 border border-neutral-200/70 rounded-2xl p-6 sm:p-8 mb-8 text-left">
+          <div className="flex items-start gap-3 mb-4">
+            <div className="w-8 h-8 rounded-full bg-camel/10 flex items-center justify-center shrink-0 mt-0.5 text-camel-dark">
+              <Mail className="w-4 h-4" />
             </div>
-
-            <div className="space-y-2 pt-2">
-              <label className="flex items-start gap-2.5 cursor-pointer text-xs text-neutral-700">
-                <input
-                  type="checkbox"
-                  checked={dataConsent}
-                  onChange={(e) => setDataConsent(e.target.checked)}
-                  className="w-4 h-4 rounded text-camel-dark focus:ring-camel-dark mt-0.5 cursor-pointer"
-                />
-                <span>Autorizo el tratamiento de mis datos para recibir el resultado de esta experiencia decorativa.</span>
-              </label>
-              <label className="flex items-start gap-2.5 cursor-pointer text-xs text-neutral-700">
-                <input
-                  type="checkbox"
-                  checked={marketingConsent}
-                  onChange={(e) => setMarketingConsent(e.target.checked)}
-                  className="w-4 h-4 rounded text-camel-dark focus:ring-camel-dark mt-0.5 cursor-pointer"
-                />
-                <span>Deseo recibir novedades, inspiración y comunicaciones comerciales de Anbar Home.</span>
-              </label>
+            <div>
+              <h2 className="text-sm font-semibold text-neutral-900 mb-0.5">
+                ¿Deseas recibir los resultados del estudio?
+              </h2>
+              <p className="text-xs text-neutral-600 leading-relaxed">
+                Opcional. Déjanos tu correo y te enviaremos un resumen de los principales hallazgos cuando estén disponibles.
+              </p>
             </div>
-
-            {contactError && (
-              <p className="text-xs text-red-600 mt-2">{contactError}</p>
-            )}
-
+          </div>
+          <form onSubmit={handleEmailSubmit} className="flex gap-2 flex-col sm:flex-row">
+            <input
+              type="email"
+              placeholder="tucorreo@ejemplo.com"
+              value={email}
+              onChange={(e) => { setEmail(e.target.value); setEmailError(''); }}
+              className="flex-1 px-4 py-2.5 rounded-lg bg-white border border-neutral-300/80 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-1.5 focus:ring-camel focus:border-camel transition-all"
+            />
             <button
               type="submit"
-              className="mt-4 px-6 py-3.5 bg-camel-dark hover:bg-neutral-950 text-white text-xs uppercase tracking-wider font-medium rounded-xl shadow-xs transition-colors"
+              className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-camel-dark hover:bg-neutral-900 text-white text-xs font-medium uppercase tracking-wider rounded-lg transition-colors duration-200 shrink-0"
             >
-              Guardar mis datos opcionales
+              Enviar
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </form>
-        )}
-      </section>
+          {emailError && (
+            <p className="mt-2 text-xs text-red-600">{emailError}</p>
+          )}
+          <p className="mt-2 text-[10.5px] text-neutral-400 leading-relaxed">
+            Tu correo solo se usará para enviarte los resultados del estudio y no con fines comerciales.
+          </p>
+        </div>
+      ) : (
+        <div className="bg-camel/5 border border-camel/25 rounded-2xl p-6 mb-8 flex items-center gap-3">
+          <CheckCircle2 className="w-5 h-5 text-camel-dark shrink-0" />
+          <p className="text-sm text-neutral-700">
+            ¡Gracias! Te notificaremos a <strong>{email}</strong> cuando los resultados estén disponibles.
+          </p>
+        </div>
+      )}
 
-      {/* Data Management Actions */}
-      <section className="p-6 bg-neutral-100/60 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
-        <div>
-          <p className="font-medium text-neutral-700">Privacidad y tus datos</p>
-          <p className="text-neutral-500">Puedes conservar una copia de tus respuestas o borrar el progreso en este navegador.</p>
-        </div>
-        <div className="flex items-center gap-3 shrink-0">
-          <button
-            type="button"
-            onClick={onDownloadJSON}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-neutral-300 hover:border-neutral-900 text-neutral-700 bg-white transition-colors"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Descargar JSON</span>
-          </button>
-          <button
-            type="button"
-            onClick={onClearData}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Borrar datos</span>
-          </button>
-        </div>
-      </section>
+      {/* Acciones */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a
+          href="/"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-camel-dark hover:bg-neutral-950 text-white font-medium text-xs uppercase tracking-[0.18em] rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+        >
+          Ir a la tienda
+        </a>
+        <button
+          onClick={onRestart}
+          type="button"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-neutral-300 hover:border-neutral-400 text-neutral-700 hover:text-neutral-900 font-medium text-xs uppercase tracking-[0.18em] rounded-xl transition-all duration-300"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          Responder de nuevo
+        </button>
+      </div>
+
     </div>
   );
 }

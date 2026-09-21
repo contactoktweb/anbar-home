@@ -67,17 +67,13 @@ export function QuizContainer() {
     }
   }, [searchParams]);
 
-  // Compute active question list based on respondent profile type
+  // Siempre usa preguntas principales (sin ruta B2B en la encuesta académica)
   const activeQuestions = useMemo<Question[]>(() => {
-    const isProfessional = answers.q19_profile_type && professionalTypes.has(answers.q19_profile_type);
-    if (isProfessional) {
-      return [...mainQuestions, ...b2bQuestions];
-    }
     return mainQuestions;
-  }, [answers.q19_profile_type]);
+  }, []);
 
   const currentQuestion = activeQuestions[currentIndex] || activeQuestions[0];
-  const currentStage = stages[currentQuestion?.stage] || stages.context;
+  const currentStage = stages[currentQuestion?.stage] || stages.conocimiento;
 
   // Save draft helper
   const saveDraft = useCallback((updatedAnswers: QuizAnswers, index: number, startTime: string) => {
@@ -163,7 +159,7 @@ export function QuizContainer() {
       }
     } else if (currentQuestion.type === 'demographics') {
       if (!ans || !ans.city || !ans.age) {
-        setErrorMessage('Por favor completa la ciudad y el rango de edad para continuar.');
+        setErrorMessage('Por favor completa los campos requeridos para continuar.');
         return false;
       }
     }
@@ -232,7 +228,7 @@ export function QuizContainer() {
       appVersion: APP_VERSION,
       completedAt: new Date().toISOString(),
       startedAt: startedAt || new Date().toISOString(),
-      route: professionalTypes.has(answers.q19_profile_type) ? 'B2B' : 'B2C',
+      route: 'B2C',
       profileKey: result.key,
       profileName: profileDefinitions[result.key]?.name || 'Perfil Personalizado',
       profileScores: result.scores,
@@ -320,15 +316,15 @@ export function QuizContainer() {
       return;
     }
 
-    const headers = ['ID', 'Fecha', 'Ruta', 'Perfil', 'Ciudad', 'Estilo', 'Email'];
+    const headers = ['ID', 'Fecha', 'Ruta', 'Perfil', 'Ciudad', 'Edad', 'Género'];
     const rows = records.map((rec) => [
       rec.id,
       rec.completedAt,
       rec.route,
       `"${rec.profileName}"`,
-      `"${rec.answers?.q20_demographics?.city || ''}"`,
-      `"${rec.answers?.q4_style || ''}"`,
-      `"${rec.contact?.email || ''}"`
+      `"${rec.answers?.q22_ciudad || ''}"`,
+      `"${rec.answers?.q23_edad || ''}"`,
+      `"${rec.answers?.q24_genero || ''}"`
     ]);
 
     const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
