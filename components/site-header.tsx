@@ -110,10 +110,11 @@ export function SiteHeader() {
       >
         {/* Fila Superior: Logo Centrado y Acciones (Buscar, Favoritos, Carrito) */}
         <div className="relative mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5 md:py-4 md:px-10">
-          {/* Logo Centrado */}
+          {/* Logo: izquierda en móvil — centrado en desktop */}
           <Link
             href="/"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center flex-shrink-0 transition-opacity hover:opacity-90"
+            className="flex items-center justify-center flex-shrink-0 transition-opacity hover:opacity-90
+              md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
             aria-label="Anbar Home"
           >
             <Image
