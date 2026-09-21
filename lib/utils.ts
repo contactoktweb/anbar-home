@@ -6,8 +6,14 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Optimizes Sanity CDN image URLs by requesting reduced resolutions,
- * WebP/AVIF auto-formatting, and compression quality to minimize bandwidth and speed up loading.
+ * Optimiza URLs de imágenes del CDN de Sanity aplicando transformaciones en la URL:
+ * - fm=webp  → Fuerza formato WebP (máxima compresión sin pérdida visual perceptible)
+ * - w        → Limita el ancho máximo al tamaño renderizado (evita descargar originales enormes)
+ * - q        → Calidad de compresión (75–85 es el rango ideal para web)
+ * - fit=max  → No amplía imágenes pequeñas (evita upscaling que aumenta tamaño sin beneficio)
+ *
+ * Si `next/image` está activo (unoptimized: false), esta función se vuelve una capa
+ * de seguridad extra para URLs pasadas como prop o usadas fuera de componentes <Image>.
  */
 export function optimizeImageUrl(
   url?: string | null,
@@ -15,19 +21,28 @@ export function optimizeImageUrl(
   quality: number = 75
 ): string {
   if (!url) return ''
-  
-  // Apply Sanity CDN transformation parameters
+
   if (url.includes('cdn.sanity.io')) {
-    // If URL already has transformation params, return as is
-    if (url.includes('w=') && url.includes('auto=format')) {
-      return url
-    }
+    // Si ya tiene parámetros de transformación de Sanity, no duplicar
+    if (url.includes('fm=webp') && url.includes('w=')) return url
+
     const cleanUrl = url.split('?')[0]
-    return `${cleanUrl}?w=${width}&auto=format&q=${quality}`
+    return `${cleanUrl}?w=${width}&fm=webp&q=${quality}&fit=max`
   }
 
   return url
 }
+
+/**
+ * Genera una URL de imagen Sanity ultra-reducida para usar como blurDataURL en <Image>.
+ * 20px de ancho es suficiente para el efecto de placeholder borroso.
+ */
+export function sanityBlurUrl(url?: string | null): string {
+  if (!url || !url.includes('cdn.sanity.io')) return ''
+  const cleanUrl = url.split('?')[0]
+  return `${cleanUrl}?w=20&fm=webp&q=20&fit=max&blur=50`
+}
+
 
 /**
  * Detecta si un producto pertenece a las colecciones o temática navideña

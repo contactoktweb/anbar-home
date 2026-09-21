@@ -7,6 +7,8 @@ import { DiscountModal } from '@/components/discount-modal'
 import { ProductQuickView } from '@/components/quick-view/product-quick-view'
 import { KlaviyoScript } from '@/components/klaviyo-script'
 import { KlaviyoRouteTracker } from '@/components/klaviyo-route-tracker'
+import { client } from '@/sanity/lib/client'
+import { DISCOUNT_MODAL_QUERY } from '@/sanity/lib/queries'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -78,11 +80,13 @@ export const viewport: Viewport = {
   themeColor: '#ffffff',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const modalData = await client.fetch(DISCOUNT_MODAL_QUERY).catch(() => null)
+
   return (
     <html
       lang="es"
@@ -94,7 +98,11 @@ export default function RootLayout({
           <KlaviyoScript />
           <KlaviyoRouteTracker />
           {children}
-          <DiscountModal />
+          <DiscountModal
+            enabled={modalData?.discountModalEnabled ?? true}
+            imageDesktopUrl={modalData?.discountModalImageDesktop ?? null}
+            imageMobileUrl={modalData?.discountModalImageMobile ?? null}
+          />
           <ProductQuickView />
           {process.env.NODE_ENV === 'production' && <PublicAnalytics />}
           <Script src="https://checkout.wompi.co/widget.js" strategy="beforeInteractive" />

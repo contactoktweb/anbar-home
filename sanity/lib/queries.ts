@@ -31,6 +31,14 @@ export const GLOBAL_SETTINGS_QUERY = groq`
   }
 `
 
+export const DISCOUNT_MODAL_QUERY = groq`
+  *[_type == "globalSettings"][0]{
+    discountModalEnabled,
+    "discountModalImageDesktop": discountModalImageDesktop.asset->url,
+    "discountModalImageMobile": discountModalImageMobile.asset->url,
+  }
+`
+
 export const HOME_PAGE_QUERY = groq`
   *[_type == "homePage"][0]{
     heroSubtitle,

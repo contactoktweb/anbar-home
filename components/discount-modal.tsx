@@ -4,15 +4,34 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { X, CheckCircle, ArrowRight, Loader2 } from 'lucide-react'
 import { identifyUser } from '@/lib/klaviyo/client'
+import { optimizeImageUrl } from '@/lib/utils'
 
-export function DiscountModal() {
+interface DiscountModalProps {
+  /** Si es false, el modal nunca se muestra (controlado desde Sanity). */
+  enabled?: boolean
+  /** URL de la imagen de fondo para escritorio (desde Sanity). Fallback a /banner/horizontal.png */
+  imageDesktopUrl?: string | null
+  /** URL de la imagen de fondo para móvil (desde Sanity). Fallback a /banner/vertical.png */
+  imageMobileUrl?: string | null
+}
+
+export function DiscountModal({
+  enabled = true,
+  imageDesktopUrl,
+  imageMobileUrl,
+}: DiscountModalProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
+  // Imágenes con optimización WebP desde Sanity CDN (fallback a archivos locales)
+  const desktopSrc = optimizeImageUrl(imageDesktopUrl, 1920, 82) || '/banner/horizontal.png'
+  const mobileSrc  = optimizeImageUrl(imageMobileUrl,  1080, 82) || '/banner/vertical.png'
+
   useEffect(() => {
+    if (!enabled) return
     // Verificar si ya fue visto en esta sesión / navegador
     const alreadySeen = localStorage.getItem('anbar_discount_modal_seen')
     if (!alreadySeen) {
@@ -21,7 +40,7 @@ export function DiscountModal() {
       }, 4500)
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, [enabled])
 
   const handleClose = () => {
     localStorage.setItem('anbar_discount_modal_seen', 'true')
@@ -83,23 +102,25 @@ export function DiscountModal() {
 
         {/* Imagen de Fondo (Horizontal para PC / Vertical para Móvil) */}
         <div className="relative w-full aspect-[1080/1350] md:aspect-[1915/821]">
-          {/* Versión PC */}
+          {/* Versión PC — imagen optimizada desde Sanity CDN */}
           <Image
-            src="/banner/horizontal.png"
+            src={desktopSrc}
             alt="10% OFF Primera Compra"
             fill
+            sizes="(max-width: 767px) 0px, (max-width: 1023px) 760px, 880px"
             className="object-cover object-center hidden md:block"
             priority
-            quality={90}
+            quality={82}
           />
-          {/* Versión Móvil */}
+          {/* Versión Móvil — imagen optimizada desde Sanity CDN */}
           <Image
-            src="/banner/vertical.png"
+            src={mobileSrc}
             alt="10% OFF Primera Compra"
             fill
+            sizes="(max-width: 767px) 100vw, 0px"
             className="object-cover object-center md:hidden"
             priority
-            quality={90}
+            quality={82}
           />
 
           {/* Formulario / Mensaje de Éxito posicionado estratégicamente bajo el texto */}
