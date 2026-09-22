@@ -83,7 +83,7 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
 
   return (
     <div
-      className="relative w-full overflow-hidden bg-neutral-950 group/carousel touch-pan-y md:max-h-[460px] lg:max-h-[500px] xl:max-h-[540px]"
+      className="relative w-full h-full overflow-hidden bg-neutral-950 group/carousel touch-pan-y"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -100,7 +100,7 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
 
         const renderVisualContent = () => (
           <>
-            {/* Desktop Video o Imagen */}
+            {/* Desktop Video o Imagen — cubre todo el contenedor */}
             {img.videoDesktop ? (
               <video
                 src={img.videoDesktop}
@@ -110,22 +110,19 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
                 loop
                 playsInline
                 preload={index === 0 ? "auto" : "metadata"}
-                onLoadedMetadata={(e) => handleDesktopMetadata(index, e)}
-                style={{ aspectRatio: desktopAspect }}
-                className={`w-full h-auto md:max-h-[460px] lg:max-h-[500px] xl:max-h-[540px] block object-cover object-center ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
+                className={`absolute inset-0 w-full h-full object-cover object-center ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : 'block'}`}
               />
             ) : optimizedDesktopSrc ? (
               <img
                 src={optimizedDesktopSrc}
                 alt={img.alt}
-                style={{ aspectRatio: desktopAspect }}
-                className={`w-full h-auto md:max-h-[460px] lg:max-h-[500px] xl:max-h-[540px] block object-cover object-center ${img.videoMobile || optimizedMobileSrc ? 'hidden md:block' : ''}`}
+                className={`absolute inset-0 w-full h-full object-cover object-center ${(img.videoMobile || optimizedMobileSrc) && optimizedMobileSrc !== optimizedDesktopSrc ? 'hidden md:block' : 'block'}`}
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
               />
             ) : null}
 
-            {/* Mobile Video o Imagen */}
+            {/* Mobile Video o Imagen — cubre todo el contenedor */}
             {img.videoMobile ? (
               <video
                 src={img.videoMobile}
@@ -135,16 +132,13 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
                 loop
                 playsInline
                 preload={index === 0 ? "auto" : "metadata"}
-                onLoadedMetadata={(e) => handleMobileMetadata(index, e)}
-                style={{ aspectRatio: mobileAspect }}
-                className="w-full h-auto block object-cover md:hidden"
+                className="absolute inset-0 w-full h-full object-cover object-center block md:hidden"
               />
-            ) : optimizedMobileSrc ? (
+            ) : (optimizedMobileSrc && optimizedMobileSrc !== optimizedDesktopSrc) ? (
               <img
                 src={optimizedMobileSrc}
                 alt={img.alt}
-                style={{ aspectRatio: mobileAspect }}
-                className="w-full h-auto block object-cover md:hidden"
+                className="absolute inset-0 w-full h-full object-cover object-center block md:hidden"
                 loading={index === 0 ? "eager" : "lazy"}
                 fetchPriority={index === 0 ? "high" : "auto"}
               />
@@ -173,16 +167,16 @@ export function HeroCarousel({ images, showLabels = false }: HeroCarouselProps) 
         return (
           <div
             key={index}
-            className={`w-full md:max-h-[460px] lg:max-h-[500px] xl:max-h-[540px] transition-opacity duration-1000 ease-in-out ${
-              isActive ? 'relative opacity-100 z-10' : 'absolute inset-0 opacity-0 z-0 pointer-events-none'
+            className={`transition-opacity duration-1000 ease-in-out ${
+              isActive ? 'absolute inset-0 opacity-100 z-10' : 'absolute inset-0 opacity-0 z-0 pointer-events-none'
             }`}
           >
             {img.href ? (
-              <Link href={img.href} className="group relative block w-full">
+              <Link href={img.href} className="absolute inset-0 block w-full h-full">
                 {renderVisualContent()}
               </Link>
             ) : (
-              <div className="relative w-full">
+              <div className="absolute inset-0 w-full h-full">
                 {renderVisualContent()}
               </div>
             )}

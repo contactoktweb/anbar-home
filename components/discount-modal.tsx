@@ -176,7 +176,7 @@ export function DiscountModal({
             quality={82}
           />
           {/* Formulario superpuesto en desktop — posicionado sobre la mitad derecha */}
-          <div className="absolute inset-y-0 right-0 w-[38%] flex items-end pb-5 lg:pb-7 pr-2 lg:pr-4 z-20">
+          <div className="absolute inset-y-0 right-0 w-[38%] flex items-end pb-5 lg:pb-7 pr-8 lg:pr-12 z-20">
             <div className="w-full max-w-[340px] lg:max-w-[380px] mx-auto">
               {formContent}
             </div>
