@@ -89,33 +89,11 @@ export function QuestionView({
         </div>
       </div>
 
-      {/* Main Grid: Aside Stage Info + Question Box */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Stage Aside Banner */}
-        <aside className="lg:col-span-4 bg-white border border-neutral-200/80 rounded-2xl p-6 shadow-xs lg:sticky lg:top-24">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="w-8 h-8 rounded-full bg-camel/15 text-camel-dark font-serif font-bold text-sm flex items-center justify-center">
-              0{stage.number}
-            </span>
-            <span className="text-[11px] uppercase tracking-[0.2em] text-neutral-500 font-medium">
-              Etapa {stage.number}
-            </span>
-          </div>
-          <h3 className="font-serif text-xl font-normal text-neutral-900 mb-2">
-            {stage.title}
-          </h3>
-          <p className="text-xs text-neutral-600 font-light leading-relaxed mb-6">
-            {stage.description}
-          </p>
-          <div className="pt-4 border-t border-neutral-100">
-            <blockquote className="text-xs italic text-neutral-500 font-serif leading-relaxed">
-              &ldquo;{stage.quote}&rdquo;
-            </blockquote>
-          </div>
-        </aside>
+      {/* Main Grid: Question Box */}
+      <div className="grid grid-cols-1 gap-8 items-start">
 
         {/* Question Panel */}
-        <section className="lg:col-span-8 bg-white border border-neutral-200/80 rounded-2xl p-6 sm:p-8 shadow-xs">
+        <section className="bg-white border border-neutral-200/80 rounded-2xl p-6 sm:p-8 shadow-xs">
           {/* Question Kicker & Title */}
           <p className="text-[11px] uppercase tracking-[0.2em] text-camel-dark font-medium mb-2">
             Pregunta {question.number}

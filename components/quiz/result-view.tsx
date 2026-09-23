@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { CheckCircle2, RotateCcw, Heart, Mail, ArrowRight } from 'lucide-react';
+import React from 'react';
+import { CheckCircle2, RotateCcw, Heart } from 'lucide-react';
 import { ProfileDefinition, QuizAnswers } from '@/lib/quiz-data';
 
 interface ResultViewProps {
@@ -20,20 +20,6 @@ interface ResultViewProps {
 export function ResultView({
   onRestart,
 }: ResultViewProps) {
-  const [email, setEmail] = useState('');
-  const [emailSent, setEmailSent] = useState(false);
-  const [emailError, setEmailError] = useState('');
-
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !email.includes('@')) {
-      setEmailError('Por favor ingresa un correo válido.');
-      return;
-    }
-    // El contacto ya se guarda en Sanity automáticamente desde quiz-container
-    setEmailSent(true);
-    setEmailError('');
-  };
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 animate-fade-in text-center">
@@ -73,53 +59,7 @@ export function ResultView({
         </div>
       </div>
 
-      {/* Formulario opcional de correo */}
-      {!emailSent ? (
-        <div className="bg-neutral-50 border border-neutral-200/70 rounded-2xl p-6 sm:p-8 mb-8 text-left">
-          <div className="flex items-start gap-3 mb-4">
-            <div className="w-8 h-8 rounded-full bg-camel/10 flex items-center justify-center shrink-0 mt-0.5 text-camel-dark">
-              <Mail className="w-4 h-4" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold text-neutral-900 mb-0.5">
-                ¿Deseas recibir los resultados del estudio?
-              </h2>
-              <p className="text-xs text-neutral-600 leading-relaxed">
-                Opcional. Déjanos tu correo y te enviaremos un resumen de los principales hallazgos cuando estén disponibles.
-              </p>
-            </div>
-          </div>
-          <form onSubmit={handleEmailSubmit} className="flex gap-2 flex-col sm:flex-row">
-            <input
-              type="email"
-              placeholder="tucorreo@ejemplo.com"
-              value={email}
-              onChange={(e) => { setEmail(e.target.value); setEmailError(''); }}
-              className="flex-1 px-4 py-2.5 rounded-lg bg-white border border-neutral-300/80 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-1.5 focus:ring-camel focus:border-camel transition-all"
-            />
-            <button
-              type="submit"
-              className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-camel-dark hover:bg-neutral-900 text-white text-xs font-medium uppercase tracking-wider rounded-lg transition-colors duration-200 shrink-0"
-            >
-              Enviar
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </form>
-          {emailError && (
-            <p className="mt-2 text-xs text-red-600">{emailError}</p>
-          )}
-          <p className="mt-2 text-[10.5px] text-neutral-400 leading-relaxed">
-            Tu correo solo se usará para enviarte los resultados del estudio y no con fines comerciales.
-          </p>
-        </div>
-      ) : (
-        <div className="bg-camel/5 border border-camel/25 rounded-2xl p-6 mb-8 flex items-center gap-3">
-          <CheckCircle2 className="w-5 h-5 text-camel-dark shrink-0" />
-          <p className="text-sm text-neutral-700">
-            ¡Gracias! Te notificaremos a <strong>{email}</strong> cuando los resultados estén disponibles.
-          </p>
-        </div>
-      )}
+
 
       {/* Acciones */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
