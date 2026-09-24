@@ -20,6 +20,7 @@ E-commerce y tienda online de Anbar Home, marca de decoración artesanal, estét
 - `components/hero-wow.tsx` & `components/hero-carousel.tsx`: Carrusel hero principal con videos responsivos HD (PC 1920x818 y Móvil), posters optimizados, gestos táctiles swipe y transiciones suaves.
 - `components/category-hero-banner.tsx`: Renderizado del banner subido en Sanity para cada categoría, con fallback elegante en fondo borgoña (`#4b0d10`) y tipografía del sitio cuando no tenga imagen propia.
 - `components/discount-modal.tsx`: Modal emergente de 10% OFF para primera compra con imágenes de fondo `/banner/horizontal.png` (PC 1915x821) y `/banner/vertical.png` (móvil 1080x1350), formulario de suscripción alineado y sincronización con Klaviyo.
-- `lib/utils.ts`: Utilidades del sistema, incluyendo `isChristmasProduct` para detección centralizada de productos de la temporada navideña.
+- `lib/utils.ts`: Utilidades del sistema, incluyendo `optimizeImageUrl` (transformación URL nativa en Sanity CDN con WebP/redimensionado) e `isChristmasProduct` para detección centralizada de productos de la temporada navideña.
+- `next.config.mjs`: Configuración con `images.unoptimized: true` para evitar límites y cobros de Vercel Image Optimization (402), sirviendo las imágenes directamente desde el CDN de Sanity.
 - `sanity/schemaTypes/product.ts`: Esquema de producto en Sanity con campos para stock, `isLastUnits`, `isBestSeller`, precios y categorías.
 

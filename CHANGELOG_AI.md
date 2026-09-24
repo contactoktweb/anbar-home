@@ -1,6 +1,16 @@
 # CHANGELOG AI
 
-## [2026-09-19] - Restauración de Videos en Hero, Banners Subidos por Categoría y Modal de Descuento 10% OFF
+## [2026-09-23] - Solución a Error 402 OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED (Vercel Image Optimization)
+
+### Requerimiento
+- Resolver el error en producción `402 OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED` que impedía la carga de imágenes debido al límite de optimización de imágenes alcanzado en Vercel.
+
+### Cambios Realizados
+1. **Configuración de Next.js (`next.config.mjs`):**
+   - Se activó `unoptimized: true` en la sección `images`. Esto desactiva el servicio de optimización de Vercel (`/_next/image`), permitiendo que el navegador cargue las imágenes directamente desde el CDN de origen sin consumir cuota mensual de Vercel ni bloquear la web.
+2. **Optimización Nativa en Sanity CDN (`lib/utils.ts`):**
+   - Se actualizó `optimizeImageUrl` utilizando la API nativa `URL` para inyectar y mantener dinámicamente los parámetros de Sanity (`w`, `fm=webp`, `q`, `fit=max`) preservando otros parámetros como recortes y hotspots (`rect=`), entregando imágenes ligeras en formato WebP de máxima calidad directamente desde el CDN de Sanity.
+
 
 ### Requerimiento
 1. En el hero de la homepage: restaurar los videos que estaban antes (Jarrones escultóricos, Esculturas y Acentos decorativos en formato horizontal y vertical).

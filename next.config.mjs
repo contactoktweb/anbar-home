@@ -5,6 +5,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
+    // Desactivar el proxy de optimización de Vercel para evitar el error 402 PAYMENT_REQUIRED
+    // Las imágenes se sirven directo desde Sanity CDN optimizadas con WebP en lib/utils.ts
+    unoptimized: true,
     // Sanity CDN + otras fuentes externas de imagen
     remotePatterns: [
       {

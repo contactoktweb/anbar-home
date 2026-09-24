@@ -23,11 +23,19 @@ export function optimizeImageUrl(
   if (!url) return ''
 
   if (url.includes('cdn.sanity.io')) {
-    // Si ya tiene parámetros de transformación de Sanity, no duplicar
-    if (url.includes('fm=webp') && url.includes('w=')) return url
-
-    const cleanUrl = url.split('?')[0]
-    return `${cleanUrl}?w=${width}&fm=webp&q=${quality}&fit=max`
+    try {
+      const parsed = new URL(url)
+      parsed.searchParams.set('w', width.toString())
+      parsed.searchParams.set('fm', 'webp')
+      parsed.searchParams.set('q', quality.toString())
+      if (!parsed.searchParams.has('fit')) {
+        parsed.searchParams.set('fit', 'max')
+      }
+      return parsed.toString()
+    } catch {
+      const cleanUrl = url.split('?')[0]
+      return `${cleanUrl}?w=${width}&fm=webp&q=${quality}&fit=max`
+    }
   }
 
   return url
