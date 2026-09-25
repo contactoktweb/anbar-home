@@ -1,5 +1,44 @@
 # CHANGELOG AI
 
+## [2026-09-24] - Publicación y Subida de Blogs Editoriales de Navidad a Sanity CMS
+
+### Requerimiento
+- Revisar la carpeta `public/NAVIDAD`, identificar qué blogs existían en el sitio y cuáles no estaban subidos.
+- Subir a la web (Sanity CMS) los nuevos blogs con fecha de hoy (`2026-09-24`), integrando todo su contenido (encabezados, textos completos, metadatos SEO, categorías, enlaces internos y todas sus imágenes en alta resolución).
+
+### Diagnóstico de Carpetas y Estado en Sanity
+- **Estado previo en Sanity:** 7 artículos activos (ninguno de la temática navideña).
+- **Contenido auditado en `public/NAVIDAD/`:** 5 carpetas con artículos editoriales completos:
+  1. `01-decoracion-de-navidad`: "Decoración de Navidad: guía para crear espacios equilibrados" (No estaba en Sanity).
+  2. `02-decoracion-arbol-de-navidad`: "Decoración de árbol de Navidad: guía de proporción y color" (No estaba en Sanity).
+  3. `03-navidad-espacios-pequenos`: "Decoración para Navidad en espacios pequeños: ideas prácticas" (No estaba en Sanity).
+  4. `04-como-decorar-mesa-navidena`: "Cómo decorar una mesa navideña elegante y funcional" (No estaba en Sanity).
+  5. `05-decoracion-navidena-espacios-profesionales`: "Decoración navideña para oficinas, hoteles, restaurantes y comercios" (No estaba en Sanity).
+
+### Cambios y Proceso de Subida Realizados
+1. **Script de Carga e Integración (`scripts/uploadNavidadBlogs.ts`):**
+   - Procesamiento de Frontmatter (`title`, `seo_title`, `meta_description`, `slug`).
+   - Carga de las 20 imágenes WebP (1 hero/portada + 3 internas por cada blog) al Asset Store de Sanity conservando sus dimensiones, alts y captions.
+   - Conversión de Markdown a PortableText estructurado: H2, H3, H4, listas ordenadas y con viñetas, enlaces contextuales internos hacia categorías de Anbar Home, y figuras con imagen (`_type: 'image'`) intercaladas en el cuerpo.
+   - Vinculación de autor institucional (`Anbar Home`) y categorías de temporada (`Navidad Premium`, `Arboles de Navidad`, `Villas navideñas`, `Navidad en la mesa`).
+   - Asignación de fecha de publicación de hoy (`2026-09-24`).
+2. **Validación:**
+   - Verificación de consulta GROQ vía Sanity Client con éxito.
+   - Ejecución exitosa de `next build` confirmando que todas las rutas estáticas y dinámicas compilan sin incidencias.
+
+## [2026-09-24] - Integración de Google Tag (gtag.js / Google Analytics 4)
+
+### Requerimiento
+- Integrar la etiqueta de Google Analytics 4 / Google tag (gtag.js) con ID `G-1J0PDF7CS5` en el sitio web.
+
+### Cambios Realizados
+1. **Componente Modular (`components/google-analytics.tsx`):**
+   - Se creó un componente modular que utiliza `next/script` con estrategia `afterInteractive` para cargar `gtag.js` y ejecutar la inicialización de `dataLayer` y configuración de medición de Google Analytics sin bloquear la renderización ni degradar las métricas de Core Web Vitals (LCP, CLS, INP).
+2. **Inclusión en Root Layout (`app/layout.tsx`):**
+   - Se importó y renderizó `<GoogleAnalytics />` globalmente dentro de `StoreProvider`, conviviendo de forma limpia y ordenada con Meta Pixel, Klaviyo y Microsoft Clarity.
+3. **Seguridad y Variables de Entorno (`.env.local` y `.env.example`):**
+   - Se configuró la variable de entorno `NEXT_PUBLIC_GA_MEASUREMENT_ID="G-1J0PDF7CS5"` siguiendo las directrices de seguridad y buenas prácticas de Next.js.
+
 ## [2026-09-23] - Solución a Error 402 OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED (Vercel Image Optimization)
 
 ### Requerimiento

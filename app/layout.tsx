@@ -1,4 +1,5 @@
 import { PublicAnalytics } from '@/components/public-analytics'
+import { GoogleAnalytics } from '@/components/google-analytics'
 import Script from 'next/script'
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Poppins } from 'next/font/google'
@@ -95,6 +96,7 @@ export default async function RootLayout({
     >
       <body className="font-sans antialiased overflow-x-hidden">
         <StoreProvider>
+          <GoogleAnalytics />
           <KlaviyoScript />
           <KlaviyoRouteTracker />
           {children}

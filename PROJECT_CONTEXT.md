@@ -8,9 +8,11 @@ E-commerce y tienda online de Anbar Home, marca de decoración artesanal, estét
 - **CMS:** Sanity Studio v5
 - **Estilos:** Tailwind CSS v4 + Tailwind Merge
 - **Tipografía:** Tipografías serif y sans elegantes
-- **Seguimiento:** Meta Pixel Ads, Klaviyo
+- **Seguimiento:** Meta Pixel Ads, Klaviyo, Google Analytics 4 (gtag.js), Microsoft Clarity, Vercel Analytics
 
 ## Arquitectura y Componentes Clave
+- `components/google-analytics.tsx`: Integración modular de Google tag (gtag.js) mediante `next/script` (`strategy="afterInteractive"`), configurado vía variable de entorno `NEXT_PUBLIC_GA_MEASUREMENT_ID`.
+- `scripts/uploadNavidadBlogs.ts`: Script de migración y subida automatizada de blogs editoriales de Navidad (`public/NAVIDAD/`) hacia Sanity CMS, procesando imágenes WebP hacia el CDN de Sanity, convirtiendo Markdown a PortableText con metadatos SEO y vinculando autores y categorías.
 - `app/product/[slug]/page.tsx`: Vista detallada de producto con ambientación de temporada navideña (insignias festivas, listón hero y llamado a la acción en borgoña).
 - `components/christmas-ribbon.tsx`: Listón diagonal artesanal 3D en terciopelo borgoña noble, moño volumétrico con caídas en V y broche de estrella navideña de 8 puntas con halo luminoso.
 - `components/product-card.tsx`: Tarjeta de producto para catálogos y carruseles con listón artesanal navideño, acentos borgoña, oro champán, badges festivos, swipe mobile y vista rápida.
