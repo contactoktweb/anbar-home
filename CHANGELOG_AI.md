@@ -1,5 +1,16 @@
 # CHANGELOG AI
 
+## [2026-09-24] - Eliminación de Encabezados Editoriales "Cierre y CTA" en Blogs
+
+### Requerimiento
+- Eliminar el encabezado `Cierre y CTA` presente al final de los artículos de Navidad, manteniendo el párrafo de cierre y llamada a la acción de forma natural.
+
+### Cambios Realizados
+1. **Limpieza en Sanity CMS:**
+   - Se ejecutó un parche en los 5 documentos de Navidad (`post-decoracion-de-navidad`, `post-decoracion-arbol-de-navidad`, `post-decoracion-navidad-espacios-pequenos`, `post-como-decorar-mesa-navidena`, `post-decoracion-navidena-oficinas-hoteles`) para remover el bloque de encabezado `Cierre y CTA` de `body`.
+2. **Archivos Markdown y Script (`public/NAVIDAD/` y `scripts/uploadNavidadBlogs.ts`):**
+   - Se removió la línea `## Cierre y CTA` de los 5 archivos `articulo-para-publicar.md` y se añadió una regla de exclusión en el script de carga.
+
 ## [2026-09-24] - Publicación y Subida de Blogs Editoriales de Navidad a Sanity CMS
 
 ### Requerimiento

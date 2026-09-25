@@ -114,7 +114,5 @@ Prueba la distribución antes de recibir a los invitados. Separa el punto focal 
 
 No es obligatorio. Repetir un color o acabado puede conectar los ambientes, pero la mesa también puede tener una paleta propia que dialogue con el comedor.
 
-## Cierre y CTA
-
 Una mesa navideña proporcionada se construye con pausas, no con acumulación. Define el ambiente, escoge un punto focal acorde con la forma de la mesa y conserva suficiente superficie para que la reunión fluya. Explora la colección de [Navidad en la Mesa de Anbar Home](https://anbarhome.co/category/navidad-en-la-mesa) para revisar piezas que puedas combinar de acuerdo con el tamaño, el uso y el estilo de tu espacio.
 <!-- FIN CUERPO -->

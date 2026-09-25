@@ -114,7 +114,5 @@ Escoge una escena o pieza principal y acompáñala con elementos de menor altura
 
 Comparte una paleta o un acabado, pero cambia la función. La sala puede concentrar altura y volumen, mientras el comedor prioriza una pieza baja y central que permita conversar y servir.
 
-## Cierre y CTA
-
 Una buena decoración de Navidad no depende de llenar todos los espacios. Depende de elegir relaciones claras entre escala, color, función y recorrido. Recorre la casa, decide qué quieres destacar y deja que cada ambiente tenga su propio ritmo. Para explorar escenas que puedan integrarse a repisas, consolas o vitrinas, consulta las [Villas navideñas de Anbar Home](https://anbarhome.co/category/villas-navidenas).
 <!-- FIN CUERPO -->

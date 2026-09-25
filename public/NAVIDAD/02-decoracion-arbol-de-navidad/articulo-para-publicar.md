@@ -120,7 +120,5 @@ Las luces van antes porque pueden distribuirse entre el interior y el exterior d
 
 Repite uno o dos tonos del árbol y contrasta con acabados distintos. La combinación final debe responder al espacio y no a una fórmula fija.
 
-## Cierre y CTA
-
 Un árbol equilibrado no depende de contar adornos. Depende de observar la escala, elegir una paleta coherente y construir profundidad con pausas visuales. Cuando la composición se revisa desde todos los ángulos, el árbol se integra al ambiente. Para comparar formatos antes de elegir, explora la [colección de Árboles de Navidad de Anbar Home](https://anbarhome.co/category/arboles-de-navidad).
 <!-- FIN CUERPO -->

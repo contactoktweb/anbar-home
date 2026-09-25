@@ -151,6 +151,9 @@ function processTextChunk(chunk: string) {
       blocks.push({ _key: key, _type: 'block', style: 'h3', markDefs, children })
     } else if (trimmed.startsWith('## ')) {
       const text = trimmed.slice(3).trim()
+      if (/cierre y cta/i.test(text)) {
+        continue // Skip editorial heading
+      }
       const key = Math.random().toString(36).substring(2, 11)
       const { markDefs, children } = parseInline(text, key)
       blocks.push({ _key: key, _type: 'block', style: 'h2', markDefs, children })

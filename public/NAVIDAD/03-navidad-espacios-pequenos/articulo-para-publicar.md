@@ -124,7 +124,5 @@ Traslada el foco a una recepción, repisa común o mueble auxiliar. Mantén libr
 
 Usa una paleta corta que dialogue con los tonos existentes. Repite un color de acento en dos puntos y deja que el fondo actúe como descanso visual.
 
-## Cierre y CTA
-
 La mejor decoración para Navidad en espacios pequeños no intenta ocultar las dimensiones del lugar. Las aprovecha. Un árbol de mesa, una repisa bien compuesta o una escena con aire alrededor puede crear una atmósfera de temporada sin alterar la forma en que se vive o se trabaja. Explora los [Árboles de Navidad de Anbar Home](https://anbarhome.co/category/arboles-de-navidad) y compara formatos según tus superficies y recorridos.
 <!-- FIN CUERPO -->

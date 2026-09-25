@@ -118,8 +118,6 @@ Prioriza acceso, recepción o muro lateral. Mantén despejadas las áreas de ser
 
 La auditoría revisada no confirmó un servicio de instalación, montaje o desmontaje en sitio. La existencia de asesoría personalizada o colaboración profesional no debe comunicarse como instalación. Confirma el alcance específico directamente con Anbar Home.
 
-## Cierre y CTA
-
 La decoración navideña para oficinas, hoteles, restaurantes y comercios se resuelve mejor cuando cada decisión parte del uso real. Mide, define una jerarquía, selecciona una paleta coherente y deja que la circulación determine la ubicación. Explora las colecciones navideñas de Anbar Home, comenzando por [Villas navideñas](https://anbarhome.co/category/villas-navidenas), para comparar escenas según la escala y el carácter de tu proyecto.
 <!-- FIN CUERPO -->
 
