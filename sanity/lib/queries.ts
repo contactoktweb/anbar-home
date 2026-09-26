@@ -205,7 +205,7 @@ export const PRODUCT_BY_SLUG_QUERY = groq`
 `
 
 export const POSTS_QUERY = groq`
-  *[_type == "post"] | order(publishedAt desc) {
+  *[_type == "post" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
     _id,
     title,
     seoTitle,
@@ -222,7 +222,7 @@ export const POSTS_QUERY = groq`
 `
 
 export const POST_BY_SLUG_QUERY = groq`
-  *[_type == "post" && (slug.current == $slug || slug.current == $cleanSlug)][0] {
+  *[_type == "post" && !(_id in path("drafts.**")) && (slug.current == $slug || slug.current == $cleanSlug)][0] {
     _id,
     title,
     seoTitle,

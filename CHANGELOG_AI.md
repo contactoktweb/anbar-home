@@ -1,5 +1,24 @@
 # CHANGELOG AI
 
+## [2026-09-25] - Retiro / Despublicación de Blogs de Navidad a Modo Borrador (Draft)
+
+### Requerimiento
+- Bajar del sitio web los 5 blogs de Navidad que se habían subido, debido a que aún no se publicarán.
+
+### Acciones Realizadas
+1. **Despublicación y Conversión a Borradores en Sanity CMS:**
+   - Se trasladaron los 5 artículos de Navidad a estado de borrador (`drafts.post-...`) y se eliminaron sus versiones publicadas (`post-...`):
+     1. `drafts.post-decoracion-de-navidad` ("Decoración de Navidad: guía para crear espacios equilibrados")
+     2. `drafts.post-decoracion-arbol-de-navidad` ("Decoración de árbol de Navidad: guía de proporción y color")
+     3. `drafts.post-decoracion-navidad-espacios-pequenos` ("Decoración para Navidad en espacios pequeños: ideas prácticas")
+     4. `drafts.post-como-decorar-mesa-navidena` ("Cómo decorar una mesa navideña elegante y funcional")
+     5. `drafts.post-decoracion-navidena-oficinas-hoteles` ("Decoración navideña para oficinas, hoteles, restaurantes y comercios")
+   - Todo el contenido editorial, imágenes WebP, bloques PortableText, metadatos y categorías quedan 100% seguros y editables dentro de Sanity Studio para cuando el equipo decida publicarlos.
+2. **Protección en Consultas GROQ (`sanity/lib/queries.ts`):**
+   - Se reforzaron `POSTS_QUERY` y `POST_BY_SLUG_QUERY` con el filtro `!(_id in path("drafts.**"))`, garantizando que ningún borrador se filtre al listado `/blog`, páginas individuales o al pie de página.
+3. **Script Automatizado de Control (`scripts/unpublishNavidadBlogs.ts`):**
+   - Se creó un script modular para despublicar o verificar en cualquier momento el estado de los blogs de Navidad.
+
 ## [2026-09-24] - Eliminación de Encabezados Editoriales "Cierre y CTA" en Blogs
 
 ### Requerimiento
