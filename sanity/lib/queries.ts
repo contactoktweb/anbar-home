@@ -58,10 +58,18 @@ export const HOME_PAGE_QUERY = groq`
     categoriesSectionSubtitle,
     homeCategories[]{
       _key,
-      title,
-      "imageUrl": image.asset->url,
+      "title": coalesce(title, category->title),
+      "imageUrl": coalesce(image.asset->url, category->image.asset->url),
       "categoryTitle": category->title,
       "categorySlug": coalesce(category->slug.current, customSlug),
+    },
+    "featuredCategories": *[_type == "category" && isFeatured == true ${hiddenCategoryDocsFilter}] | order(featuredOrder asc, title asc) {
+      _id,
+      title,
+      "imageUrl": image.asset->url,
+      "categoryTitle": title,
+      "categorySlug": slug.current,
+      description
     },
     conceptTitle,
     conceptSubtitle,
@@ -150,13 +158,16 @@ export const PRODUCTS_QUERY = groq`
 `
 
 export const CATEGORIES_QUERY = groq`
-  *[_type == "category" ${hiddenCategoryDocsFilter}] | order(title asc) {
+  *[_type == "category" ${hiddenCategoryDocsFilter}] | order(featuredOrder asc, title asc) {
     _id,
     title,
     "slug": slug.current,
+    "imageUrl": image.asset->url,
     "bannerDesktop": coalesce(imageDesktop.asset->url, image.asset->url),
     "bannerMobile": imageMobile.asset->url,
-    description
+    description,
+    isFeatured,
+    featuredOrder
   }
 `
 

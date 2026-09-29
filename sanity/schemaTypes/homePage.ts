@@ -116,63 +116,70 @@ export const homePage = defineType({
       title: 'Título de la Sección de Categorías',
       type: 'string',
       group: 'categoriesGroup',
-      initialValue: 'Explora Nuestras Categorías',
+      initialValue: 'Categorías Destacadas',
     }),
     defineField({
       name: 'categoriesSectionSubtitle',
       title: 'Subtítulo de Categorías',
       type: 'string',
       group: 'categoriesGroup',
-      initialValue: 'Piezas exclusivas seleccionadas para cada espacio',
+      initialValue: 'Colecciones de temporada y piezas navideñas exclusivas',
     }),
     defineField({
       name: 'homeCategories',
-      title: 'Cuadros de Categorías',
+      title: 'Cuadros de Categorías Destacadas',
       type: 'array',
       group: 'categoriesGroup',
-      description: 'Cuadros de categorías con imagen y nombre que aparecen justo después del banner principal.',
+      description: 'Selecciona las categorías creadas en la web para destacarlas en el Home. Cada elemento se enlaza directamente a su categoría. Si no especificas título o imagen, se tomarán automáticamente los de la categoría vinculada.',
       of: [
         {
           type: 'object',
           icon: ImageIcon,
           fields: [
             defineField({
-              name: 'title',
-              title: 'Nombre de la Categoría',
-              type: 'string',
+              name: 'category',
+              title: 'Categoría de la Tienda (Enlace oficial)',
+              type: 'reference',
+              to: [{ type: 'category' }],
+              description: 'Selecciona una de las categorías ya creadas y activas en la administración.',
               validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'title',
+              title: 'Título Personalizado en la Tarjeta (Opcional)',
+              type: 'string',
+              description: 'Opcional. Déjalo en blanco para usar automáticamente el nombre oficial de la categoría seleccionada.',
             }),
             defineField({
               name: 'image',
-              title: 'Imagen de la Categoría',
+              title: 'Imagen Personalizada en la Tarjeta (Opcional)',
               type: 'image',
               options: { hotspot: true },
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: 'category',
-              title: 'Categoría vinculada',
-              type: 'reference',
-              to: [{ type: 'category' }],
+              description: 'Opcional. Déjalo en blanco para usar la imagen de portada configurada en la categoría seleccionada.',
             }),
             defineField({
               name: 'customSlug',
-              title: 'Slug personalizado (opcional)',
+              title: 'Ruta / Slug Personalizado (Opcional)',
               type: 'string',
-              description: 'Opcional si no se vincula una categoría directamente (ej. sale)',
+              description: 'Opcional. Déjalo vacío para redirigir directamente a la página de la categoría vinculada.',
             }),
           ],
           preview: {
             select: {
-              title: 'title',
+              customTitle: 'title',
               categoryTitle: 'category.title',
-              media: 'image',
+              customImage: 'image',
+              categoryImage: 'category.image',
+              categorySlug: 'category.slug.current',
+              customSlug: 'customSlug',
             },
-            prepare({ title, categoryTitle, media }) {
+            prepare({ customTitle, categoryTitle, customImage, categoryImage, categorySlug, customSlug }) {
+              const displayTitle = customTitle || categoryTitle || 'Categoría sin nombre'
+              const resolvedSlug = customSlug || categorySlug || 'sin-enlace'
               return {
-                title: title || 'Categoría sin nombre',
-                subtitle: categoryTitle ? `Vinculado a: ${categoryTitle}` : 'Sin vínculo',
-                media,
+                title: displayTitle,
+                subtitle: `Enlace: /category/${resolvedSlug}${categoryTitle && customTitle ? ` (Categoría: ${categoryTitle})` : ''}`,
+                media: customImage || categoryImage,
               }
             },
           },

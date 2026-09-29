@@ -29,25 +29,31 @@ export async function SiteFooter() {
     { label: 'Cabecera del Llano: Cra 36 #48-141 Local 5', href: 'https://www.google.com/maps/search/?api=1&query=Cabecera%20del%20Llano%20Cra%2036%20%2348-141%20Local%205' },
   ]
 
-  // Filter out system or unwanted categories
+  const isSaleCategory = (c: any) => {
+    const slug = (c.slug || '').toLowerCase().trim()
+    const cleanTitle = (c.title || '').toUpperCase().replace(/\s+/g, '')
+    return slug === 'sale' || slug === 's-a-l-e' || slug === 'summer-sale' || cleanTitle === 'SALE'
+  }
+
+  // Filter out system or unwanted categories, and exclude any variant of SALE to guarantee a single canonical link
   const activeCategories = (categories || []).filter(
-    (c: any) => c.slug && c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized'
+    (c: any) => c.slug && c.slug !== 'todos-los-productos' && c.slug !== 'uncategorized' && !isSaleCategory(c)
   )
 
   const rawCollectionsLinks = activeCategories.length > 0
     ? [
         ...activeCategories.map((c: any) => ({
-          label: c.title === 'Summer Sale' || c.title === 'sale' ? 'SALE' : c.title,
+          label: (c.title || '').trim(),
           href: `/category/${c.slug}`
         })),
-        ...(activeCategories.some((c: any) => c.slug === 'summer-sale' || c.slug === 'sale') ? [] : [{ label: 'SALE', href: '/category/sale' }])
+        { label: 'SALE', href: '/category/sale' }
       ]
     : [
         { label: 'Línea Suprema', href: '/category/linea-suprema' },
         { label: 'Esculturas', href: '/category/esculturas' },
-        { label: 'SALE', href: '/category/sale' },
         { label: 'Acentos Decorativos', href: '/category/acentos-decorativos' },
-        { label: 'Jarrones', href: '/category/jarrones' }
+        { label: 'Jarrones', href: '/category/jarrones' },
+        { label: 'SALE', href: '/category/sale' }
       ]
 
   const collectionsLinks = rawCollectionsLinks.filter(
@@ -85,11 +91,11 @@ export async function SiteFooter() {
   ]
 
   return (
-    <footer className="border-t border-neutral-800 bg-neutral-950 px-6 py-10 md:px-10">
+    <footer className="relative border-t border-[#E3C58B]/25 bg-gradient-to-b from-[#4b0d10] via-[#410b0e] to-[#32070a] px-6 py-12 md:px-10 text-[#F5E2BE] shadow-[0_-4px_30px_rgba(75,13,16,0.35)]">
       <div className="mx-auto max-w-7xl">
         
         {/* Top Row */}
-        <div className="flex flex-col items-center gap-12 border-b border-white/10 pb-16 md:flex-row md:justify-between md:gap-10">
+        <div className="flex flex-col items-center gap-12 border-b border-[#E3C58B]/20 pb-16 md:flex-row md:justify-between md:gap-10">
           <div className="flex items-center justify-start">
             <Image
               src="/LOGO ANBAR.png"
@@ -97,12 +103,12 @@ export async function SiteFooter() {
               width={280}
               height={112}
               quality={75}
-              className="h-14 w-auto object-contain brightness-0 invert md:h-16"
+              className="h-14 w-auto object-contain brightness-0 invert drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)] md:h-16"
             />
           </div>
 
           <div className="flex flex-col justify-center text-center md:items-end md:text-right">
-            <h3 className="font-serif text-[19px] font-medium text-white md:text-[23px]">
+            <h3 className="font-serif text-[19px] font-medium tracking-wide text-[#E3C58B] md:text-[23px]">
               {topGroup.title}
             </h3>
             <ul className="mt-6 space-y-4">
@@ -110,7 +116,7 @@ export async function SiteFooter() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-[15px] md:text-[17px] font-light text-neutral-400 transition-colors duration-300 hover:text-camel"
+                    className="text-[15px] md:text-[17px] font-light text-[#F5E2BE]/80 transition-colors duration-300 hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -124,10 +130,10 @@ export async function SiteFooter() {
         <div className="grid gap-12 pt-16 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {bottomGroups.map((group) => (
             <div key={group.title} className="flex flex-col gap-6">
-              <h3 className="font-serif text-[19px] font-medium text-white">
+              <h3 className="font-serif text-[19px] font-medium tracking-wide text-[#E3C58B]">
                 {group.title}
               </h3>
-              <ul className="mt-6 space-y-4">
+              <ul className="mt-6 space-y-3.5">
                 {group.links.map((link: string | { label: string; href: string }) => {
                   const isString = typeof link === 'string';
                   const name = isString ? link : link.label;
@@ -139,7 +145,7 @@ export async function SiteFooter() {
                         href={href}
                         target={isExternal ? '_blank' : undefined}
                         rel={isExternal ? 'noopener noreferrer' : undefined}
-                        className="text-[15px] font-light leading-relaxed text-neutral-400 transition-colors duration-300 hover:text-camel"
+                        className="inline-block text-[15px] font-light leading-relaxed text-[#F5E2BE]/80 transition-all duration-300 hover:text-white hover:translate-x-1"
                       >
                         {name}
                       </Link>
@@ -152,7 +158,7 @@ export async function SiteFooter() {
         </div>
 
         {/* Copyright & K&T Mark */}
-        <div className="mt-20 flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-10 text-[14px] text-neutral-400 md:flex-row">
+        <div className="mt-20 flex flex-col items-center justify-between gap-6 border-t border-[#E3C58B]/20 pt-10 text-[14px] text-[#E3C58B]/75 md:flex-row">
           <span>
             Anbar Home {new Date().getFullYear()} © Todos los derechos reservados
           </span>
@@ -160,9 +166,9 @@ export async function SiteFooter() {
             href="https://www.kytcode.lat"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 transition-colors duration-300 hover:text-camel"
+            className="group flex items-center gap-1.5 font-medium text-[#E3C58B]/90 transition-colors duration-300 hover:text-white"
           >
-            Desarrollado por K&amp;T <span className="not-italic text-white">🤍</span>
+            Desarrollado por K&amp;T <span className="not-italic text-white transition-transform duration-300 group-hover:scale-110">🤍</span>
           </a>
         </div>
         

@@ -8,8 +8,9 @@ import { optimizeImageUrl } from '@/lib/utils'
 
 interface CategoryItem {
   _key?: string
-  title: string
-  imageUrl: string
+  _id?: string
+  title?: string
+  imageUrl?: string
   categoryTitle?: string
   categorySlug?: string
 }
@@ -19,16 +20,21 @@ interface CategoryGridSectionProps {
     categoriesSectionTitle?: string
     categoriesSectionSubtitle?: string
     homeCategories?: CategoryItem[]
+    featuredCategories?: CategoryItem[]
   }
 }
 
 export function CategoryGridSection({ data }: CategoryGridSectionProps) {
-  const categories = data?.homeCategories || []
+  const rawCategories = (data?.homeCategories && data.homeCategories.length > 0)
+    ? data.homeCategories
+    : (data?.featuredCategories || [])
+
+  const categories = rawCategories.filter((cat) => Boolean(cat.imageUrl && (cat.title || cat.categoryTitle)))
 
   if (!categories || categories.length === 0) return null
 
   const title = data?.categoriesSectionTitle || 'Categorías Destacadas'
-  const subtitle = data?.categoriesSectionSubtitle || 'Explora nuestras colecciones exclusivas'
+  const subtitle = data?.categoriesSectionSubtitle || 'Colecciones de temporada y piezas navideñas exclusivas'
 
   return (
     <section className="py-8 sm:py-12 md:py-16 bg-[#FAFAF8] border-b border-neutral-200/60 overflow-hidden">
@@ -53,10 +59,11 @@ export function CategoryGridSection({ data }: CategoryGridSectionProps) {
         {/* Mobile Swipeable (Peek effect) / Desktop Multi-Column Responsive Layout */}
         <div className="flex sm:grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 md:gap-4 lg:gap-3.5 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-3 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0">
           {categories.map((cat, idx) => {
+            const displayTitle = cat.title || cat.categoryTitle || 'Colección'
             const href = cat.categorySlug ? `/category/${cat.categorySlug}` : '/category/todos-los-productos'
 
             return (
-              <Reveal key={cat._key || idx} delay={idx * 0.05}>
+              <Reveal key={cat._key || cat._id || idx} delay={idx * 0.05}>
                 <Link
                   href={href}
                   className="group flex-shrink-0 w-[150px] sm:w-auto snap-start block relative bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-neutral-200/80 hover:border-[#7A1A28]/40"
@@ -64,8 +71,8 @@ export function CategoryGridSection({ data }: CategoryGridSectionProps) {
                   {/* Square Image Container */}
                   <div className="relative aspect-square w-full overflow-hidden bg-neutral-100">
                     <Image
-                      src={optimizeImageUrl(cat.imageUrl, 500, 75)}
-                      alt={cat.title}
+                      src={optimizeImageUrl(cat.imageUrl || '', 500, 75)}
+                      alt={displayTitle}
                       fill
                       sizes="(max-width: 640px) 45vw, (max-width: 1024px) 25vw, 15vw"
                       className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
@@ -84,7 +91,7 @@ export function CategoryGridSection({ data }: CategoryGridSectionProps) {
                   {/* Card Title Bar */}
                   <div className="p-3 sm:p-3.5 text-center bg-white">
                     <h3 className="font-serif text-xs sm:text-xs md:text-[13px] lg:text-sm text-neutral-900 font-medium tracking-wide group-hover:text-[#7A1A28] transition-colors duration-300 line-clamp-1">
-                      {cat.title}
+                      {displayTitle}
                     </h3>
                   </div>
                 </Link>

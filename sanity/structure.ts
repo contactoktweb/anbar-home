@@ -1,6 +1,6 @@
 import type {StructureResolver} from 'sanity/structure'
 import {AnalyticsDashboard} from './components/AnalyticsDashboard'
-import {ChartUpwardIcon} from '@sanity/icons'
+import {ChartUpwardIcon, TagIcon, PackageIcon} from '@sanity/icons'
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
@@ -32,9 +32,25 @@ export const structure: StructureResolver = (S) =>
             .schemaType('homePage')
             .documentId('homePage')
         ),
+      S.listItem()
+        .title('Categorías de la Tienda')
+        .id('category')
+        .icon(TagIcon)
+        .child(
+          S.documentTypeList('category')
+            .title('Todas las Categorías')
+        ),
+      S.listItem()
+        .title('Productos')
+        .id('product')
+        .icon(PackageIcon)
+        .child(
+          S.documentTypeList('product')
+            .title('Todos los Productos')
+        ),
       S.divider(),
       ...S.documentTypeListItems().filter(
-        (listItem) => !['globalSettings', 'homePage'].includes(listItem.getId() as string)
+        (listItem) => !['globalSettings', 'homePage', 'category', 'product'].includes(listItem.getId() as string)
       ),
     ])
 

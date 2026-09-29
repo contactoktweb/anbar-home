@@ -21,10 +21,10 @@ const homeDropdownLinks = [
   { label: 'Jarrones escultóricos', href: '/category/jarrones-escultoricos' },
   { label: 'Esculturas', href: '/category/esculturas' },
   { label: 'Acentos Decorativos', href: '/category/acentos-decorativos' },
+  { label: 'SALE', href: '/category/sale' },
 ]
 
 const secondaryLinks = [
-  { label: 'SALE', href: '/category/sale' },
   { label: 'Blogs', href: '/blog' },
 ]
 
@@ -254,6 +254,7 @@ export function SiteHeader() {
                   <div className="py-1">
                     {homeDropdownLinks.map((item) => {
                       const isActive = pathname === item.href
+                      const isSale = item.label === 'SALE'
                       return (
                         <Link
                           key={item.href}
@@ -262,13 +263,20 @@ export function SiteHeader() {
                           className={cn(
                             "flex items-center justify-between rounded-lg px-3.5 py-2.5 text-[13px] font-medium transition-all duration-200",
                             isActive
-                              ? "bg-white/15 text-[#F5E2BE] font-semibold"
+                              ? isSale
+                                ? "bg-white/20 text-[#FFD1D6] font-bold"
+                                : "bg-white/15 text-[#F5E2BE] font-semibold"
+                              : isSale
+                              ? "text-[#FFA8B2] font-semibold hover:bg-white/10 hover:text-white hover:translate-x-0.5"
                               : "text-[#E3C58B]/90 hover:bg-white/10 hover:text-white hover:translate-x-0.5"
                           )}
                         >
-                          <span>{item.label}</span>
+                          <span className={cn(isSale && "tracking-wider")}>{item.label}</span>
                           {isActive && (
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#E3C58B] shadow-[0_0_6px_#E3C58B]" />
+                            <span className={cn(
+                              "h-1.5 w-1.5 rounded-full",
+                              isSale ? "bg-[#FFA8B2] shadow-[0_0_6px_#FFA8B2]" : "bg-[#E3C58B] shadow-[0_0_6px_#E3C58B]"
+                            )} />
                           )}
                         </Link>
                       )
@@ -278,7 +286,7 @@ export function SiteHeader() {
               </div>
             </div>
 
-            {/* Secondary Links: SALE & Blogs */}
+            {/* Secondary Links: Blogs */}
             {secondaryLinks.map((link) => {
               const isActive = pathname === link.href
               return (
@@ -287,16 +295,13 @@ export function SiteHeader() {
                   href={link.href}
                   className={cn(
                     "group relative whitespace-nowrap text-[13px] xl:text-[13.5px] 2xl:text-[14.5px] font-medium tracking-wide transition-all duration-300 py-1",
-                    link.label === 'SALE'
-                      ? isActive ? "text-[#FFD1D6] font-bold" : "text-[#FFA8B2] font-semibold hover:text-white"
-                      : isActive ? "text-[#F5E2BE] font-semibold" : "text-[#E3C58B]/90 hover:text-white"
+                    isActive ? "text-[#F5E2BE] font-semibold" : "text-[#E3C58B]/90 hover:text-white"
                   )}
                 >
                   {link.label}
                   <span
                     className={cn(
-                      "absolute bottom-0 left-0 h-[2px] transition-all duration-300",
-                      link.label === 'SALE' ? "bg-[#FFA8B2]" : "bg-[#E3C58B] shadow-[0_0_8px_rgba(227,197,139,0.6)]",
+                      "absolute bottom-0 left-0 h-[2px] bg-[#E3C58B] transition-all duration-300 shadow-[0_0_8px_rgba(227,197,139,0.6)]",
                       isActive ? "w-full" : "w-0 group-hover:w-full"
                     )}
                   />
@@ -353,11 +358,12 @@ export function SiteHeader() {
             <div
               className={cn(
                 "overflow-hidden transition-all duration-300 ease-in-out pl-3 flex flex-col space-y-1",
-                isMobileHogarOpen ? "max-h-60 pb-2 pt-1 opacity-100" : "max-h-0 opacity-0"
+                isMobileHogarOpen ? "max-h-80 pb-2 pt-1 opacity-100" : "max-h-0 opacity-0"
               )}
             >
               {homeDropdownLinks.map((subLink) => {
                 const isSubActive = pathname === subLink.href
+                const isSale = subLink.label === 'SALE'
                 return (
                   <Link
                     key={subLink.href}
@@ -369,7 +375,11 @@ export function SiteHeader() {
                     className={cn(
                       "py-2 text-[13px] transition-colors border-l-2 pl-3",
                       isSubActive
-                        ? "border-[#7A1A28] font-semibold text-[#7A1A28]"
+                        ? isSale
+                          ? "border-red-600 font-bold text-red-600"
+                          : "border-[#7A1A28] font-semibold text-[#7A1A28]"
+                        : isSale
+                        ? "border-red-200 font-bold text-red-600 hover:text-red-700 hover:border-red-600"
                         : "border-neutral-200 font-normal text-neutral-600 hover:text-[#7A1A28] hover:border-[#7A1A28]"
                     )}
                   >
@@ -380,7 +390,7 @@ export function SiteHeader() {
             </div>
           </div>
 
-          {/* Secondary Links: SALE & Blogs */}
+          {/* Secondary Links: Blogs */}
           {secondaryLinks.map((link) => {
             const isActive = pathname === link.href
             return (
@@ -390,9 +400,7 @@ export function SiteHeader() {
                 onClick={() => setOpen(false)}
                 className={cn(
                   "border-b border-border/40 py-3 text-[14px] font-medium transition-colors last:border-b-0",
-                  link.label === 'SALE'
-                    ? "text-red-600 font-semibold"
-                    : isActive
+                  isActive
                     ? "text-[#7A1A28] font-semibold"
                     : "text-neutral-800 hover:text-[#7A1A28]"
                 )}

@@ -1,6 +1,78 @@
 # CHANGELOG AI
 
-## [2026-09-25] - Retiro / Despublicación de Blogs de Navidad a Modo Borrador (Draft)
+## [2026-09-29] - Eliminación de Enlace Duplicado de SALE en el Footer
+
+### Requerimiento
+- Quitar la doble categoría o enlace duplicado de SALE en la columna de "Colecciones" del pie de página (Footer).
+
+### Diagnóstico
+- En Sanity CMS existe un documento de categoría con título `"S A L E "` y slug `"s-a-l-e"`. Al mapear las colecciones, el filtro anterior no normalizaba los espacios intermedios del título y el slug no coincidía con `"sale"`, lo que provocaba que se renderizara `"S A L E "` desde Sanity y adicionalmente se adjuntara `"SALE"` como enlace manual de fallback.
+
+### Cambios Realizados
+1. **Componente de Pie de Página (`components/site-footer.tsx`):**
+   - Se implementó la función auxiliar `isSaleCategory` que detecta y filtra cualquier variante de SALE (`slug: 'sale'`, `slug: 's-a-l-e'`, `slug: 'summer-sale'` o títulos que al limpiar espacios resulten en `'SALE'`).
+   - Se garantiza un único y exclusivo enlace canónico a `{ label: 'SALE', href: '/category/sale' }` al final del listado de colecciones activas, eliminando cualquier duplicidad.
+
+## [2026-09-29] - Integración del Catálogo SALE dentro del Menú Desplegable "Hogar"
+
+### Requerimiento
+- Mover el catálogo de SALE al interior del desplegable "Hogar" en el encabezado (Header).
+
+### Cambios Realizados
+1. **Cabecera Principal (`components/site-header.tsx`):**
+   - **Reubicación:** Se trasladó `{ label: 'SALE', href: '/category/sale' }` de `secondaryLinks` a `homeDropdownLinks`.
+   - **Escritorio:** En el menú desplegable flotante de "Hogar", la opción SALE se resalta con tipografía estilizada y color distintivo festivo (`text-[#FFA8B2]` / `text-[#FFD1D6]`), con halo e indicador de estado activo.
+   - **Móvil:** En el menú lateral (drawer), el acordeón "Hogar" ahora incluye SALE como una de sus opciones expandibles con borde e indicador destacado, aumentando la altura máxima (`max-h-80`) para evitar cualquier recorte de contenido.
+   - **Enlaces Secundarios:** La barra exterior ahora solo conserva el enlace directo a "Blogs", despejando visualmente la barra de navegación.
+
+## [2026-09-29] - Fondo del Footer en Borgoña / Gorgoña con Detalles en Dorado
+
+### Requerimiento
+- Cambiar el fondo del footer a tonalidad borgoña/gorgoña con acentos, bordes y tipografía en dorado.
+
+### Cambios Realizados
+1. **Componente de Pie de Página (`components/site-footer.tsx`):**
+   - **Fondo:** Se transformó el fondo oscuro neutro a un degradado borgoña profundo y noble (`bg-gradient-to-b from-[#4b0d10] via-[#410b0e] to-[#32070a]`), armonizando con la franja de navegación del header y la ambientación festiva de Anbar Home.
+   - **Encabezados y Acentos:** Se configuraron los títulos de sección en **oro champán** resplandeciente (`text-[#E3C58B]`), con tipografía serif y espaciado elegante.
+   - **Bordes y Separadores:** Líneas divisorias en fino trazo dorado traslúcido (`border-[#E3C58B]/20` y `border-t border-[#E3C58B]/25`).
+   - **Enlaces:** Textos en tono crema cálido suave (`text-[#F5E2BE]/80`) con micro-interacción al hacer hover que ilumina el texto a blanco radiante con un leve desplazamiento sutil (`hover:translate-x-1`).
+   - **Firma y Branding K&T:** Texto en oro champán (`text-[#E3C58B]/90`), año dinámico `new Date().getFullYear()`, corazón blanco `🤍` obligatorio para fondos oscuros y enlace operativo a `https://www.kytcode.lat`.
+
+## [2026-09-29] - Sincronización, Administración y Edición de Categorías en Sanity Studio
+
+### Requerimiento
+- Pasar las categorías a administración (Sanity Studio) para que sean 100% editables y corregir la desconexión existente entre las tarjetas mostradas en "Categorías Destacadas" del Home y las categorías oficiales de la tienda web.
+
+### Diagnóstico
+1. **Desconexión de datos:** En la página de inicio, las 7 tarjetas de categorías provenían de un arreglo de objetos manuales en `homePage.homeCategories` donde "Esferas Navideñas" y "Animales" no estaban vinculadas a ninguna categoría de Sanity (`category: null`), "Piezas Grandes Premium" usaba un slug manual (`piezas-grandes-premium`) en lugar de enlazarse a `navidad-premium`, y el componente ignoraba el título dinámico de la categoría en Sanity.
+2. **Esquema de Categoría incompleto:** El esquema `categoryType` no contaba con campo de imagen de portada (`image`), ni opciones de destacado en el Home (`isFeatured`, `featuredOrder`).
+3. **Acceso en Sanity Studio:** El acceso a "Categorías" estaba disperso en la lista alfabética de documentos en lugar de tener acceso directo y prioritario junto a la Página de Inicio y Productos.
+
+### Cambios Realizados
+1. **Esquema de Categoría (`sanity/schemaTypes/categoryType.ts`):**
+   - Se añadió el campo `image` ("Imagen de Portada / Miniatura para Home y Cuadros") con hotspot para permitir subir y editar la imagen de cada categoría directamente desde la administración.
+   - Se agregaron los campos `isFeatured` ("¿Destacar en la Página de Inicio?") y `featuredOrder` ("Orden en Destacados del Home").
+   - Se optimizó la vista previa (`preview`) en el Studio para mostrar la imagen de portada/banner, slug y distintivo de orden destacado `★ [Orden: X]`.
+2. **Esquema de Página de Inicio (`sanity/schemaTypes/homePage.ts`):**
+   - Se transformó el campo `category` en una referencia obligatoria (`reference to category`) para asegurar que cualquier tarjeta destacada provenga de una categoría real de la web.
+   - Se convirtieron los campos `title`, `image` y `customSlug` en sobreescrituras opcionales: si se dejan vacíos, heredan automáticamente el título, imagen y slug oficial del documento de la categoría.
+   - Se mejoró la vista previa del bloque en Sanity Studio para ver en tiempo real el título resuelto, la URL y la imagen.
+3. **Estructura de Sanity Studio (`sanity/structure.ts`):**
+   - Se otorgó un lugar prioritario de primer nivel en el menú lateral a **"Categorías de la Tienda"** (con icono de etiqueta) y a **"Productos"**, ubicados inmediatamente después de "Página de Inicio".
+4. **Consultas GROQ (`sanity/lib/queries.ts`):**
+   - En `HOME_PAGE_QUERY`, se incorporó `coalesce(title, category->title)` y `coalesce(image.asset->url, category->image.asset->url)` para que los cambios hechos en el documento de la categoría se reflejen al instante en el Home.
+   - Se agregó la consulta `featuredCategories` como fallback automático basado en las categorías marcadas con `isFeatured == true`.
+   - En `CATEGORIES_QUERY`, se expuso `imageUrl`, `isFeatured` y `featuredOrder`.
+5. **Componente de Cuadros (`components/category-grid-section.tsx`):**
+   - Ahora resuelve dinámicamente `displayTitle` y `imageUrl`, filtrando únicamente categorías válidas con imagen.
+   - Mantiene total compatibilidad responsive con swipe táctil nativo en móvil sin desbordamiento horizontal.
+6. **Sincronización en Base de Datos de Sanity (`scripts/syncCategoriesAdmin.ts`):**
+   - Se crearon como documentos oficiales de Sanity las categorías **"Esferas Navideñas"** (`esferas-navidenas`) y **"Animales"** (`animales`), con sus descripciones e imágenes asignadas.
+   - Se asignaron las imágenes correspondientes a las categorías navideñas existentes (`arboles-de-navidad`, `villas-navidenas`, `pesebres-y-nacimientos`, `navidad-en-la-mesa`, `navidad-premium`).
+   - Se actualizaron las 7 tarjetas en `homePage.homeCategories`, todas con referencias directas y válidas a sus documentos de categoría en Sanity.
+   - Se asociaron los productos respectivos a las nuevas categorías en Sanity para que aparezcan en el catálogo dinámico y filtros.
+
+
 
 ### Requerimiento
 - Bajar del sitio web los 5 blogs de Navidad que se habían subido, debido a que aún no se publicarán.
