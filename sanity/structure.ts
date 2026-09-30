@@ -1,6 +1,6 @@
 import type {StructureResolver} from 'sanity/structure'
 import {AnalyticsDashboard} from './components/AnalyticsDashboard'
-import {ChartUpwardIcon, TagIcon, PackageIcon} from '@sanity/icons'
+import {ChartUpwardIcon, TagIcon, PackageIcon, DocumentTextIcon, UserIcon} from '@sanity/icons'
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
@@ -32,6 +32,7 @@ export const structure: StructureResolver = (S) =>
             .schemaType('homePage')
             .documentId('homePage')
         ),
+      S.divider(),
       S.listItem()
         .title('Categorías de la Tienda')
         .id('category')
@@ -49,8 +50,26 @@ export const structure: StructureResolver = (S) =>
             .title('Todos los Productos')
         ),
       S.divider(),
+      S.listItem()
+        .title('Blog / Artículos')
+        .id('post')
+        .icon(DocumentTextIcon)
+        .child(
+          S.documentTypeList('post')
+            .title('Todos los Artículos')
+        ),
+      S.listItem()
+        .title('Autores')
+        .id('author')
+        .icon(UserIcon)
+        .child(
+          S.documentTypeList('author')
+            .title('Autores')
+        ),
+      S.divider(),
       ...S.documentTypeListItems().filter(
-        (listItem) => !['globalSettings', 'homePage', 'category', 'product'].includes(listItem.getId() as string)
+        (listItem) => !['globalSettings', 'homePage', 'category', 'product', 'post', 'author', 'blockContent'].includes(listItem.getId() as string)
       ),
     ])
+
 

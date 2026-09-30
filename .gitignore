@@ -58,3 +58,6 @@ test-search.html
 dev-logs.txt
 scripts/*.mjs
 scripts/*.json
+
+# Blog content (articles and images — managed via Sanity, not Git)
+/public/blogs/

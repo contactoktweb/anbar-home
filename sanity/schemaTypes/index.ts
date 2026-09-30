@@ -9,7 +9,25 @@ import { faqType } from './faqType'
 import { order } from './order'
 import { discountCoupon } from './discountCoupon'
 import { quizResponse } from './quizResponse'
+import { postType } from './postType'
+import { authorType } from './authorType'
+import { blockContentType } from './blockContentType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [globalSettings, homePage, categoryType, product, legalPage, reviewType, faqType, order, discountCoupon, quizResponse],
+  types: [
+    globalSettings,
+    homePage,
+    categoryType,
+    product,
+    legalPage,
+    reviewType,
+    faqType,
+    order,
+    discountCoupon,
+    quizResponse,
+    postType,
+    authorType,
+    blockContentType,
+  ],
 }
+
