@@ -38,6 +38,8 @@ export function HeroWow({ data }: { data?: any }) {
         srcMobile: banner.srcMobile
           ? optimizeImageUrl(banner.srcMobile, 1080, 85)
           : (banner.src ? optimizeImageUrl(banner.src, 1080, 85) : undefined),
+        dimensionsDesktop: banner.dimensionsDesktop,
+        dimensionsMobile: banner.dimensionsMobile,
         videoDesktop: banner.videoDesktop,
         videoMobile: banner.videoMobile,
         alt: banner.alt || 'Anbar Home',
@@ -46,11 +48,34 @@ export function HeroWow({ data }: { data?: any }) {
       }))
     : fallbackBanners
 
+  // Obtenemos la relación de aspecto del banner activo/primer banner para móvil y desktop
+  const firstBanner = banners[0]
+  const mobileAspectRatio = firstBanner?.dimensionsMobile?.aspectRatio 
+    ? `${firstBanner.dimensionsMobile.width} / ${firstBanner.dimensionsMobile.height}`
+    : (firstBanner?.videoMobile?.includes('8995d4ba') ? '1 / 1' : '1 / 1')
+
+  const desktopAspectRatio = firstBanner?.dimensionsDesktop?.aspectRatio
+    ? `${firstBanner.dimensionsDesktop.width} / ${firstBanner.dimensionsDesktop.height}`
+    : '1920 / 818'
+
   return (
     <section
       id="inicio"
-      className="relative w-full overflow-hidden bg-neutral-950 aspect-[4/5] sm:aspect-[3/2] md:aspect-[16/7] lg:aspect-[21/9] xl:aspect-[21/8]"
+      className="relative w-full overflow-hidden bg-neutral-950"
+      style={{
+        aspectRatio: 'var(--hero-aspect, 1 / 1)',
+      }}
     >
+      <style>{`
+        #inicio {
+          --hero-aspect: ${mobileAspectRatio};
+        }
+        @media (min-width: 768px) {
+          #inicio {
+            --hero-aspect: ${desktopAspectRatio};
+          }
+        }
+      `}</style>
       <div className="absolute inset-0">
         <HeroCarousel images={banners} />
       </div>

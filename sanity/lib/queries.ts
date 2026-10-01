@@ -48,6 +48,8 @@ export const HOME_PAGE_QUERY = groq`
       _key,
       "src": imageDesktop.asset->url,
       "srcMobile": imageMobile.asset->url,
+      "dimensionsDesktop": imageDesktop.asset->metadata.dimensions,
+      "dimensionsMobile": imageMobile.asset->metadata.dimensions,
       "videoDesktop": videoDesktop.asset->url,
       "videoMobile": videoMobile.asset->url,
       alt,

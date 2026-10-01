@@ -11,6 +11,8 @@ interface HeroCarouselProps {
     srcMobile?: string
     videoDesktop?: string
     videoMobile?: string
+    dimensionsDesktop?: { width: number; height: number; aspectRatio: number }
+    dimensionsMobile?: { width: number; height: number; aspectRatio: number }
     alt: string
     label?: string
     href?: string
