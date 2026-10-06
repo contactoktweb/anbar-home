@@ -250,6 +250,29 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
           </header>
 
+          {post.imageUrl && (
+            <figure className="mx-auto max-w-5xl px-6 md:px-10 mb-10 md:mb-14">
+              <div className="w-full overflow-hidden rounded-sm bg-neutral-100/40 shadow-sm">
+                <Image
+                  src={optimizeImageUrl(post.imageUrl, 1400, 85)}
+                  alt={post.imageAlt || post.title}
+                  width={1400}
+                  height={787}
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                  quality={85}
+                  className="w-full h-auto object-cover rounded-sm"
+                  priority
+                  fetchPriority="high"
+                />
+              </div>
+              {post.imageCaption && (
+                <figcaption className="mt-3 px-2 text-center font-sans text-[0.75rem] md:text-[0.8rem] leading-relaxed text-neutral-500 font-light italic max-w-xl mx-auto">
+                  {post.imageCaption}
+                </figcaption>
+              )}
+            </figure>
+          )}
+
           <div className="mx-auto max-w-2xl px-6 md:px-0 blog-content">
             {post.body ? (
               <PortableText value={post.body} components={portableTextComponents} />
