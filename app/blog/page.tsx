@@ -1,6 +1,5 @@
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { WhatsAppButton } from '@/components/whatsapp-button'
 import { Concept } from '@/components/concept'
 import { client } from '@/sanity/lib/client'
 import { POSTS_QUERY } from '@/sanity/lib/queries'
@@ -86,7 +85,6 @@ export default async function BlogPage() {
         <Concept />
       </main>
       <SiteFooter />
-      <WhatsAppButton />
     </>
   )
 }

@@ -6,7 +6,6 @@ import { CategoryGridSection } from '@/components/category-grid-section'
 import { FeaturedProducts } from '@/components/featured-products'
 import { NewArrivals } from '@/components/new-arrivals'
 import { SiteFooter } from '@/components/site-footer'
-import { WhatsAppButton } from '@/components/whatsapp-button'
 import { client } from '@/sanity/lib/client'
 import { HOME_PAGE_QUERY, LATEST_PRODUCTS_QUERY } from '@/sanity/lib/queries'
 
@@ -110,7 +109,6 @@ export default async function Page() {
         <NewArrivals products={newArrivals} />
       </main>
       <SiteFooter />
-      <WhatsAppButton />
     </>
   )
 }

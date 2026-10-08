@@ -6,7 +6,6 @@ import type { Metadata, ResolvingMetadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { CategoryHeroBanner } from '@/components/category-hero-banner'
 import { SiteFooter } from '@/components/site-footer'
-import { WhatsAppButton } from '@/components/whatsapp-button'
 import { CategorySidebar } from '@/components/category-sidebar'
 import { CategoryProductGrid } from '@/components/category-product-grid'
 import { RecentlyViewedProducts } from '@/components/recently-viewed-products'
@@ -206,7 +205,6 @@ export default async function CategoryPage({ params, searchParams }: { params: P
         </div>
       </main>
       <SiteFooter />
-      <WhatsAppButton />
     </>
   )
 }

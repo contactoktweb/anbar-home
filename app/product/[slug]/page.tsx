@@ -6,7 +6,6 @@ import { notFound } from 'next/navigation'
 import { ProductActions } from './product-actions'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { WhatsAppButton } from '@/components/whatsapp-button'
 import { ProductTabs } from '@/components/product-tabs'
 import { ProductReviews } from '@/components/product-reviews'
 import { ProductPurchaseBenefits } from '@/components/product-purchase-benefits'
@@ -322,7 +321,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </main>
       <StickyMobileCta product={product} />
       <SiteFooter />
-      <WhatsAppButton className="bottom-20 md:bottom-7" />
     </>
   )
 }

@@ -3,7 +3,6 @@ export const revalidate = 60
 import { Suspense } from 'react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { WhatsAppButton } from '@/components/whatsapp-button'
 import { CategorySidebar } from '@/components/category-sidebar'
 import { Search } from 'lucide-react'
 import { client } from '@/sanity/lib/client'
@@ -93,7 +92,6 @@ export default async function SearchPage() {
         </div>
       </main>
       <SiteFooter />
-      <WhatsAppButton />
     </>
   )
 }

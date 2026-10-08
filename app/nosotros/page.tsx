@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import { MapPin, Navigation, Phone } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { WhatsAppButton } from '@/components/whatsapp-button'
 import { client } from '@/sanity/lib/client'
 import { GLOBAL_SETTINGS_QUERY } from '@/sanity/lib/queries'
 
@@ -155,7 +154,6 @@ export default async function NosotrosPage() {
 
       </main>
       <SiteFooter />
-      <WhatsAppButton />
     </>
   )
 }

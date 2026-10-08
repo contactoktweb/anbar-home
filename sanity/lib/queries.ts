@@ -247,6 +247,7 @@ export const POST_BY_SLUG_QUERY = groq`
     "imageUrl": mainImage.asset->url,
     "imageAlt": mainImage.alt,
     "imageCaption": mainImage.caption,
+    "mainImageAssetRef": mainImage.asset._ref,
     publishedAt,
     body,
     "categories": categories[]->title

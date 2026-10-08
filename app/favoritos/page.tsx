@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { WhatsAppButton } from '@/components/whatsapp-button'
 import { FavoritesClientView } from '@/components/favorites-client-view'
 
 export const metadata: Metadata = {
@@ -35,7 +34,6 @@ export default function FavoritosPage() {
         <FavoritesClientView />
       </main>
       <SiteFooter />
-      <WhatsAppButton />
     </>
   )
 }

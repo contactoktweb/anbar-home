@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
-import { WhatsAppButton } from '@/components/whatsapp-button';
 import { QuizContainer } from '@/components/quiz/quiz-container';
 
 export const metadata: Metadata = {
@@ -56,7 +55,6 @@ export default function QuizPage() {
         </Suspense>
       </main>
 
-      <WhatsAppButton />
       <SiteFooter />
     </div>
   );

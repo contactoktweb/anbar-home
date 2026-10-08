@@ -1,6 +1,5 @@
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
-import { WhatsAppButton } from '@/components/whatsapp-button'
 import { client } from '@/sanity/lib/client'
 import { POST_BY_SLUG_QUERY } from '@/sanity/lib/queries'
 import { urlFor } from '@/sanity/lib/image'
@@ -273,19 +272,36 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </figure>
           )}
 
-          <div className="mx-auto max-w-2xl px-6 md:px-0 blog-content">
-            {post.body ? (
-              <PortableText value={post.body} components={portableTextComponents} />
-            ) : (
-              <div className="text-center py-20 text-neutral-500 font-light">
-                Este artículo no tiene contenido.
+          {(() => {
+            const cleanBody = Array.isArray(post.body)
+              ? post.body.filter((block: any, idx: number) => {
+                  if (idx === 0 && block?._type === 'image' && post.imageUrl) {
+                    const isSameAsset = block?.asset?._ref && post.mainImageAssetRef && block.asset._ref === post.mainImageAssetRef
+                    const isSameAlt = block?.alt && post.imageAlt && block.alt === post.imageAlt
+                    const isSameCaption = block?.caption && post.imageCaption && block.caption === post.imageCaption
+                    if (isSameAsset || isSameAlt || isSameCaption) {
+                      return false
+                    }
+                  }
+                  return true
+                })
+              : post.body
+
+            return (
+              <div className="mx-auto max-w-2xl px-6 md:px-0 blog-content">
+                {cleanBody && cleanBody.length > 0 ? (
+                  <PortableText value={cleanBody} components={portableTextComponents} />
+                ) : (
+                  <div className="text-center py-20 text-neutral-500 font-light">
+                    Este artículo no tiene contenido.
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            )
+          })()}
         </article>
       </main>
       <SiteFooter />
-      <WhatsAppButton />
     </>
   )
 }

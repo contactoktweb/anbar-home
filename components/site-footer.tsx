@@ -60,13 +60,18 @@ export async function SiteFooter() {
     (link, index, self) => index === self.findIndex((l) => l.label.toLowerCase() === link.label.toLowerCase())
   )
 
+  const rawWhatsapp = settings?.whatsappNumber || '573123087918'
+  const cleanWhatsapp = rawWhatsapp.replace(/[^0-9]/g, '')
+  const whatsappHref = `https://wa.me/${cleanWhatsapp}?text=${encodeURIComponent('Hola Anbar Home, me gustaría recibir asesoría sobre sus productos.')}`
+
   const bottomGroups = [
     {
       title: 'Nuestra Empresa',
       links: [
         { label: 'Nosotros', href: '/nosotros' },
         { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' },
-        { label: 'Quiz de Estilo', href: '/quiz' }
+        { label: 'Quiz de Estilo', href: '/quiz' },
+        { label: 'WhatsApp', href: whatsappHref }
       ],
     },
     {

@@ -346,8 +346,7 @@ async function main() {
     let figMatch: RegExpExecArray | null
     const bodyBlocks: any[] = []
 
-    // Add hero image as the lead visual block of the body
-    bodyBlocks.push(imageBlock(heroAsset._id, heroAlt, heroCaption))
+    // Note: Hero image is assigned directly to mainImage on the post document, avoiding duplicate in body.
 
     while ((figMatch = figureRegex.exec(rawBody)) !== null) {
       const textChunk = rawBody.slice(lastIdx, figMatch.index)
