@@ -250,16 +250,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </header>
 
           {post.imageUrl && (
-            <figure className="mx-auto max-w-5xl px-6 md:px-10 mb-10 md:mb-14">
-              <div className="w-full overflow-hidden rounded-sm bg-neutral-100/40 shadow-sm">
+            <figure className="mx-auto max-w-3xl lg:max-w-4xl px-4 sm:px-6 md:px-8 mb-10 md:mb-12">
+              <div className="w-full overflow-hidden rounded-md bg-neutral-100/50 shadow-sm flex items-center justify-center max-h-[420px] md:max-h-[480px]">
                 <Image
-                  src={optimizeImageUrl(post.imageUrl, 1400, 85)}
+                  src={optimizeImageUrl(post.imageUrl, 1200, 85)}
                   alt={post.imageAlt || post.title}
-                  width={1400}
-                  height={787}
-                  sizes="(max-width: 768px) 100vw, 1200px"
+                  width={1200}
+                  height={675}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 800px, 900px"
                   quality={85}
-                  className="w-full h-auto object-cover rounded-sm"
+                  className="w-full h-[260px] sm:h-[360px] md:h-[440px] lg:h-[480px] object-cover object-center rounded-md"
                   priority
                   fetchPriority="high"
                 />
