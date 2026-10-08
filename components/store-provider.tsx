@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import Link from 'next/link'
 import { Product, CartItem } from '@/types'
 import { trackAddedToCart, trackRemovedFromCart } from '@/lib/klaviyo/client'
+import { trackGAAddToCart, trackGARemoveFromCart } from '@/lib/gtag'
 import { Heart } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -136,8 +137,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         nextCart = [...prev, { ...product, quantity: quantityToAdd }]
       }
 
-      // Track Added to Cart in Klaviyo
+      // Track Added to Cart in Klaviyo & Google Analytics 4
       trackAddedToCart(product, quantityToAdd, nextCart)
+      trackGAAddToCart(product, quantityToAdd)
 
       return nextCart
     })
@@ -150,6 +152,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
       if (itemToRemove) {
         trackRemovedFromCart(itemToRemove, itemToRemove.quantity, nextCart)
+        trackGARemoveFromCart(itemToRemove, itemToRemove.quantity)
       }
 
       return nextCart
@@ -171,8 +174,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         const delta = quantity - existing.quantity
         if (delta > 0) {
           trackAddedToCart(existing, delta, nextCart)
+          trackGAAddToCart(existing, delta)
         } else if (delta < 0) {
           trackRemovedFromCart(existing, Math.abs(delta), nextCart)
+          trackGARemoveFromCart(existing, Math.abs(delta))
         }
       }
 

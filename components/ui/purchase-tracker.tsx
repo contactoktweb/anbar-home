@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { trackEvent } from '@/lib/fb-tracking'
+import { trackGAPurchase } from '@/lib/gtag'
 
 interface PurchaseTrackerProps {
   orderData: {
@@ -9,6 +10,8 @@ interface PurchaseTrackerProps {
     value: number
     content_ids?: string[]
     contents?: any[]
+    items?: any[]
+    coupon?: string
     order_id?: string
   }
   userData?: {
@@ -34,6 +37,7 @@ export function PurchaseTracker({ orderData, userData, eventId }: PurchaseTracke
         return
       }
 
+      // 1. Meta Pixel & CAPI Purchase
       trackEvent('Purchase', {
         currency: orderData.currency,
         value: orderData.value,
@@ -42,6 +46,23 @@ export function PurchaseTracker({ orderData, userData, eventId }: PurchaseTracke
         ...(orderData.contents && orderData.contents.length > 0 ? { contents: orderData.contents } : {}),
         ...(orderData.order_id ? { order_id: orderData.order_id } : {})
       }, userData || {}, '', eventId)
+
+      // 2. Google Analytics 4 (gtag.js) E-commerce Purchase
+      trackGAPurchase({
+        transaction_id: orderData.order_id || eventId || 'unknown',
+        value: orderData.value,
+        currency: orderData.currency || 'COP',
+        coupon: orderData.coupon,
+        items: (orderData.items && orderData.items.length > 0
+          ? orderData.items
+          : (orderData.contents || []).map((c: any) => ({
+              item_id: c.id || c.sku || 'item',
+              item_name: c.name || c.item_name || 'Producto',
+              price: c.price ?? c.item_price ?? 0,
+              quantity: c.quantity || 1,
+            }))
+        )
+      })
 
       tracked.current = true
       if (typeof window !== 'undefined') {

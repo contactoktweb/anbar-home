@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { cn, optimizeImageUrl } from '@/lib/utils'
 import { Search, Heart, ShoppingBag, X, Trash2, Plus, Minus, ChevronDown } from 'lucide-react'
 import { useStore } from '@/components/store-provider'
+import { trackGAViewCart } from '@/lib/gtag'
 
 const christmasLinks = [
   { label: 'Árboles de Navidad', href: '/category/arboles-de-navidad' },
@@ -69,9 +70,12 @@ export function SiteHeader() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Bloquear scroll cuando el carrito está abierto
+  // Bloquear scroll cuando el carrito está abierto y rastrear view_cart
   useEffect(() => {
     if (isCartOpen) {
+      if (cart.length > 0) {
+        trackGAViewCart(cart, cartTotal)
+      }
       const originalOverflow = document.body.style.overflow
       document.body.style.overflow = 'hidden'
       return () => {

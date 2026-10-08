@@ -8,6 +8,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react'
 import { generateWompiSignature } from './actions'
 import { trackEvent, getCookie } from '@/lib/fb-tracking'
 import { trackStartedCheckout, identifyUser } from '@/lib/klaviyo/client'
+import { trackGABeginCheckout, trackGAAddPaymentInfo } from '@/lib/gtag'
 import { optimizeImageUrl } from '@/lib/utils'
 import React from 'react'
 
@@ -100,9 +101,12 @@ export default function CheckoutPage() {
       // 2. Klaviyo Started Checkout
       trackStartedCheckout(cart, cartTotal, formData.email, formData.phone)
 
+      // 3. Google Analytics 4 (gtag.js) begin_checkout
+      trackGABeginCheckout(cart, cartTotal, appliedCoupon?.code)
+
       checkoutTracked.current = true
     }
-  }, [cart, cartTotal, formData.email, formData.phone])
+  }, [cart, cartTotal, formData.email, formData.phone, appliedCoupon])
 
   const formatCOP = (amount: number) =>
     new Intl.NumberFormat('es-CO', {
@@ -216,6 +220,9 @@ export default function CheckoutPage() {
         st: formData.department,
         country: 'co' // FB ISO format usually 2 letters
       })
+
+      // Google Analytics 4 (gtag.js) add_payment_info
+      trackGAAddPaymentInfo(cart, cartTotal, appliedCoupon?.code, 'Wompi')
 
       // Klaviyo Identify
       if (formData.email) {

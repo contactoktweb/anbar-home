@@ -22,6 +22,7 @@ import {
   Loader2,
 } from 'lucide-react'
 import { trackEvent } from '@/lib/fb-tracking'
+import { trackGAViewItem } from '@/lib/gtag'
 
 export function ProductQuickView() {
   const {
@@ -56,6 +57,9 @@ export function ProductQuickView() {
       setQuantity(1)
       setIsAdding(false)
       setJustAdded(false)
+
+      // Rastrear visualización del producto en Google Analytics 4
+      trackGAViewItem(quickViewProduct)
 
       // Bloquear scroll del body
       const originalOverflow = document.body.style.overflow

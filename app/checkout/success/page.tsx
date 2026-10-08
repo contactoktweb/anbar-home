@@ -21,6 +21,7 @@ export default async function CheckoutSuccessPage(props: {
   let orderId = ''
   let purchaseEventId = ''
   let purchasedItems: any[] = []
+  let orderCoupon = ''
   let userData: any = {}
   let customerInfo: any = null
   let shippingInfo: any = null
@@ -64,6 +65,9 @@ export default async function CheckoutSuccessPage(props: {
             orderId = order._id
             if (!orderValue && order.totalAmount) {
               orderValue = order.totalAmount
+            }
+            if (order.discountCode) {
+              orderCoupon = order.discountCode
             }
 
             if (order.meta && order.meta.purchaseEventId) {
@@ -170,6 +174,9 @@ export default async function CheckoutSuccessPage(props: {
         if (order) {
           orderId = order._id
           orderValue = order.totalAmount || 0
+          if (order.discountCode) {
+            orderCoupon = order.discountCode
+          }
           purchaseEventId = order.meta?.purchaseEventId || `purchase_${order._id}`
           userData = {
             em: order.customerEmail,
@@ -217,6 +224,13 @@ export default async function CheckoutSuccessPage(props: {
             value: orderValue,
             content_ids: orderContentIds,
             contents: orderContents,
+            items: purchasedItems.map((item: any) => ({
+              item_id: item.sku || item._key || item.id,
+              item_name: item.name || 'Producto',
+              price: item.price,
+              quantity: item.quantity,
+            })),
+            coupon: orderCoupon || undefined,
             order_id: orderId || transactionId
           }}
           userData={userData}

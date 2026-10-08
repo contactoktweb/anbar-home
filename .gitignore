@@ -57,6 +57,7 @@ query-output.json
 test-search.html
 dev-logs.txt
 scripts/*.mjs
+scripts/*.cjs
 scripts/*.json
 
 # Blog content (articles and images — managed via Sanity, not Git)

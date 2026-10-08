@@ -6,6 +6,7 @@ import { Search } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { trackEvent } from '@/lib/fb-tracking'
 import { trackSearch } from '@/lib/klaviyo/client'
+import { trackGASearch } from '@/lib/gtag'
 
 export default function SearchResults({ products = [] }: { products?: any[] }) {
   const searchParams = useSearchParams()
@@ -41,6 +42,9 @@ export default function SearchResults({ products = [] }: { products?: any[] }) {
 
       // 2. Klaviyo Search Event
       trackSearch(query, filteredProducts.length)
+
+      // 3. Google Analytics 4 (gtag.js) Search Event
+      trackGASearch(query)
 
       searchTracked.current = query
     }

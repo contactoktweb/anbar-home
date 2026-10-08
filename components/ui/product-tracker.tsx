@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { Product } from '@/types'
 import { trackEvent } from '@/lib/fb-tracking'
 import { trackViewedProduct } from '@/lib/klaviyo/client'
+import { trackGAViewItem } from '@/lib/gtag'
 
 interface ProductTrackerProps {
   product: Product | {
@@ -48,6 +49,9 @@ export function ProductTracker({ product }: ProductTrackerProps) {
 
       // 2. Klaviyo Viewed Product
       trackViewedProduct(product as Product)
+
+      // 3. Google Analytics 4 (gtag.js) view_item
+      trackGAViewItem(product)
     }
   }, [product])
 
