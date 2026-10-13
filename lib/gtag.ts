@@ -1,4 +1,6 @@
-export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-TFMWCDEYWX'
+export const GA_MEASUREMENT_ID = 'G-TFMWCDEYWX'
+export const GOOGLE_ADS_ID = 'AW-18499733673'
+export const GOOGLE_ADS_CONVERSION_PURCHASE = 'AW-18499733673/HoEWCJX1v5QdEKmRrvVE'
 
 // Ensure TypeScript recognizes window.gtag and window.dataLayer
 declare global {
@@ -199,3 +201,40 @@ export const trackGASearch = (searchTerm: string) => {
     search_term: searchTerm,
   })
 }
+
+export interface GoogleAdsConversionPayload {
+  send_to?: string
+  value: number
+  currency?: string
+  transaction_id?: string
+  new_customer?: boolean
+}
+
+/**
+ * Google Ads Conversion tracking: Triggered on purchase conversion
+ * Uses the exact Google Ads conversion snippet schema:
+ * gtag('event', 'conversion', {
+ *   'send_to': 'AW-18499733673/HoEWCJX1v5QdEKmRrvVE',
+ *   'value': 1.0,
+ *   'currency': 'COP',
+ *   'transaction_id': ''
+ * })
+ */
+export const trackGoogleAdsConversion = ({
+  send_to = GOOGLE_ADS_CONVERSION_PURCHASE,
+  value,
+  currency = 'COP',
+  transaction_id = '',
+  new_customer,
+}: GoogleAdsConversionPayload) => {
+  if (value <= 0) return
+
+  trackGAEvent('conversion', {
+    send_to,
+    value,
+    currency,
+    ...(transaction_id ? { transaction_id } : {}),
+    ...(typeof new_customer === 'boolean' ? { new_customer } : {}),
+  })
+}
+

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { trackEvent } from '@/lib/fb-tracking'
-import { trackGAPurchase } from '@/lib/gtag'
+import { trackGAPurchase, trackGoogleAdsConversion } from '@/lib/gtag'
 
 interface PurchaseTrackerProps {
   orderData: {
@@ -37,6 +37,8 @@ export function PurchaseTracker({ orderData, userData, eventId }: PurchaseTracke
         return
       }
 
+      const txId = orderData.order_id || eventId || 'unknown'
+
       // 1. Meta Pixel & CAPI Purchase
       trackEvent('Purchase', {
         currency: orderData.currency,
@@ -49,7 +51,7 @@ export function PurchaseTracker({ orderData, userData, eventId }: PurchaseTracke
 
       // 2. Google Analytics 4 (gtag.js) E-commerce Purchase
       trackGAPurchase({
-        transaction_id: orderData.order_id || eventId || 'unknown',
+        transaction_id: txId,
         value: orderData.value,
         currency: orderData.currency || 'COP',
         coupon: orderData.coupon,
@@ -62,6 +64,13 @@ export function PurchaseTracker({ orderData, userData, eventId }: PurchaseTracke
               quantity: c.quantity || 1,
             }))
         )
+      })
+
+      // 3. Google Ads Conversion (gtag.js) Purchase Tracking
+      trackGoogleAdsConversion({
+        value: orderData.value,
+        currency: orderData.currency || 'COP',
+        transaction_id: txId,
       })
 
       tracked.current = true
